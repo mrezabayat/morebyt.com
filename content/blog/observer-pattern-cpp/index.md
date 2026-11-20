@@ -10,29 +10,22 @@ The Observer pattern sets up a one-to-many relationship: one object, the subject
 
 It's another of the patterns in *Design Patterns* (Gamma, Helm, Johnson and Vlissides, 1994), and you've used it even if you've never named it: GUI event handlers, signals and slots in Qt, and "listeners" in most frameworks are all observers.
 
-```mermaid
-%% alt: UML class diagram of the Observer pattern: a Subject keeps a list of Observers and calls update on each; ConcreteObserverA and ConcreteObserverB implement the Observer interface
-classDiagram
-    direction TB
-    class Subject {
-        -observers : list of Observer
-        +attach(o : Observer) void
-        +detach(o : Observer) void
-        -notify() void
-    }
-    class Observer {
-        <<interface>>
-        +update(state) void
-    }
-    class ConcreteObserverA {
-        +update(state) void
-    }
-    class ConcreteObserverB {
-        +update(state) void
-    }
-    Subject --> "0..*" Observer : notifies
-    Observer <|.. ConcreteObserverA
-    Observer <|.. ConcreteObserverB
+```d2
+# alt: UML class diagram of the Observer pattern: a Subject keeps a list of Observers and calls update on each; ConcreteObserverA and ConcreteObserverB implement the Observer interface
+direction: down
+Subject: {
+  shape: class
+  -observers: list of Observer
+  "+attach(o: Observer)": void
+  "+detach(o: Observer)": void
+  "-notify()": void
+}
+Observer: "«interface» Observer" {shape: class; "+update(state)": void}
+ConcreteObserverA: {shape: class; "+update(state)": void}
+ConcreteObserverB: {shape: class; "+update(state)": void}
+Subject -> Observer: notifies {target-arrowhead.label: "0..*"}
+Observer <-> ConcreteObserverA: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Observer <-> ConcreteObserverB: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
 ```
 
 ## How it works
@@ -47,31 +40,35 @@ In C++, the interesting part of this pattern is lifetime. The subject holds refe
 
 This is the weather station from *Head First Design Patterns*: a `WeatherData` object receives new measurements and three displays react to them.
 
-```mermaid
-%% alt: Class diagram of the weather station: WeatherData refers to zero or more Observers without owning them, passes Measurements to update, and three display classes implement Observer
-classDiagram
-    direction TB
-    class WeatherData {
-        -m_observers : weak_ptr list
-        -m_current : Measurements
-        +subscribe(o : Observer) void
-        +unsubscribe(o : Observer) void
-        +setMeasurements(m : Measurements) void
-    }
-    class Observer {
-        <<interface>>
-        +update(m : Measurements) void
-    }
-    class Measurements {
-        +temperature : double
-        +humidity : double
-        +pressure : double
-    }
-    WeatherData --> "0..*" Observer : notifies, does not own
-    WeatherData *-- Measurements
-    Observer <|.. CurrentConditionsDisplay
-    Observer <|.. StatisticsDisplay
-    Observer <|.. ForecastDisplay
+```d2
+# alt: Class diagram of the weather station: WeatherData refers to zero or more Observers without owning them and owns its current Measurements; three display classes implement Observer
+direction: down
+WeatherData: {
+  shape: class
+  -m_observers: weak_ptr list
+  -m_current: Measurements
+  "+subscribe(o: Observer)": void
+  "+unsubscribe(o: Observer)": void
+  "+setMeasurements(m: Measurements)": void
+}
+Measurements: {
+  shape: class
+  +temperature: double
+  +humidity: double
+  +pressure: double
+}
+Observer: "«interface» Observer" {shape: class; "+update(m: Measurements)": void}
+CurrentConditionsDisplay: {shape: class}
+StatisticsDisplay: {shape: class}
+ForecastDisplay: {shape: class}
+# layout only: stack the small classes in a column
+CurrentConditionsDisplay -> StatisticsDisplay: {style.opacity: 0; target-arrowhead.shape: none}
+StatisticsDisplay -> ForecastDisplay: {style.opacity: 0; target-arrowhead.shape: none}
+WeatherData <-> Measurements: {source-arrowhead: {shape: diamond; style.filled: true}; target-arrowhead.shape: none}
+WeatherData -> Observer: "notifies, does not own" {target-arrowhead.label: "0..*"}
+Observer <-> CurrentConditionsDisplay: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Observer <-> StatisticsDisplay: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Observer <-> ForecastDisplay: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
 ```
 
 The plain arrow is an association: `WeatherData` knows about its observers but doesn't own them. That's the `weak_ptr` decision explained below.

@@ -37,7 +37,14 @@
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
 .prose figure.diagram{margin:var(--s4) 0}
-.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+.prose figure.diagram picture{display:block}
+.prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
+.prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
+.prose figure.drawing svg{display:block;width:100%;height:auto}
+@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
+.prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
+.prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
 @media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
@@ -115,14 +122,33 @@
 <path d="M382 186l12 8 12-8M382 186h24v14h-24z" stroke-width="1.2"/>
 </svg></div>
     <h1>From Brain to Equifax: 4 cyberattacks that changed computing</h1>
-    <p class="meta"><span>Mohammad Reza Bayat</span><time datetime="2026-04-18">18 April 2026</time><span>Updated <time datetime="2026-11-20">20 November 2026</time></span><span>7 min read</span></p>
+    <p class="meta"><span>Mohammad Reza Bayat</span><time datetime="2026-04-18">18 April 2026</time><span>Updated <time datetime="2026-11-20">20 November 2026</time></span><span>14 min read</span></p>
   </header>
   <details class="toc toc-top"><summary>On this page</summary><nav aria-label="On this page"><ol><li><a href="#brain-1986-the-virus-that-travelled-by-hand">Brain (1986): the virus that travelled by hand</a></li><li><a href="#the-morris-worm-1988-one-program-a-whole-network">The Morris worm (1988): one program, a whole network</a></li><li><a href="#iloveyou-2000-getting-people-to-run-it">ILOVEYOU (2000): getting people to run it</a></li><li><a href="#equifax-2017-a-known-bug-left-open">Equifax (2017): a known bug, left open</a></li><li><a href="#what-the-four-have-in-common">What the four have in common</a></li><li><a href="#sources">Sources</a></li></ol></nav></details>
   
   <div class="prose">
 <p>Old security incidents tend to blur into one story of "a virus, a worm, a breach". The four below failed in different ways, though, and each one taught the industry something different. Brain spread on floppy disks people swapped by hand. The Morris worm used bugs in network services to cross the early internet in a night. ILOVEYOU got people to run it themselves. Equifax was a known, patchable vulnerability that stayed open for months inside a company holding personal data on millions of people.</p>
 <p>What they have in common is trust: a disk from a colleague, a host on the same network, an email from a friend, a server nobody checked. Each attack took something people trusted and used it to spread.</p>
-<p><img loading="lazy" alt="Timeline of Brain, Morris, ILOVEYOU, and Equifax" src="timeline.svg" /></p>
+<figure class="drawing"><svg role="img" aria-label="Timeline of the four incidents: Brain in 1986, the Morris worm in 1988, ILOVEYOU in 2000 and Equifax in 2017" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 230" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><marker id="tl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" stroke="currentColor" stroke-width="1.6" fill="none"/></marker></defs>
+<path d="M30 130h500"/>
+<g>
+<circle class="acc" cx="80" cy="130" r="7" stroke="none"/><circle class="acc" cx="210" cy="130" r="7" stroke="none"/>
+<circle class="acc" cx="350" cy="130" r="7" stroke="none"/><circle class="acc" cx="480" cy="130" r="7" stroke="none"/>
+</g>
+<path d="M62 50h30l8 8v42H62z M70 50v14h18V50 M70 78h22M70 86h22"/>
+<g><rect x="186" y="58" width="18" height="14" rx="2"/><rect x="216" y="58" width="18" height="14" rx="2"/><rect x="201" y="86" width="18" height="14" rx="2"/><path d="M204 65h12M198 72l8 14M222 72l-8 14"/></g>
+<path d="M328 60h44v32h-44z M328 60l22 18 22-18"/>
+<path d="M462 54h36v46h-36z M462 66h36M462 78h36M462 90h36"/><circle cx="490" cy="60" r="1.5"/>
+<text class="t" x="80" y="172" font-size="20" text-anchor="middle" font-weight="600">1986</text>
+<text class="t" x="210" y="172" font-size="20" text-anchor="middle" font-weight="600">1988</text>
+<text class="t" x="350" y="172" font-size="20" text-anchor="middle" font-weight="600">2000</text>
+<text class="t" x="480" y="172" font-size="20" text-anchor="middle" font-weight="600">2017</text>
+<text class="m" x="80" y="198" font-size="16" text-anchor="middle">Brain</text>
+<text class="m" x="210" y="198" font-size="16" text-anchor="middle">Morris</text>
+<text class="m" x="350" y="198" font-size="16" text-anchor="middle">ILOVEYOU</text>
+<text class="m" x="480" y="198" font-size="16" text-anchor="middle">Equifax</text>
+</svg></figure>
+
 <table>
 <thead>
 <tr>
@@ -167,25 +193,111 @@
 <h2 id="brain-1986-the-virus-that-travelled-by-hand">Brain (1986): the virus that travelled by hand</h2>
 <p>Brain is usually described as the first major virus on IBM PC compatibles. Historical summaries date its release to 19 January 1986 and credit it to two brothers in Lahore, Pakistan, Basit and Amjad Farooq Alvi.</p>
 <p>It was a boot-sector virus. When a PC started from an infected floppy, the virus loaded before the operating system, copied itself into memory and then infected other floppies used on that machine. It also moved the original boot sector elsewhere on the disk, an early trick to make the infection harder to spot.</p>
-<p><img loading="lazy" alt="Illustration of a floppy disk used to spread the Brain virus" src="brain-floppy.svg" /></p>
+<figure class="drawing"><svg role="img" aria-label="How Brain spread: the infected boot sector on a floppy loads into memory before the operating system, then infects every floppy used next; the original boot sector is moved elsewhere on the disk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 340" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><marker id="br" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" stroke="currentColor" stroke-width="1.6" fill="none"/></marker></defs>
+<path d="M30 60h140l20 20v170H30z"/>
+<path d="M62 60v46h84V60"/><rect x="124" y="68" width="14" height="30" rx="1"/>
+<rect class="acc" x="44" y="146" width="132" height="30" stroke="none"/>
+<rect x="44" y="146" width="132" height="30"/>
+<text class="t" x="110" y="166" font-size="14" text-anchor="middle">boot sector</text>
+<rect x="44" y="192" width="132" height="30" stroke-dasharray="4 4"/>
+<text class="m" x="110" y="212" font-size="12" text-anchor="middle">original, moved</text>
+<text class="t" x="110" y="286" font-size="15" text-anchor="middle">infected floppy</text>
+<path d="M194 161c40 0 50-35 92-35" marker-end="url(#br)"/>
+<text class="m" x="240" y="70" font-size="13" text-anchor="middle">loads before</text>
+<text class="m" x="240" y="86" font-size="13" text-anchor="middle">the OS</text>
+<rect x="292" y="100" width="104" height="52" rx="3"/>
+<path d="M306 100v-10M322 100v-10M338 100v-10M354 100v-10M370 100v-10M386 100v-10M306 152v10M322 152v10M338 152v10M354 152v10M370 152v10M386 152v10"/>
+<text class="t" x="344" y="132" font-size="15" text-anchor="middle">memory</text>
+<path d="M400 120c20 0 26-36 40-36" marker-end="url(#br)"/>
+<path d="M400 132c20 0 26 72 40 72" marker-end="url(#br)"/>
+<path d="M448 50h64l12 12v68h-76z M460 50v22h40V50"/>
+<path d="M448 170h64l12 12v68h-76z M460 170v22h40v-22"/>
+<text class="m" x="486" y="282" font-size="13" text-anchor="middle">every floppy</text>
+<text class="m" x="486" y="298" font-size="13" text-anchor="middle">used next</text>
+</svg></figure>
+
 <p>In 1986 a floppy was storage, software distribution and file sharing all at once, and nobody scanned a disk that came from a colleague or a classmate. Brain didn't need to destroy anything to matter. It showed that the PC market had grown big enough for a virus to travel far from where it started, and it helped turn antivirus software from a curiosity into a product category.</p>
 <p>The lesson still holds: if people routinely pass something around, attackers will eventually use it to pass malware around too.</p>
 <h2 id="the-morris-worm-1988-one-program-a-whole-network">The Morris worm (1988): one program, a whole network</h2>
 <p>On 2 November 1988, at about 8:30 in the evening, a worm was released onto the internet from a machine at MIT. According to the FBI's case summary, an estimated 6,000 of the roughly 60,000 computers then on the internet were affected within 24 hours.</p>
-<p><img loading="lazy" alt="Diagram showing how the Morris worm spread across early networked Unix systems" src="morris-worm-network.svg" /></p>
+<figure class="drawing"><svg role="img" aria-label="The Morris worm&#x27;s four ways from an infected machine to the next: sendmail, fingerd, trusted hosts and password guessing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 360" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><marker id="mw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" stroke="currentColor" stroke-width="1.6" fill="none"/></marker></defs>
+<rect class="acc" x="225" y="150" width="110" height="64" rx="4" stroke="none"/>
+<rect x="225" y="150" width="110" height="64" rx="4"/>
+<path d="M260 214v14h40v-14M248 238h64"/>
+<text class="t" x="280" y="188" font-size="16" text-anchor="middle">infected</text>
+<g>
+<rect x="40" y="40" width="96" height="56" rx="4"/><path d="M70 96v12h36V96M60 116h56"/>
+<rect x="424" y="40" width="96" height="56" rx="4"/><path d="M454 96v12h36V96M444 116h56"/>
+<rect x="40" y="250" width="96" height="56" rx="4"/><path d="M70 306v12h36v-12M60 326h56"/>
+<rect x="424" y="250" width="96" height="56" rx="4"/><path d="M454 306v12h36v-12M444 326h56"/>
+</g>
+<path d="M225 165L140 90" marker-end="url(#mw)"/>
+<path d="M335 165L420 90" marker-end="url(#mw)"/>
+<path d="M225 200L140 270" marker-end="url(#mw)"/>
+<path d="M335 200L420 270" marker-end="url(#mw)"/>
+<text class="t" x="168" y="146" font-size="15" text-anchor="end">sendmail</text>
+<text class="t" x="392" y="146" font-size="15">fingerd</text>
+<text class="t" x="168" y="226" font-size="15" text-anchor="end">trusted hosts</text>
+<text class="t" x="392" y="226" font-size="15">password</text>
+<text class="t" x="392" y="244" font-size="15">guessing</text>
+</svg></figure>
+
 <p>The worm had several ways in. It used a flaw in <code>sendmail</code>, a buffer overflow in the <code>fingerd</code> service, the trust relationships between Unix hosts, and password guessing against weak accounts. If one route failed, another often worked.</p>
 <p>The damage came from a design mistake rather than a payload. Machines could claim to be infected already to keep the worm out, so the worm sometimes copied itself anyway. Copies piled up on the same hosts until they slowed to a crawl or crashed, and some sites cut themselves off the network while they worked out how to stop reinfection. Nothing was deliberately destroyed; the machines simply ran out of resources.</p>
 <p>The incident is closely tied to the creation of CERT/CC and a more formal approach to coordinated incident response, and it led to the first felony conviction under the U.S. Computer Fraud and Abuse Act. It also ended the idea that a network of universities and labs could be left to police itself.</p>
 <p>The <code>fingerd</code> bug is worth knowing in detail: the service read input into a fixed-size buffer without checking its length, which let the worm overwrite the stack. I explain how that kind of bug works in a video on buffer overflows coming to <a href="https://www.youtube.com/@morebyt">the Morebyt channel</a> in December 2026. The general lesson is that automated code spreads a small mistake across a network faster than people can react.</p>
 <h2 id="iloveyou-2000-getting-people-to-run-it">ILOVEYOU (2000): getting people to run it</h2>
 <p>The ILOVEYOU worm, also called Love Letter, started spreading on 4 May 2000. It arrived with a personal-looking subject line and an attachment called <code>LOVE-LETTER-FOR-YOU.TXT.vbs</code>.</p>
-<p><img loading="lazy" alt="Illustration of the ILOVEYOU email lure and address-book spread" src="iloveyou-email.svg" /></p>
+<figure class="drawing"><svg role="img" aria-label="ILOVEYOU: an email with the attachment LOVE-LETTER-FOR-YOU.TXT.vbs, whose real extension Windows hid; once opened it mailed itself to every Outlook contact" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 340" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><marker id="iy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" stroke="currentColor" stroke-width="1.6" fill="none"/></marker></defs>
+<rect x="30" y="40" width="250" height="150" rx="4"/>
+<path d="M30 40l125 80 125-80"/>
+<rect x="30" y="206" width="250" height="44" rx="3"/>
+<text class="t" x="44" y="224" font-size="13">LOVE-LETTER-FOR-YOU.TXT</text>
+<text class="t" x="44" y="242" font-size="13" font-weight="600">.vbs</text>
+<rect class="acc" x="44" y="247" width="32" height="3" stroke="none"/>
+<text class="m" x="155" y="276" font-size="13" text-anchor="middle">Windows hid the real extension</text>
+<path d="M290 140h56" marker-end="url(#iy)"/>
+<text class="m" x="318" y="126" font-size="13" text-anchor="middle">opened</text>
+<rect x="356" y="70" width="90" height="130" rx="4"/>
+<path d="M374 96h54M374 118h54M374 140h54M374 162h40"/>
+<text class="m" x="401" y="222" font-size="13" text-anchor="middle">Outlook</text>
+<text class="m" x="401" y="238" font-size="13" text-anchor="middle">contacts</text>
+<path d="M450 135h20"/>
+<g>
+<path d="M480 60h50v32h-50z M480 60l25 18 25-18"/>
+<path d="M480 120h50v32h-50z M480 120l25 18 25-18"/>
+<path d="M480 180h50v32h-50z M480 180l25 18 25-18"/>
+</g>
+<path d="M470 135V76h8M470 135h8M470 135v61h8" marker-end="url(#iy)"/>
+<text class="m" x="505" y="240" font-size="13" text-anchor="middle">every</text>
+<text class="m" x="505" y="256" font-size="13" text-anchor="middle">contact</text>
+</svg></figure>
+
 <p>Windows hid known file extensions by default, so many people saw a harmless <code>.TXT</code> file and not the <code>.vbs</code> script it really was. Once opened, the script mailed itself to every contact in the victim's Outlook address book, from the victim's own account, as Microsoft's malware write-up describes. It also copied itself onto the machine, changed settings, and was reported in many analyses to overwrite files and try to download a password-stealing component.</p>
 <p>The trick was that the message came from someone you knew. People trusted email from friends and colleagues, and the worm used exactly that trust. No clever exploit was needed once the dangerous action looked like an ordinary one.</p>
 <p>Many companies and government organisations shut down or filtered their email systems just to slow it down. Afterwards, mail filters started blocking script attachments, email security and endpoint security started working together, and user training began to cover file extensions and lures. If an attack rides on people's normal routine, telling them to be careful is not a defence.</p>
 <h2 id="equifax-2017-a-known-bug-left-open">Equifax (2017): a known bug, left open</h2>
 <p>Equifax is a modern failure, and the public record is detailed enough to follow it step by step. According to the U.S. House Oversight Committee's staff report, a critical vulnerability in the Apache Struts web framework was disclosed on 7 March 2017. Equifax was alerted and told its teams to patch, but one internet-facing system, its dispute portal ACIS, stayed unpatched.</p>
-<p><img loading="lazy" alt="Diagram of the Equifax breach chain from missed patch to public disclosure" src="equifax-breach.svg" /></p>
+<figure class="drawing"><svg role="img" aria-label="Equifax timeline: Struts flaw disclosed on 7 March 2017 and ACIS left unpatched; attack from 13 May using web shells and stored credentials; suspicious activity noticed 29 July; breach disclosed 7 September; an expired certificate left traffic unchecked for 19 months" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 360" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><marker id="eq" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" stroke="currentColor" stroke-width="1.6" fill="none"/></marker></defs>
+<path d="M60 70v240"/>
+<circle class="acc" cx="60" cy="80" r="7" stroke="none"/>
+<circle class="acc" cx="60" cy="150" r="7" stroke="none"/>
+<circle class="acc" cx="60" cy="220" r="7" stroke="none"/>
+<circle class="acc" cx="60" cy="290" r="7" stroke="none"/>
+<text class="t" x="84" y="86" font-size="17" font-weight="600">7 Mar 2017</text>
+<text class="m" x="220" y="86" font-size="15">Struts flaw disclosed;</text>
+<text class="m" x="220" y="106" font-size="15">ACIS left unpatched</text>
+<text class="t" x="84" y="156" font-size="17" font-weight="600">13 May</text>
+<text class="m" x="220" y="156" font-size="15">attack starts: web shells,</text>
+<text class="m" x="220" y="176" font-size="15">stored credentials, more databases</text>
+<text class="t" x="84" y="226" font-size="17" font-weight="600">29 Jul</text>
+<text class="m" x="220" y="226" font-size="15">suspicious activity noticed</text>
+<text class="t" x="84" y="296" font-size="17" font-weight="600">7 Sep</text>
+<text class="m" x="220" y="296" font-size="15">breach disclosed</text>
+<rect x="26" y="26" width="508" height="22" rx="3" stroke-dasharray="5 5"/>
+<text class="m" x="280" y="42" font-size="13" text-anchor="middle">expired certificate: traffic unchecked for 19 months</text>
+</svg></figure>
+
 <p>Attackers started exploiting it on 13 May 2017. The report describes them installing web shells to keep access, finding unencrypted credentials, and using those to reach databases beyond the first system. Equifax's monitoring didn't catch them because a certificate on a traffic-inspection device had expired, leaving that traffic unchecked for 19 months. The company noticed suspicious activity on 29 July and disclosed the breach on 7 September 2017.</p>
 <p>At disclosure, Equifax said about 143 million U.S. consumers were affected, and later revised the number upward. The data included names, Social Security numbers, birth dates, addresses and some driver's licence numbers, plus smaller sets of card numbers and dispute documents. Unlike a password, a Social Security number can't be changed, so the damage lasts.</p>
 <p>Nothing here was a mysterious zero-day. Patching, asset inventory, certificate management, network segmentation and monitoring each failed, one after another. The breach became the standard example of why those dull controls matter, and of why a company holding data that people never chose to give it needs to protect that data especially well.</p>

@@ -103,22 +103,22 @@ Two more benefits follow. Because callers only see the interface, the implementa
 
 A UML class diagram shows each class as a box with three sections: the name, the attributes and the operations.
 
-```mermaid
-%% alt: UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner, number and balancePence
-classDiagram
-    class BankAccount {
-        -m_owner : string
-        -m_number : int
-        -m_balancePence : int64
-        +deposit(pence : int64) void
-        +withdraw(pence : int64) bool
-        +owner() string
-        +number() int
-        +balancePence() int64
-    }
+```d2
+# alt: UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner, number and balancePence
+BankAccount: {
+  shape: class
+  -m_owner: string
+  -m_number: int
+  -m_balancePence: int64
+  "+deposit(pence: int64)": void
+  "+withdraw(pence: int64)": bool
+  "+owner()": string
+  "+number()": int
+  "+balancePence()": int64
+}
 ```
 
-Attributes are written as `name : type` and operations as `name(parameters) : return type`. A symbol in front shows who can see the member:
+In UML's own notation, attributes are written as `name : type` and operations as `name(parameters) : return type`. A symbol in front shows who can see the member:
 
 | Symbol | Access |
 | --- | --- |
@@ -126,25 +126,25 @@ Attributes are written as `name : type` and operations as `name(parameters) : re
 | `#` | protected |
 | `+` | public |
 
-So `-m_balancePence : int64` is a private attribute, and `+withdraw(pence : int64) : bool` is a public operation returning a `bool`. Reading the diagram, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.
+So `- m_balancePence : int64` is a private attribute, and `+ withdraw(pence : int64) : bool` is a public operation returning a `bool`. The diagram above shows the same information in two columns, with the name on the left and the type or return type on the right. Reading it, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.
 
-You don't need a drawing tool for this. [Mermaid](https://mermaid.js.org/syntax/classDiagram.html) turns plain text into diagrams, so they can live in the repository next to the code and change in the same commit. The diagram above comes from this source:
+You don't need a drawing tool for this. [D2](https://d2lang.com/tour/uml-classes/) turns plain text into diagrams, so they can live in the repository next to the code and change in the same commit. The diagram above comes from this source:
 
 ```text
-classDiagram
-    class BankAccount {
-        -m_owner : string
-        -m_number : int
-        -m_balancePence : int64
-        +deposit(pence : int64) void
-        +withdraw(pence : int64) bool
-        +owner() string
-        +number() int
-        +balancePence() int64
-    }
+BankAccount: {
+  shape: class
+  -m_owner: string
+  -m_number: int
+  -m_balancePence: int64
+  "+deposit(pence: int64)": void
+  "+withdraw(pence: int64)": bool
+  "+owner()": string
+  "+number()": int
+  "+balancePence()": int64
+}
 ```
 
-Mermaid adds the colon before each return type when it draws the diagram. GitHub [renders Mermaid blocks](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams) in Markdown files, issues and pull requests, so a diagram in a README needs no extra tooling, and editors such as VS Code have extensions that preview it as you type.
+Each line is a member and its type. Operations are quoted because they contain parentheses and colons. Running `d2 bank.d2 bank.svg` turns the text into an SVG image, and `d2 --watch bank.d2` opens a preview in the browser that redraws every time you save the file.
 
 ## Summary
 

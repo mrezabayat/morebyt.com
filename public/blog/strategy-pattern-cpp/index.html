@@ -37,7 +37,14 @@
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
 .prose figure.diagram{margin:var(--s4) 0}
-.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+.prose figure.diagram picture{display:block}
+.prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
+.prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
+.prose figure.drawing svg{display:block;width:100%;height:auto}
+@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
+.prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
+.prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
 @media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
@@ -124,15 +131,15 @@
 <p>The Strategy pattern lets an object change how it does something without changing its own code. You pull the behaviour that varies into its own small class behind an interface, and the object holds whichever version it currently needs. Swapping the behaviour at runtime then means swapping one pointer.</p>
 <p>It's one of the original 23 patterns in <em>Design Patterns</em> by Gamma, Helm, Johnson and Vlissides (1994), where it's described as defining a family of algorithms, encapsulating each one and making them interchangeable. The duck example below is the one <em>Head First Design Patterns</em> made famous, rewritten here in modern C++.</p>
 <h2 id="the-three-parts">The three parts</h2>
-<figure class="diagram"><img loading="lazy" src="diagram-8d1d65cd92f3.svg" alt="UML class diagram of the Strategy pattern: a Context owns one Strategy; ConcreteStrategyA and ConcreteStrategyB implement the Strategy interface" width="565" height="551"></figure>
+<figure class="diagram"><picture><source srcset="diagram-51d1fddb4462-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-51d1fddb4462-light.svg" alt="UML class diagram of the Strategy pattern: a Context owns one Strategy; ConcreteStrategyA and ConcreteStrategyB implement the Strategy interface" width="760" height="789"></picture></figure>
 
 <p>The context is the class your code talks to. It holds a strategy and forwards the work to it, and it can be given a different strategy later. The strategy interface declares the operation every variant must provide. The concrete strategies are the variants themselves, each one a small class.</p>
 <p>Adding a new behaviour means adding a new concrete strategy. Neither the context nor the existing strategies change, which is the open-closed principle in practice.</p>
 <h2 id="example-ducks-that-fly-and-quack-differently">Example: ducks that fly and quack differently</h2>
 <p>A <code>Duck</code> can fly and quack, but not every duck does either the same way. A mallard flies with wings, a wooden model duck can't fly at all, and we might want to bolt a rocket onto the model later. Putting all of that into a <code>Duck</code> class hierarchy with overrides gets messy quickly, so flying and quacking become strategies.</p>
-<figure class="diagram"><img loading="lazy" src="diagram-01b29bab9083.svg" alt="Class diagram of the duck example: Duck owns one FlyBehavior and one QuackBehavior; MallardDuck and ModelDuck extend Duck; three fly strategies and two quack strategies implement the behaviour interfaces" width="960" height="619"></figure>
+<figure class="diagram"><picture><source srcset="diagram-e7aba43b51b6-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-e7aba43b51b6-light.svg" alt="Class diagram of the duck example: Duck owns one FlyBehavior and one QuackBehavior; three fly strategies and two quack strategies implement the behaviour interfaces" width="1021" height="1143"></picture></figure>
 
-<p>The filled diamond means composition: each duck owns its two strategies, which is what the <code>std::unique_ptr</code> members below express.</p>
+<p>The filled diamond means composition: each duck owns its two strategies, which is what the <code>std::unique_ptr</code> members below express. The concrete ducks, <code>MallardDuck</code> and <code>ModelDuck</code>, are left out of the diagram; they appear in the code further down.</p>
 <h3 id="the-strategy-interfaces">The strategy interfaces</h3>
 <div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">duck</span><span class="w"> </span><span class="p">{</span>
 

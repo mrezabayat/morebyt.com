@@ -37,7 +37,14 @@
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
 .prose figure.diagram{margin:var(--s4) 0}
-.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+.prose figure.diagram picture{display:block}
+.prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
+.prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
+.prose figure.drawing svg{display:block;width:100%;height:auto}
+@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
+.prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
+.prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
 @media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
@@ -221,9 +228,9 @@
 <p>Two more benefits follow. Because callers only see the interface, the implementation can change without breaking them; the account could store its balance in a database tomorrow and <code>main</code> wouldn't notice. And each class can be understood as a black box: you need to know what goes in and what comes out, not how it works inside. That boundary is what makes large programs manageable.</p>
 <h2 id="drawing-it-in-uml">Drawing it in UML</h2>
 <p>A UML class diagram shows each class as a box with three sections: the name, the attributes and the operations.</p>
-<figure class="diagram"><img loading="lazy" src="diagram-1e1d9de37aab.svg" alt="UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner, number and balancePence" width="370" height="268"></figure>
+<figure class="diagram"><picture><source srcset="diagram-9455e7032219-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-9455e7032219-light.svg" alt="UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner, number and balancePence" width="453" height="502"></picture></figure>
 
-<p>Attributes are written as <code>name : type</code> and operations as <code>name(parameters) : return type</code>. A symbol in front shows who can see the member:</p>
+<p>In UML's own notation, attributes are written as <code>name : type</code> and operations as <code>name(parameters) : return type</code>. A symbol in front shows who can see the member:</p>
 <table>
 <thead>
 <tr>
@@ -246,22 +253,22 @@
 </tr>
 </tbody>
 </table>
-<p>So <code>-m_balancePence : int64</code> is a private attribute, and <code>+withdraw(pence : int64) : bool</code> is a public operation returning a <code>bool</code>. Reading the diagram, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.</p>
-<p>You don't need a drawing tool for this. <a href="https://mermaid.js.org/syntax/classDiagram.html">Mermaid</a> turns plain text into diagrams, so they can live in the repository next to the code and change in the same commit. The diagram above comes from this source:</p>
-<div class="hl"><pre><span></span><code>classDiagram
-    class BankAccount {
-        -m_owner : string
-        -m_number : int
-        -m_balancePence : int64
-        +deposit(pence : int64) void
-        +withdraw(pence : int64) bool
-        +owner() string
-        +number() int
-        +balancePence() int64
-    }
+<p>So <code>- m_balancePence : int64</code> is a private attribute, and <code>+ withdraw(pence : int64) : bool</code> is a public operation returning a <code>bool</code>. The diagram above shows the same information in two columns, with the name on the left and the type or return type on the right. Reading it, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.</p>
+<p>You don't need a drawing tool for this. <a href="https://d2lang.com/tour/uml-classes/">D2</a> turns plain text into diagrams, so they can live in the repository next to the code and change in the same commit. The diagram above comes from this source:</p>
+<div class="hl"><pre><span></span><code>BankAccount: {
+  shape: class
+  -m_owner: string
+  -m_number: int
+  -m_balancePence: int64
+  "+deposit(pence: int64)": void
+  "+withdraw(pence: int64)": bool
+  "+owner()": string
+  "+number()": int
+  "+balancePence()": int64
+}
 </code></pre></div>
 
-<p>Mermaid adds the colon before each return type when it draws the diagram. GitHub <a href="https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams">renders Mermaid blocks</a> in Markdown files, issues and pull requests, so a diagram in a README needs no extra tooling, and editors such as VS Code have extensions that preview it as you type.</p>
+<p>Each line is a member and its type. Operations are quoted because they contain parentheses and colons. Running <code>d2 bank.d2 bank.svg</code> turns the text into an SVG image, and <code>d2 --watch bank.d2</code> opens a preview in the browser that redraws every time you save the file.</p>
 <h2 id="summary">Summary</h2>
 <p>Abstraction decides what a class is, by keeping only what matters in its context. Encapsulation decides what a class guarantees, by making its rules impossible to break from outside. Part 2 looks at how classes relate to each other: <a href="/blog/object-oriented-modelling-decomposition-generalization/">decomposition and generalization</a>.</p>
 <p>The C++ examples compile with <code>clang++ -std=c++20 -Wall -Wextra</code> once <code>&lt;cstdint&gt;</code>, <code>&lt;stdexcept&gt;</code>, <code>&lt;string&gt;</code> and <code>&lt;utility&gt;</code> are included.</p>

@@ -37,7 +37,14 @@
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
 .prose figure.diagram{margin:var(--s4) 0}
-.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+.prose figure.diagram picture{display:block}
+.prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
+.prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
+.prose figure.drawing svg{display:block;width:100%;height:auto}
+@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
+.prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
+.prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
 @media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
@@ -121,13 +128,13 @@
 <p>It's the alternative to building every combination with subclasses. If a coffee can have milk, mocha or soya in any combination and quantity, subclasses like <code>DarkRoastWithDoubleMochaAndMilk</code> explode in number. Decorators let you build that drink by wrapping a <code>DarkRoast</code> in two <code>Mocha</code>s and a <code>Milk</code>.</p>
 <p>The pattern comes from <em>Design Patterns</em> (Gamma, Helm, Johnson and Vlissides, 1994), and the coffee shop example below is the one used in <em>Head First Design Patterns</em>.</p>
 <h2 id="the-structure">The structure</h2>
-<figure class="diagram"><img loading="lazy" src="diagram-48dc7255d59f.svg" alt="UML class diagram of the Decorator pattern: ConcreteComponent and Decorator both implement Component; Decorator owns one wrapped Component; ConcreteDecoratorA and ConcreteDecoratorB extend Decorator" width="543" height="604"></figure>
+<figure class="diagram"><picture><source srcset="diagram-ff5d5985648e-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-ff5d5985648e-light.svg" alt="UML class diagram of the Decorator pattern: ConcreteComponent and Decorator both implement Component; Decorator owns one wrapped Component; ConcreteDecoratorA and ConcreteDecoratorB extend Decorator" width="869" height="824"></picture></figure>
 
 <p>There are four roles. The component is the interface everyone shares. A concrete component is the real object at the centre. The decorator implements the same interface and holds a component. Concrete decorators each add one piece of behaviour.</p>
 <p>The textbook case outside C++ is Java's I/O library, where a <code>BufferedInputStream</code> wraps a <code>FileInputStream</code>. In everyday code, a logging or caching wrapper around a service is the same idea.</p>
 <h2 id="example-a-coffee-shop">Example: a coffee shop</h2>
 <p>The shop sells a few coffees, and customers add condiments. Each condiment changes both the description and the price.</p>
-<figure class="diagram"><img loading="lazy" src="diagram-2723b6c226b7.svg" alt="Class diagram of the coffee shop: Coffee and Condiment implement Beverage; Espresso, DarkRoast and HouseBlend extend Coffee; Milk, Mocha and Soya extend Condiment; each Condiment owns the Beverage it wraps" width="696" height="646"></figure>
+<figure class="diagram"><picture><source srcset="diagram-0acfd95c3eb7-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-0acfd95c3eb7-light.svg" alt="Class diagram of the coffee shop: Coffee and Condiment implement Beverage; Espresso, DarkRoast and HouseBlend extend Coffee; Milk, Mocha and Soya extend Condiment; each Condiment owns the Beverage it wraps" width="742" height="1316"></picture></figure>
 
 <h3 id="the-component">The component</h3>
 <div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">sb</span><span class="w"> </span><span class="p">{</span>

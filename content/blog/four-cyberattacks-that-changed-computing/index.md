@@ -10,7 +10,7 @@ Old security incidents tend to blur into one story of "a virus, a worm, a breach
 
 What they have in common is trust: a disk from a colleague, a host on the same network, an email from a friend, a server nobody checked. Each attack took something people trusted and used it to spread.
 
-![Timeline of Brain, Morris, ILOVEYOU, and Equifax](timeline.svg)
+!drawing[Timeline of the four incidents: Brain in 1986, the Morris worm in 1988, ILOVEYOU in 2000 and Equifax in 2017](timeline.svg)
 
 | Incident | Date | Type | How it got in | Immediate impact |
 | --- | --- | --- | --- | --- |
@@ -25,7 +25,7 @@ Brain is usually described as the first major virus on IBM PC compatibles. Histo
 
 It was a boot-sector virus. When a PC started from an infected floppy, the virus loaded before the operating system, copied itself into memory and then infected other floppies used on that machine. It also moved the original boot sector elsewhere on the disk, an early trick to make the infection harder to spot.
 
-![Illustration of a floppy disk used to spread the Brain virus](brain-floppy.svg)
+!drawing[How Brain spread: the infected boot sector on a floppy loads into memory before the operating system, then infects every floppy used next; the original boot sector is moved elsewhere on the disk](brain-floppy.svg)
 
 In 1986 a floppy was storage, software distribution and file sharing all at once, and nobody scanned a disk that came from a colleague or a classmate. Brain didn't need to destroy anything to matter. It showed that the PC market had grown big enough for a virus to travel far from where it started, and it helped turn antivirus software from a curiosity into a product category.
 
@@ -35,7 +35,7 @@ The lesson still holds: if people routinely pass something around, attackers wil
 
 On 2 November 1988, at about 8:30 in the evening, a worm was released onto the internet from a machine at MIT. According to the FBI's case summary, an estimated 6,000 of the roughly 60,000 computers then on the internet were affected within 24 hours.
 
-![Diagram showing how the Morris worm spread across early networked Unix systems](morris-worm-network.svg)
+!drawing[The Morris worm's four ways from an infected machine to the next: sendmail, fingerd, trusted hosts and password guessing](morris-worm-network.svg)
 
 The worm had several ways in. It used a flaw in `sendmail`, a buffer overflow in the `fingerd` service, the trust relationships between Unix hosts, and password guessing against weak accounts. If one route failed, another often worked.
 
@@ -49,7 +49,7 @@ The `fingerd` bug is worth knowing in detail: the service read input into a fixe
 
 The ILOVEYOU worm, also called Love Letter, started spreading on 4 May 2000. It arrived with a personal-looking subject line and an attachment called `LOVE-LETTER-FOR-YOU.TXT.vbs`.
 
-![Illustration of the ILOVEYOU email lure and address-book spread](iloveyou-email.svg)
+!drawing[ILOVEYOU: an email with the attachment LOVE-LETTER-FOR-YOU.TXT.vbs, whose real extension Windows hid; once opened it mailed itself to every Outlook contact](iloveyou-email.svg)
 
 Windows hid known file extensions by default, so many people saw a harmless `.TXT` file and not the `.vbs` script it really was. Once opened, the script mailed itself to every contact in the victim's Outlook address book, from the victim's own account, as Microsoft's malware write-up describes. It also copied itself onto the machine, changed settings, and was reported in many analyses to overwrite files and try to download a password-stealing component.
 
@@ -61,7 +61,7 @@ Many companies and government organisations shut down or filtered their email sy
 
 Equifax is a modern failure, and the public record is detailed enough to follow it step by step. According to the U.S. House Oversight Committee's staff report, a critical vulnerability in the Apache Struts web framework was disclosed on 7 March 2017. Equifax was alerted and told its teams to patch, but one internet-facing system, its dispute portal ACIS, stayed unpatched.
 
-![Diagram of the Equifax breach chain from missed patch to public disclosure](equifax-breach.svg)
+!drawing[Equifax timeline: Struts flaw disclosed on 7 March 2017 and ACIS left unpatched; attack from 13 May using web shells and stored credentials; suspicious activity noticed 29 July; breach disclosed 7 September; an expired certificate left traffic unchecked for 19 months](equifax-breach.svg)
 
 Attackers started exploiting it on 13 May 2017. The report describes them installing web shells to keep access, finding unencrypted credentials, and using those to reach databases beyond the first system. Equifax's monitoring didn't catch them because a certificate on a traffic-inspection device had expired, leaving that traffic unchecked for 19 months. The company noticed suspicious activity on 29 July and disclosed the breach on 7 September 2017.
 

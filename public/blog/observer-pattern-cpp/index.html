@@ -37,7 +37,14 @@
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
 .prose figure.diagram{margin:var(--s4) 0}
-.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+.prose figure.diagram picture{display:block}
+.prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
+.prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
+.prose figure.drawing svg{display:block;width:100%;height:auto}
+@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
+.prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
+.prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
 @media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
@@ -113,14 +120,14 @@
 <path d="M226 120l70-44M226 135h70M226 150l70 52" stroke-dasharray="4 6"/>
 </svg></div>
     <h1>The Observer pattern in C++, without the lifetime bugs</h1>
-    <p class="meta"><span>Mohammad Reza Bayat</span><time datetime="2025-01-20">20 January 2025</time><span>Updated <time datetime="2026-11-20">20 November 2026</time></span><span>3 min read</span></p>
+    <p class="meta"><span>Mohammad Reza Bayat</span><time datetime="2025-01-20">20 January 2025</time><span>Updated <time datetime="2026-11-20">20 November 2026</time></span><span>4 min read</span></p>
   </header>
   <details class="toc toc-top"><summary>On this page</summary><nav aria-label="On this page"><ol><li><a href="#how-it-works">How it works</a></li><li><a href="#example-a-weather-station">Example: a weather station</a></li><li><a href="#things-to-watch-for">Things to watch for</a></li></ol></nav></details>
   
   <div class="prose">
 <p>The Observer pattern sets up a one-to-many relationship: one object, the subject, keeps a list of other objects, the observers, and tells all of them when its state changes. The subject only knows that its observers have an <code>update</code> function. It doesn't know what they are or what they do with the news, so you can add a new observer without touching the subject.</p>
 <p>It's another of the patterns in <em>Design Patterns</em> (Gamma, Helm, Johnson and Vlissides, 1994), and you've used it even if you've never named it: GUI event handlers, signals and slots in Qt, and "listeners" in most frameworks are all observers.</p>
-<figure class="diagram"><img loading="lazy" src="diagram-0639d6f09ed5.svg" alt="UML class diagram of the Observer pattern: a Subject keeps a list of Observers and calls update on each; ConcreteObserverA and ConcreteObserverB implement the Observer interface" width="637" height="601"></figure>
+<figure class="diagram"><picture><source srcset="diagram-177e30e9c5f1-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-177e30e9c5f1-light.svg" alt="UML class diagram of the Observer pattern: a Subject keeps a list of Observers and calls update on each; ConcreteObserverA and ConcreteObserverB implement the Observer interface" width="760" height="835"></picture></figure>
 
 <h2 id="how-it-works">How it works</h2>
 <p>Observers register with the subject. When the subject's state changes, it walks its list and calls <code>update</code> on each one. Each observer decides what to do with the new state, and observers can join or leave while the program runs.</p>
@@ -128,7 +135,7 @@
 <p>In C++, the interesting part of this pattern is lifetime. The subject holds references to objects it doesn't own, which is exactly the situation where dangling pointers and leaks come from. Most short examples get this wrong, so the example below is built around it.</p>
 <h2 id="example-a-weather-station">Example: a weather station</h2>
 <p>This is the weather station from <em>Head First Design Patterns</em>: a <code>WeatherData</code> object receives new measurements and three displays react to them.</p>
-<figure class="diagram"><img loading="lazy" src="diagram-c65f7175a4ec.svg" alt="Class diagram of the weather station: WeatherData refers to zero or more Observers without owning them, passes Measurements to update, and three display classes implement Observer" width="743" height="734"></figure>
+<figure class="diagram"><picture><source srcset="diagram-9ad3973f218c-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-9ad3973f218c-light.svg" alt="Class diagram of the weather station: WeatherData refers to zero or more Observers without owning them and owns its current Measurements; three display classes implement Observer" width="732" height="1398"></picture></figure>
 
 <p>The plain arrow is an association: <code>WeatherData</code> knows about its observers but doesn't own them. That's the <code>weak_ptr</code> decision explained below.</p>
 <h3 id="the-data-and-the-observer-interface">The data and the observer interface</h3>

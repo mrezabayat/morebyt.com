@@ -11,6 +11,10 @@ Each post folder holds index.md and its images. Front matter (between --- lines)
     updated: 2026-11-21          (optional; only for real content changes)
     tags: C++, design patterns   (comma separated)
     video: gvcfUgpRvsk           (optional YouTube id, embedded at the top)
+    cover: photo.jpg             (optional; otherwise cover.svg in the folder is inlined)
+
+Diagrams: ```d2 fenced blocks (first line '# alt: ...'), rendered with the D2 CLI.
+Drawings: !drawing[alt text](file.svg) inlines a line-art SVG that follows light/dark mode.
 """
 import re
 import shutil
@@ -57,70 +61,107 @@ def nice(d):
     return f"{d.day} {d.strftime('%B %Y')}"
 
 
-# ------------------------------------------------------------------ Mermaid diagrams
-# ```mermaid blocks are rendered to SVG at build time (no JavaScript on the page).
-# The first line of a block may be "%% alt: <text>" for the image's alt text.
-# SVGs are cached in the post folder as diagram-<hash>.svg and committed, so the
-# site builds without Node when no diagram changed.
-MERMAID_CLI = "@mermaid-js/mermaid-cli@12.0.0"
+# ------------------------------------------------------------------ D2 diagrams and inline drawings
+# ```d2 blocks are rendered to SVG at build time with the D2 CLI (no JavaScript on the page),
+# once with the light site colours and once with the dark ones; <picture> picks the right file.
+# The first line of a block must be "# alt: <text>" for the image's alt text.
+# SVGs are cached in the post folder as diagram-<hash>-light.svg / -dark.svg and committed,
+# so the site builds without D2 when no diagram changed.
 TOOLS = ROOT / "tools"
-MERMAID_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n```[ \t]*$", re.S | re.M)
+D2_FLAGS = ["--layout", "elk", "--pad", "20"]
+D2_RE = re.compile(r"^```d2[ \t]*\n(.*?)\n```[ \t]*$", re.S | re.M)
+DRAWING_RE = re.compile(r"^!drawing\[([^\]]+)\]\(([\w.-]+\.svg)\)[ \t]*$", re.M)
 
 
-def _mermaid_hash(src):
+def _d2_version():
+    import subprocess
+    try:
+        return subprocess.run(["d2", "--version"], capture_output=True, text=True, check=True).stdout.strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+
+
+def _diagram_hash(src):
     import hashlib
-    cfg = (TOOLS / "mermaid.json").read_bytes()
-    return hashlib.sha256(MERMAID_CLI.encode() + cfg + src.encode()).hexdigest()[:12]
+    h = hashlib.sha256(" ".join(D2_FLAGS).encode() + src.encode())
+    for f in ("d2-light.d2", "d2-dark.d2"):
+        h.update((TOOLS / f).read_bytes())
+    return h.hexdigest()[:12]
 
 
-def _render_svg(src, out):
-    import os
+def _render_d2(src, out, theme_file, version):
     import subprocess
     import tempfile
+    if not version:
+        raise SystemExit(f"{out.name} needs rendering but the d2 command is not installed (brew install d2)")
     with tempfile.TemporaryDirectory() as tmp:
-        mmd = Path(tmp) / "d.mmd"
-        mmd.write_text(src, encoding="utf-8")
-        env = {**os.environ, "PUPPETEER_SKIP_DOWNLOAD": "1"}
-        cmd = ["npx", "-y", MERMAID_CLI, "-i", str(mmd), "-o", str(out), "-b", "white",
-               "-c", str(TOOLS / "mermaid.json"), "-p", str(TOOLS / "puppeteer.json")]
-        try:
-            subprocess.run(cmd, check=True, env=env, capture_output=True, text=True)
-        except (FileNotFoundError, subprocess.CalledProcessError) as e:
-            detail = getattr(e, "stderr", "") or str(e)
-            raise SystemExit(f"Mermaid render failed for {out.name}:\n{detail}")
+        f = Path(tmp) / "d.d2"
+        f.write_text((TOOLS / theme_file).read_text(encoding="utf-8") + "\n" + src + "\n", encoding="utf-8")
+        r = subprocess.run(["d2", *D2_FLAGS, str(f), str(out)], capture_output=True, text=True)
+        if r.returncode != 0:
+            raise SystemExit(f"D2 render failed for {out.name}:\n{r.stderr}")
 
 
-def mermaid(slug, body):
+def _fix_svg_size(path):
+    """D2 writes no width/height on the root <svg>; add them so <img> has a real intrinsic size."""
+    text = path.read_text(encoding="utf-8")
+    m = re.match(r'(<\?xml[^>]*\?>)?(<svg\b[^>]*?)(>)', text)
+    if m and " width=" not in m.group(2):
+        vb = re.search(r'viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"', m.group(2))
+        if vb:
+            w, h = round(float(vb.group(1))), round(float(vb.group(2)))
+            text = text[:m.end(2)] + f' width="{w}" height="{h}"' + text[m.end(2):]
+            path.write_text(text, encoding="utf-8")
+
+
+def _svg_size(path):
+    m = re.search(r'viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"', path.read_text(encoding="utf-8")[:2000])
+    return (round(float(m.group(1))), round(float(m.group(2)))) if m else (None, None)
+
+
+def diagrams(slug, body):
     folder = SRC / slug
     used = set()
+    version = None
 
     def repl(m):
+        nonlocal version
         src = m.group(1).strip()
-        alt_m = re.match(r"%%\s*alt:\s*(.+)", src.splitlines()[0])
+        alt_m = re.match(r"#\s*alt:\s*(.+)", src.splitlines()[0])
         if not alt_m:
-            raise SystemExit(f"{slug}: every mermaid block needs a first line '%% alt: ...'")
-        name = f"diagram-{_mermaid_hash(src)}.svg"
-        used.add(name)
-        svg = folder / name
-        if not svg.exists():
-            print("rendering", slug, name)
-            _render_svg(src, svg)
-        text = svg.read_text(encoding="utf-8")
-        vb = re.search(r'viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"', text)
-        if vb and 'width="100%"' in text[:600]:
-            # give the SVG a real intrinsic size so <img> can show it 1:1 on phones
-            w, h = round(float(vb.group(1))), round(float(vb.group(2)))
-            text = text.replace('width="100%"', f'width="{w}" height="{h}"', 1)
-            text = re.sub(r'(<svg[^>]*?)\sstyle="max-width:[^"]*"', r"\1", text, count=1)
-            svg.write_text(text, encoding="utf-8")
-        size = f' width="{round(float(vb.group(1)))}" height="{round(float(vb.group(2)))}"' if vb else ""
-        return f'\n<figure class="diagram"><img src="{name}" alt="{escape(alt_m.group(1).strip())}"{size}></figure>\n'
+            raise SystemExit(f"{slug}: every d2 block needs a first line '# alt: ...'")
+        key = _diagram_hash(src)
+        light, dark = folder / f"diagram-{key}-light.svg", folder / f"diagram-{key}-dark.svg"
+        used.update({light.name, dark.name})
+        for out, theme in ((light, "d2-light.d2"), (dark, "d2-dark.d2")):
+            if not out.exists():
+                version = version or _d2_version()
+                print("rendering", slug, out.name)
+                _render_d2(src, out, theme, version)
+        _fix_svg_size(light)
+        _fix_svg_size(dark)
+        w, h = _svg_size(light)
+        size = f' width="{w}" height="{h}"' if w else ""
+        return (f'\n<figure class="diagram"><picture><source srcset="{dark.name}" media="(prefers-color-scheme: dark)">'
+                f'<img src="{light.name}" alt="{escape(alt_m.group(1).strip())}"{size}></picture></figure>\n')
 
-    body = MERMAID_RE.sub(repl, body)
-    for old in folder.glob("diagram-*.svg"):
+    body = D2_RE.sub(repl, body)
+    for old in list(folder.glob("diagram-*.svg")):
         if old.name not in used:
             old.unlink()
     return body
+
+
+def drawings(slug, body):
+    """!drawing[alt text](file.svg) inlines a line drawing so it follows the site colours."""
+    def repl(m):
+        f = SRC / slug / m.group(2)
+        if not f.exists():
+            raise SystemExit(f"{slug}: drawing {m.group(2)} not found")
+        svg = f.read_text(encoding="utf-8").strip()
+        svg = svg.replace("<svg ", f'<svg role="img" aria-label="{escape(m.group(1))}" ', 1)
+        return f'\n<figure class="drawing">{svg}</figure>\n'
+    return DRAWING_RE.sub(repl, body)
 
 
 def render_md(body):
@@ -150,7 +191,14 @@ POST_CSS = """
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
 .prose figure.diagram{margin:var(--s4) 0}
-.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+.prose figure.diagram picture{display:block}
+.prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
+.prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
+.prose figure.drawing svg{display:block;width:100%;height:auto}
+@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
+.prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
+.prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
 @media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
@@ -393,7 +441,7 @@ def main():
     posts = []
     for d in sorted(p for p in SRC.iterdir() if (p / "index.md").exists()):
         meta, body = parse(d / "index.md")
-        body = mermaid(d.name, body)
+        body = drawings(d.name, diagrams(d.name, body))
         if meta.get("draft") == "true":
             continue
         posts.append((d.name, meta, body))

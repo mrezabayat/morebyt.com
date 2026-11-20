@@ -37,7 +37,14 @@
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
 .prose figure.diagram{margin:var(--s4) 0}
-.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+.prose figure.diagram picture{display:block}
+.prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
+.prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
+.prose figure.drawing svg{display:block;width:100%;height:auto}
+@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
+.prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
+.prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
 @media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
@@ -127,7 +134,7 @@
 <p>Parts can be wholes themselves: a kitchen is part of a house and is also made of an oven and a fridge. The number of parts can be fixed, like an oven's four burners, or change over time, like the food in the fridge.</p>
 <p>The important question about each part is its lifetime relative to the whole. A fridge's thermostat is built into it and goes when the fridge goes. A carton of milk in the fridge has its own life; it can go off without the fridge breaking, and the fridge can be thrown out after the milk is moved. A part can also be shared between wholes at the same time, or deliberately kept exclusive.</p>
 <p>UML names three strengths of relationship along this scale: association, aggregation and composition.</p>
-<figure class="diagram"><img loading="lazy" src="diagram-d3c353fdf6b3.svg" alt="UML notation for the four relationships: Course to Student with a plain arrow (association), ReadingList to Book with a hollow diamond (aggregation), Fridge to Thermostat with a filled diamond (composition), and Circle to Shape with a hollow triangle (generalization)" width="480" height="448"></figure>
+<figure class="diagram"><picture><source srcset="diagram-33bb18e3a0b4-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-33bb18e3a0b4-light.svg" alt="UML notation for the four relationships: Course to Student with a plain arrow (association), ReadingList to Book with a hollow diamond (aggregation), Fridge to Thermostat with a filled diamond (composition), and Circle to Shape with a hollow triangle (generalization)" width="787" height="470"></picture></figure>
 
 <h3 id="association-one-object-knows-about-another">Association: one object knows about another</h3>
 <p>An association is the loosest link. Two classes work together, but neither owns the other, and either can exist without the other. A course has students enrolled, and a student can be enrolled in several courses, but closing a course doesn't delete anyone.</p>

@@ -20,14 +20,21 @@ The important question about each part is its lifetime relative to the whole. A 
 
 UML names three strengths of relationship along this scale: association, aggregation and composition.
 
-```mermaid
-%% alt: UML notation for the four relationships: Course to Student with a plain arrow (association), ReadingList to Book with a hollow diamond (aggregation), Fridge to Thermostat with a filled diamond (composition), and Circle to Shape with a hollow triangle (generalization)
-classDiagram
-    direction LR
-    Course --> "0..*" Student : association
-    ReadingList o-- "0..*" Book : aggregation
-    Fridge *-- "1" Thermostat : composition
-    Shape <|-- Circle : generalization
+```d2
+# alt: UML notation for the four relationships: Course to Student with a plain arrow (association), ReadingList to Book with a hollow diamond (aggregation), Fridge to Thermostat with a filled diamond (composition), and Circle to Shape with a hollow triangle (generalization)
+direction: right
+Course: {shape: class}
+Student: {shape: class}
+ReadingList: {shape: class}
+Book: {shape: class}
+Fridge: {shape: class}
+Thermostat: {shape: class}
+Circle: {shape: class}
+ShapeBase: Shape {shape: class}
+Course -> Student: association {target-arrowhead.label: "0..*"}
+ReadingList <-> Book: aggregation {source-arrowhead: {shape: diamond; style.filled: false}; target-arrowhead.shape: none}
+Fridge <-> Thermostat: composition {source-arrowhead: {shape: diamond; style.filled: true}; target-arrowhead.shape: none}
+ShapeBase <-> Circle: generalization {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
 ```
 
 ### Association: one object knows about another

@@ -14,27 +14,23 @@ The pattern comes from *Design Patterns* (Gamma, Helm, Johnson and Vlissides, 19
 
 ## The structure
 
-```mermaid
-%% alt: UML class diagram of the Decorator pattern: ConcreteComponent and Decorator both implement Component; Decorator owns one wrapped Component; ConcreteDecoratorA and ConcreteDecoratorB extend Decorator
-classDiagram
-    direction TB
-    class Component {
-        <<interface>>
-        +operation() void
-    }
-    class ConcreteComponent {
-        +operation() void
-    }
-    class Decorator {
-        <<abstract>>
-        -inner : Component
-        +operation() void
-    }
-    Component <|.. ConcreteComponent
-    Component <|.. Decorator
-    Decorator *-- Component : wraps
-    Decorator <|-- ConcreteDecoratorA
-    Decorator <|-- ConcreteDecoratorB
+```d2
+# alt: UML class diagram of the Decorator pattern: ConcreteComponent and Decorator both implement Component; Decorator owns one wrapped Component; ConcreteDecoratorA and ConcreteDecoratorB extend Decorator
+direction: down
+Component: "«interface» Component" {shape: class; "+operation()": void}
+ConcreteComponent: {shape: class; "+operation()": void}
+Decorator: "«abstract» Decorator" {
+  shape: class
+  -inner: Component
+  "+operation()": void
+}
+ConcreteDecoratorA: {shape: class}
+ConcreteDecoratorB: {shape: class}
+Component <-> ConcreteComponent: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Component <-> Decorator: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Decorator <-> Component: wraps {source-arrowhead: {shape: diamond; style.filled: true}; target-arrowhead.shape: none}
+Decorator <-> ConcreteDecoratorA: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Decorator <-> ConcreteDecoratorB: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
 ```
 
 There are four roles. The component is the interface everyone shares. A concrete component is the real object at the centre. The decorator implements the same interface and holds a component. Concrete decorators each add one piece of behaviour.
@@ -45,33 +41,45 @@ The textbook case outside C++ is Java's I/O library, where a `BufferedInputStrea
 
 The shop sells a few coffees, and customers add condiments. Each condiment changes both the description and the price.
 
-```mermaid
-%% alt: Class diagram of the coffee shop: Coffee and Condiment implement Beverage; Espresso, DarkRoast and HouseBlend extend Coffee; Milk, Mocha and Soya extend Condiment; each Condiment owns the Beverage it wraps
-classDiagram
-    direction TB
-    class Beverage {
-        <<interface>>
-        +description() string
-        +costPence() int
-    }
-    class Coffee {
-        -m_name : string
-        -m_pence : int
-    }
-    class Condiment {
-        -m_inner : Beverage
-        -m_name : string
-        -m_pence : int
-    }
-    Beverage <|.. Coffee
-    Beverage <|.. Condiment
-    Condiment *-- Beverage : wraps
-    Coffee <|-- Espresso
-    Coffee <|-- DarkRoast
-    Coffee <|-- HouseBlend
-    Condiment <|-- Milk
-    Condiment <|-- Mocha
-    Condiment <|-- Soya
+```d2
+# alt: Class diagram of the coffee shop: Coffee and Condiment implement Beverage; Espresso, DarkRoast and HouseBlend extend Coffee; Milk, Mocha and Soya extend Condiment; each Condiment owns the Beverage it wraps
+direction: down
+Beverage: "«interface» Beverage" {
+  shape: class
+  "+description()": string
+  "+costPence()": int
+}
+Coffee: {
+  shape: class
+  -m_name: string
+  -m_pence: int
+}
+Condiment: {
+  shape: class
+  -m_inner: Beverage
+  -m_name: string
+  -m_pence: int
+}
+Espresso: {shape: class}
+DarkRoast: {shape: class}
+HouseBlend: {shape: class}
+Milk: {shape: class}
+Mocha: {shape: class}
+Soya: {shape: class}
+# layout only: stack the small classes in columns
+Espresso -> DarkRoast: {style.opacity: 0; target-arrowhead.shape: none}
+DarkRoast -> HouseBlend: {style.opacity: 0; target-arrowhead.shape: none}
+Milk -> Mocha: {style.opacity: 0; target-arrowhead.shape: none}
+Mocha -> Soya: {style.opacity: 0; target-arrowhead.shape: none}
+Beverage <-> Coffee: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Beverage <-> Condiment: {style.stroke-dash: 4; source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Condiment <-> Beverage: wraps {source-arrowhead: {shape: diamond; style.filled: true}; target-arrowhead.shape: none}
+Coffee <-> Espresso: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Coffee <-> DarkRoast: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Coffee <-> HouseBlend: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Condiment <-> Milk: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Condiment <-> Mocha: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
+Condiment <-> Soya: {source-arrowhead: {shape: triangle; style.filled: false}; target-arrowhead.shape: none}
 ```
 
 ### The component
