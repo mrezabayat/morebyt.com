@@ -143,7 +143,7 @@ def diagrams(slug, body):
         w, h = _svg_size(light)
         size = f' width="{w}" height="{h}"' if w else ""
         return (f'\n<figure class="diagram"><a href="{light.name}" title="Open the full-size diagram">'
-                f'<picture><source srcset="{dark.name}" media="(prefers-color-scheme: dark)">'
+                f'<picture><source data-dark srcset="{dark.name}" media="(prefers-color-scheme: dark)">'
                 f'<img src="{light.name}" alt="{escape(alt_m.group(1).strip())}"{size}></picture></a>'
                 f'<figcaption>Tap the diagram to open it full size.</figcaption></figure>\n')
 
@@ -214,17 +214,12 @@ POST_CSS = """
 .video{position:relative;aspect-ratio:16/9;margin:0 0 var(--s5);border:1px solid var(--rule-2)}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .after{margin-top:var(--s6)}
-/* code colours: light */
-.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:#7a2e8a}
-.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:#1f6a3a}
-.hl .c,.hl .c1,.hl .cm{color:#6a7785;font-style:italic}
-.hl .m,.hl .mi,.hl .mf,.hl .mh{color:#a3501a}
-.hl .nf,.hl .nc{color:#1E4F86}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl .k,:root:not([data-theme="light"]) .hl .kd,:root:not([data-theme="light"]) .hl .kt,:root:not([data-theme="light"]) .hl .kr,:root:not([data-theme="light"]) .hl .kn,:root:not([data-theme="light"]) .hl .cp{color:#d6a3f0}
-:root:not([data-theme="light"]) .hl .s,:root:not([data-theme="light"]) .hl .s1,:root:not([data-theme="light"]) .hl .s2,:root:not([data-theme="light"]) .hl .sc,:root:not([data-theme="light"]) .hl .cpf{color:#8fd9a8}
-:root:not([data-theme="light"]) .hl .c,:root:not([data-theme="light"]) .hl .c1,:root:not([data-theme="light"]) .hl .cm{color:#8b99a8}
-:root:not([data-theme="light"]) .hl .m,:root:not([data-theme="light"]) .hl .mi,:root:not([data-theme="light"]) .hl .mf,:root:not([data-theme="light"]) .hl .mh{color:#f0b07a}
-:root:not([data-theme="light"]) .hl .nf,:root:not([data-theme="light"]) .hl .nc{color:#8DB6E6}}
+/* code colours: variables in site.css follow the theme */
+.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:var(--hl-kw)}
+.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:var(--hl-str)}
+.hl .c,.hl .c1,.hl .cm{color:var(--hl-com);font-style:italic}
+.hl .m,.hl .mi,.hl .mf,.hl .mh{color:var(--hl-num)}
+.hl .nf,.hl .nc{color:var(--hl-fn)}
 </style>"""
 
 LAYOUT_CSS = """

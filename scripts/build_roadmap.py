@@ -175,8 +175,6 @@ TOTAL_CHECKS = sum(len(s["check"]) for s in STAGES)
 
 # ---------------------------------------------------------------- shared bits
 CSS_TOKENS = """
-:root{--warn:#B4462A}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--warn:#F09A7E}}
 """
 
 def door_meter(n):
@@ -238,6 +236,7 @@ def web():
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+{site.THEME_HEAD_JS}
 <title>C++ Roadmap 2027: Morebyt</title>
 <meta name="description" content="A free C++ roadmap for 2027: what to learn, in order, what to skip, and where the C++ jobs actually are. From a working C++ engineer.">
 <meta property="og:title" content="C++ Roadmap 2027: what to learn, what to skip, where the jobs are">

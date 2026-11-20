@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+(function(){var r=document.documentElement;
+try{var t=localStorage.getItem('morebyt-theme');if(t==='light'||t==='dark')r.dataset.theme=t;}catch(e){}
+r.dataset.themeNow=r.dataset.theme||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();
+</script>
 <title>The Strategy pattern in modern C++: Morebyt</title>
 <meta name="description" content="How the Strategy pattern lets an object swap behaviour at runtime, shown with a C++20 example using std::unique_ptr, plus the lighter std::function version.">
 <meta property="og:title" content="The Strategy pattern in modern C++: Morebyt">
@@ -58,17 +63,12 @@
 .video{position:relative;aspect-ratio:16/9;margin:0 0 var(--s5);border:1px solid var(--rule-2)}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .after{margin-top:var(--s6)}
-/* code colours: light */
-.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:#7a2e8a}
-.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:#1f6a3a}
-.hl .c,.hl .c1,.hl .cm{color:#6a7785;font-style:italic}
-.hl .m,.hl .mi,.hl .mf,.hl .mh{color:#a3501a}
-.hl .nf,.hl .nc{color:#1E4F86}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl .k,:root:not([data-theme="light"]) .hl .kd,:root:not([data-theme="light"]) .hl .kt,:root:not([data-theme="light"]) .hl .kr,:root:not([data-theme="light"]) .hl .kn,:root:not([data-theme="light"]) .hl .cp{color:#d6a3f0}
-:root:not([data-theme="light"]) .hl .s,:root:not([data-theme="light"]) .hl .s1,:root:not([data-theme="light"]) .hl .s2,:root:not([data-theme="light"]) .hl .sc,:root:not([data-theme="light"]) .hl .cpf{color:#8fd9a8}
-:root:not([data-theme="light"]) .hl .c,:root:not([data-theme="light"]) .hl .c1,:root:not([data-theme="light"]) .hl .cm{color:#8b99a8}
-:root:not([data-theme="light"]) .hl .m,:root:not([data-theme="light"]) .hl .mi,:root:not([data-theme="light"]) .hl .mf,:root:not([data-theme="light"]) .hl .mh{color:#f0b07a}
-:root:not([data-theme="light"]) .hl .nf,:root:not([data-theme="light"]) .hl .nc{color:#8DB6E6}}
+/* code colours: variables in site.css follow the theme */
+.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:var(--hl-kw)}
+.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:var(--hl-str)}
+.hl .c,.hl .c1,.hl .cm{color:var(--hl-com);font-style:italic}
+.hl .m,.hl .mi,.hl .mf,.hl .mh{color:var(--hl-num)}
+.hl .nf,.hl .nc{color:var(--hl-fn)}
 </style>
 <style>
 .post-wrap{padding-top:var(--s6);padding-bottom:var(--s5)}
@@ -103,7 +103,7 @@
   <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
 <rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
 <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>morebyt</a>
-  <nav class="nav" aria-label="Main"><a href="/roadmap">Roadmap</a><a href="/blog" aria-current="page">Blog</a><a href="/consulting">Consulting</a><a href="https://www.youtube.com/@morebyt">YouTube</a></nav>
+  <div class="head-right"><nav class="nav" aria-label="Main"><a href="/roadmap">Roadmap</a><a href="/blog" aria-current="page">Blog</a><a href="/consulting">Consulting</a><a href="https://www.youtube.com/@morebyt">YouTube</a></nav><button class="theme-toggle" type="button" aria-label="Switch colour theme"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg></button></div>
 </div></header>
 <main id="main"><div class="wrap post-wrap"><div class="post-grid">
 <article class="post">
@@ -133,13 +133,13 @@
 <p>The Strategy pattern lets an object change how it does something without changing its own code. You pull the behaviour that varies into its own small class behind an interface, and the object holds whichever version it currently needs. Swapping the behaviour at runtime then means swapping one pointer.</p>
 <p>It's one of the original 23 patterns in <em>Design Patterns</em> by Gamma, Helm, Johnson and Vlissides (1994), where it's described as defining a family of algorithms, encapsulating each one and making them interchangeable. The duck example below is the one <em>Head First Design Patterns</em> made famous, rewritten here in modern C++.</p>
 <h2 id="the-three-parts">The three parts</h2>
-<figure class="diagram"><a href="diagram-51d1fddb4462-light.svg" title="Open the full-size diagram"><picture><source srcset="diagram-51d1fddb4462-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-51d1fddb4462-light.svg" alt="UML class diagram of the Strategy pattern: a Context owns one Strategy; ConcreteStrategyA and ConcreteStrategyB implement the Strategy interface" width="760" height="789"></picture></a><figcaption>Tap the diagram to open it full size.</figcaption></figure>
+<figure class="diagram"><a href="diagram-51d1fddb4462-light.svg" title="Open the full-size diagram"><picture><source data-dark srcset="diagram-51d1fddb4462-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-51d1fddb4462-light.svg" alt="UML class diagram of the Strategy pattern: a Context owns one Strategy; ConcreteStrategyA and ConcreteStrategyB implement the Strategy interface" width="760" height="789"></picture></a><figcaption>Tap the diagram to open it full size.</figcaption></figure>
 
 <p>The context is the class your code talks to. It holds a strategy and forwards the work to it, and it can be given a different strategy later. The strategy interface declares the operation every variant must provide. The concrete strategies are the variants themselves, each one a small class.</p>
 <p>Adding a new behaviour means adding a new concrete strategy. Neither the context nor the existing strategies change, which is the open-closed principle in practice.</p>
 <h2 id="example-ducks-that-fly-and-quack-differently">Example: ducks that fly and quack differently</h2>
 <p>A <code>Duck</code> can fly and quack, but not every duck does either the same way. A mallard flies with wings, a wooden model duck can't fly at all, and we might want to bolt a rocket onto the model later. Putting all of that into a <code>Duck</code> class hierarchy with overrides gets messy quickly, so flying and quacking become strategies.</p>
-<figure class="diagram"><a href="diagram-e7aba43b51b6-light.svg" title="Open the full-size diagram"><picture><source srcset="diagram-e7aba43b51b6-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-e7aba43b51b6-light.svg" alt="Class diagram of the duck example: Duck owns one FlyBehavior and one QuackBehavior; three fly strategies and two quack strategies implement the behaviour interfaces" width="1021" height="1143"></picture></a><figcaption>Tap the diagram to open it full size.</figcaption></figure>
+<figure class="diagram"><a href="diagram-e7aba43b51b6-light.svg" title="Open the full-size diagram"><picture><source data-dark srcset="diagram-e7aba43b51b6-dark.svg" media="(prefers-color-scheme: dark)"><img loading="lazy" src="diagram-e7aba43b51b6-light.svg" alt="Class diagram of the duck example: Duck owns one FlyBehavior and one QuackBehavior; three fly strategies and two quack strategies implement the behaviour interfaces" width="1021" height="1143"></picture></a><figcaption>Tap the diagram to open it full size.</figcaption></figure>
 
 <p>The filled diamond means composition: each duck owns its two strategies, which is what the <code>std::unique_ptr</code> members below express. The concrete ducks, <code>MallardDuck</code> and <code>ModelDuck</code>, are left out of the diagram; they appear in the code further down.</p>
 <h3 id="the-strategy-interfaces">The strategy interfaces</h3>
@@ -315,5 +315,17 @@
     <div><span>Contact</span><a href="mailto:hello@morebyt.com">hello@morebyt.com</a></div>
   </div>
 </div></footer>
+<script>
+(function(){var r=document.documentElement,b=document.querySelector('.theme-toggle'),
+mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):{matches:false};
+function now(){return r.dataset.theme||(mq.matches?'dark':'light');}
+function apply(){var n=now();r.dataset.themeNow=n;
+[].forEach.call(document.querySelectorAll('picture source[data-dark]'),function(s){
+s.media=r.dataset.theme?(r.dataset.theme==='dark'?'all':'not all'):'(prefers-color-scheme: dark)';});
+if(b){b.setAttribute('aria-label',n==='dark'?'Switch to light mode':'Switch to dark mode');b.title=b.getAttribute('aria-label');}}
+if(b)b.addEventListener('click',function(){var next=now()==='dark'?'light':'dark';r.dataset.theme=next;
+try{localStorage.setItem('morebyt-theme',next);}catch(e){}apply();});
+if(mq.addEventListener)mq.addEventListener('change',apply);apply();})();
+</script>
 </body>
 </html>

@@ -40,6 +40,32 @@ MARK_SVG = """<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="cu
 <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>"""
 
 
+THEME_HEAD_JS = """<script>
+(function(){var r=document.documentElement;
+try{var t=localStorage.getItem('morebyt-theme');if(t==='light'||t==='dark')r.dataset.theme=t;}catch(e){}
+r.dataset.themeNow=r.dataset.theme||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();
+</script>"""
+
+THEME_FOOT_JS = """<script>
+(function(){var r=document.documentElement,b=document.querySelector('.theme-toggle'),
+mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):{matches:false};
+function now(){return r.dataset.theme||(mq.matches?'dark':'light');}
+function apply(){var n=now();r.dataset.themeNow=n;
+[].forEach.call(document.querySelectorAll('picture source[data-dark]'),function(s){
+s.media=r.dataset.theme?(r.dataset.theme==='dark'?'all':'not all'):'(prefers-color-scheme: dark)';});
+if(b){b.setAttribute('aria-label',n==='dark'?'Switch to light mode':'Switch to dark mode');b.title=b.getAttribute('aria-label');}}
+if(b)b.addEventListener('click',function(){var next=now()==='dark'?'light':'dark';r.dataset.theme=next;
+try{localStorage.setItem('morebyt-theme',next);}catch(e){}apply();});
+if(mq.addEventListener)mq.addEventListener('change',apply);apply();})();
+</script>"""
+
+TOGGLE_BUTTON = ('<button class="theme-toggle" type="button" aria-label="Switch colour theme">'
+    '<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
+    '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>'
+    '<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg></button>')
+
+
 def head(title, description, path, extra_css="", og_image=None, og_image_alt=None, og_type="website"):
     url = "https://morebyt.com" + path
     css = '<link rel="stylesheet" href="/assets/site.css">' + (
@@ -56,6 +82,7 @@ def head(title, description, path, extra_css="", og_image=None, og_image_alt=Non
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+{THEME_HEAD_JS}
 <title>{escape(title)}</title>
 <meta name="description" content="{escape(description)}">
 <meta property="og:title" content="{escape(title)}">
@@ -81,7 +108,7 @@ def header(current):
     links = "".join(f'<a href="{h}"{cur if h == current else ""}>{n}</a>' for h, n in items)
     return f"""<header class="site-head"><div class="wrap">
   <a class="mark" href="/">{MARK_SVG}morebyt</a>
-  <nav class="nav" aria-label="Main">{links}</nav>
+  <div class="head-right"><nav class="nav" aria-label="Main">{links}</nav>{TOGGLE_BUTTON}</div>
 </div></header>"""
 
 
@@ -94,6 +121,7 @@ def footer():
     <div><span>Contact</span><a href="mailto:{EMAIL}">{EMAIL}</a></div>
   </div>
 </div></footer>
+{THEME_FOOT_JS}
 </body>
 </html>
 """
