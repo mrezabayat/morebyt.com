@@ -12,7 +12,29 @@ It's one of the original 23 patterns in *Design Patterns* by Gamma, Helm, Johnso
 
 ## The three parts
 
-![UML class diagram of the Strategy pattern: a Context holding a Strategy interface with several concrete strategies](key_components_uml_class_diagram.png)
+```mermaid
+%% alt: UML class diagram of the Strategy pattern: a Context owns one Strategy; ConcreteStrategyA and ConcreteStrategyB implement the Strategy interface
+classDiagram
+    direction TB
+    class Context {
+        -strategy : Strategy
+        +setStrategy(s : Strategy) void
+        +doWork() void
+    }
+    class Strategy {
+        <<interface>>
+        +execute() void
+    }
+    class ConcreteStrategyA {
+        +execute() void
+    }
+    class ConcreteStrategyB {
+        +execute() void
+    }
+    Context *-- Strategy : owns
+    Strategy <|.. ConcreteStrategyA
+    Strategy <|.. ConcreteStrategyB
+```
 
 The context is the class your code talks to. It holds a strategy and forwards the work to it, and it can be given a different strategy later. The strategy interface declares the operation every variant must provide. The concrete strategies are the variants themselves, each one a small class.
 
@@ -21,6 +43,38 @@ Adding a new behaviour means adding a new concrete strategy. Neither the context
 ## Example: ducks that fly and quack differently
 
 A `Duck` can fly and quack, but not every duck does either the same way. A mallard flies with wings, a wooden model duck can't fly at all, and we might want to bolt a rocket onto the model later. Putting all of that into a `Duck` class hierarchy with overrides gets messy quickly, so flying and quacking become strategies.
+
+```mermaid
+%% alt: Class diagram of the duck example: Duck owns one FlyBehavior and one QuackBehavior; MallardDuck and ModelDuck extend Duck; three fly strategies and two quack strategies implement the behaviour interfaces
+classDiagram
+    direction TB
+    class Duck {
+        <<abstract>>
+        +performFly() void
+        +performQuack() void
+        +setFlyBehavior(f : FlyBehavior) void
+        +display()* void
+    }
+    class FlyBehavior {
+        <<interface>>
+        +fly() void
+    }
+    class QuackBehavior {
+        <<interface>>
+        +quack() void
+    }
+    Duck *-- FlyBehavior : owns
+    Duck *-- QuackBehavior : owns
+    Duck <|-- MallardDuck
+    Duck <|-- ModelDuck
+    FlyBehavior <|.. FlyWithWings
+    FlyBehavior <|.. FlyNoWay
+    FlyBehavior <|.. FlyRocketPowered
+    QuackBehavior <|.. Quack
+    QuackBehavior <|.. MuteQuack
+```
+
+The filled diamond means composition: each duck owns its two strategies, which is what the `std::unique_ptr` members below express.
 
 ### The strategy interfaces
 

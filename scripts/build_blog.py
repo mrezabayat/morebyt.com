@@ -57,6 +57,72 @@ def nice(d):
     return f"{d.day} {d.strftime('%B %Y')}"
 
 
+# ------------------------------------------------------------------ Mermaid diagrams
+# ```mermaid blocks are rendered to SVG at build time (no JavaScript on the page).
+# The first line of a block may be "%% alt: <text>" for the image's alt text.
+# SVGs are cached in the post folder as diagram-<hash>.svg and committed, so the
+# site builds without Node when no diagram changed.
+MERMAID_CLI = "@mermaid-js/mermaid-cli@12.0.0"
+TOOLS = ROOT / "tools"
+MERMAID_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n```[ \t]*$", re.S | re.M)
+
+
+def _mermaid_hash(src):
+    import hashlib
+    cfg = (TOOLS / "mermaid.json").read_bytes()
+    return hashlib.sha256(MERMAID_CLI.encode() + cfg + src.encode()).hexdigest()[:12]
+
+
+def _render_svg(src, out):
+    import os
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        mmd = Path(tmp) / "d.mmd"
+        mmd.write_text(src, encoding="utf-8")
+        env = {**os.environ, "PUPPETEER_SKIP_DOWNLOAD": "1"}
+        cmd = ["npx", "-y", MERMAID_CLI, "-i", str(mmd), "-o", str(out), "-b", "white",
+               "-c", str(TOOLS / "mermaid.json"), "-p", str(TOOLS / "puppeteer.json")]
+        try:
+            subprocess.run(cmd, check=True, env=env, capture_output=True, text=True)
+        except (FileNotFoundError, subprocess.CalledProcessError) as e:
+            detail = getattr(e, "stderr", "") or str(e)
+            raise SystemExit(f"Mermaid render failed for {out.name}:\n{detail}")
+
+
+def mermaid(slug, body):
+    folder = SRC / slug
+    used = set()
+
+    def repl(m):
+        src = m.group(1).strip()
+        alt_m = re.match(r"%%\s*alt:\s*(.+)", src.splitlines()[0])
+        if not alt_m:
+            raise SystemExit(f"{slug}: every mermaid block needs a first line '%% alt: ...'")
+        name = f"diagram-{_mermaid_hash(src)}.svg"
+        used.add(name)
+        svg = folder / name
+        if not svg.exists():
+            print("rendering", slug, name)
+            _render_svg(src, svg)
+        text = svg.read_text(encoding="utf-8")
+        vb = re.search(r'viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"', text)
+        if vb and 'width="100%"' in text[:600]:
+            # give the SVG a real intrinsic size so <img> can show it 1:1 on phones
+            w, h = round(float(vb.group(1))), round(float(vb.group(2)))
+            text = text.replace('width="100%"', f'width="{w}" height="{h}"', 1)
+            text = re.sub(r'(<svg[^>]*?)\sstyle="max-width:[^"]*"', r"\1", text, count=1)
+            svg.write_text(text, encoding="utf-8")
+        size = f' width="{round(float(vb.group(1)))}" height="{round(float(vb.group(2)))}"' if vb else ""
+        return f'\n<figure class="diagram"><img src="{name}" alt="{escape(alt_m.group(1).strip())}"{size}></figure>\n'
+
+    body = MERMAID_RE.sub(repl, body)
+    for old in folder.glob("diagram-*.svg"):
+        if old.name not in used:
+            old.unlink()
+    return body
+
+
 def render_md(body):
     md = markdown.Markdown(
         extensions=["fenced_code", "codehilite", "tables", "toc", "attr_list", "sane_lists", "footnotes"],
@@ -86,6 +152,9 @@ POST_CSS = """
 .prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose figure.diagram{margin:var(--s4) 0}
+.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+@media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
 .prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
@@ -199,6 +268,7 @@ def main():
     posts = []
     for d in sorted(p for p in SRC.iterdir() if (p / "index.md").exists()):
         meta, body = parse(d / "index.md")
+        body = mermaid(d.name, body)
         if meta.get("draft") == "true":
             continue
         posts.append((d.name, meta, body))

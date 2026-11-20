@@ -33,6 +33,9 @@
 .prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose figure.diagram{margin:var(--s4) 0}
+.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+@media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
 .prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
@@ -69,13 +72,17 @@
   <div class="prose">
 <p>The Observer pattern sets up a one-to-many relationship: one object, the subject, keeps a list of other objects, the observers, and tells all of them when its state changes. The subject only knows that its observers have an <code>update</code> function. It doesn't know what they are or what they do with the news, so you can add a new observer without touching the subject.</p>
 <p>It's another of the patterns in <em>Design Patterns</em> (Gamma, Helm, Johnson and Vlissides, 1994), and you've used it even if you've never named it: GUI event handlers, signals and slots in Qt, and "listeners" in most frameworks are all observers.</p>
-<p><img loading="lazy" alt="UML class diagram of the Observer pattern: a Subject with attach, detach and notify, and Observers with update" src="observer-design-pattern-uml-class-diagram.png" /></p>
+<figure class="diagram"><img loading="lazy" src="diagram-0639d6f09ed5.svg" alt="UML class diagram of the Observer pattern: a Subject keeps a list of Observers and calls update on each; ConcreteObserverA and ConcreteObserverB implement the Observer interface" width="637" height="601"></figure>
+
 <h2 id="how-it-works">How it works</h2>
 <p>Observers register with the subject. When the subject's state changes, it walks its list and calls <code>update</code> on each one. Each observer decides what to do with the new state, and observers can join or leave while the program runs.</p>
 <p>The subject can send the new data along with the call (the push model), or just say "something changed" and let each observer ask for what it needs (the pull model). Push is simpler; pull is better when observers want very different slices of a large state.</p>
 <p>In C++, the interesting part of this pattern is lifetime. The subject holds references to objects it doesn't own, which is exactly the situation where dangling pointers and leaks come from. Most short examples get this wrong, so the example below is built around it.</p>
 <h2 id="example-a-weather-station">Example: a weather station</h2>
 <p>This is the weather station from <em>Head First Design Patterns</em>: a <code>WeatherData</code> object receives new measurements and three displays react to them.</p>
+<figure class="diagram"><img loading="lazy" src="diagram-c65f7175a4ec.svg" alt="Class diagram of the weather station: WeatherData refers to zero or more Observers without owning them, passes Measurements to update, and three display classes implement Observer" width="743" height="734"></figure>
+
+<p>The plain arrow is an association: <code>WeatherData</code> knows about its observers but doesn't own them. That's the <code>weak_ptr</code> decision explained below.</p>
 <h3 id="the-data-and-the-observer-interface">The data and the observer interface</h3>
 <div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ws</span><span class="w"> </span><span class="p">{</span>
 

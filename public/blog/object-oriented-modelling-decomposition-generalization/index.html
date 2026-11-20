@@ -33,6 +33,9 @@
 .prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose figure.diagram{margin:var(--s4) 0}
+.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+@media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
 .prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
@@ -74,7 +77,8 @@
 <p>Parts can be wholes themselves: a kitchen is part of a house and is also made of an oven and a fridge. The number of parts can be fixed, like an oven's four burners, or change over time, like the food in the fridge.</p>
 <p>The important question about each part is its lifetime relative to the whole. A fridge's thermostat is built into it and goes when the fridge goes. A carton of milk in the fridge has its own life; it can go off without the fridge breaking, and the fridge can be thrown out after the milk is moved. A part can also be shared between wholes at the same time, or deliberately kept exclusive.</p>
 <p>UML names three strengths of relationship along this scale: association, aggregation and composition.</p>
-<p><img loading="lazy" alt="UML notation for the four relationships: a plain arrow for association, a hollow diamond for aggregation, a filled diamond for composition and a hollow triangle for generalization" src="uml-relationships.svg" /></p>
+<figure class="diagram"><img loading="lazy" src="diagram-d3c353fdf6b3.svg" alt="UML notation for the four relationships: Course to Student with a plain arrow (association), ReadingList to Book with a hollow diamond (aggregation), Fridge to Thermostat with a filled diamond (composition), and Circle to Shape with a hollow triangle (generalization)" width="480" height="448"></figure>
+
 <h3 id="association-one-object-knows-about-another">Association: one object knows about another</h3>
 <p>An association is the loosest link. Two classes work together, but neither owns the other, and either can exist without the other. A course has students enrolled, and a student can be enrolled in several courses, but closing a course doesn't delete anyone.</p>
 <div class="hl"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="w"> </span><span class="p">{</span>

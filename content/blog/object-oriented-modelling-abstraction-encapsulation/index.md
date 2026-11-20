@@ -103,7 +103,20 @@ Two more benefits follow. Because callers only see the interface, the implementa
 
 A UML class diagram shows each class as a box with three sections: the name, the attributes and the operations.
 
-![UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner and balancePence](bank-account.svg)
+```mermaid
+%% alt: UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner, number and balancePence
+classDiagram
+    class BankAccount {
+        -m_owner : string
+        -m_number : int
+        -m_balancePence : int64
+        +deposit(pence : int64) void
+        +withdraw(pence : int64) bool
+        +owner() string
+        +number() int
+        +balancePence() int64
+    }
+```
 
 Attributes are written as `name : type` and operations as `name(parameters) : return type`. A symbol in front shows who can see the member:
 
@@ -113,24 +126,23 @@ Attributes are written as `name : type` and operations as `name(parameters) : re
 | `#` | protected |
 | `+` | public |
 
-So `- m_balancePence : int64` is a private attribute, and `+ withdraw(pence : int64) : bool` is a public operation returning a `bool`. Reading the diagram, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.
+So `-m_balancePence : int64` is a private attribute, and `+withdraw(pence : int64) : bool` is a public operation returning a `bool`. Reading the diagram, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.
 
-You don't need a drawing tool for this. [PlantUML](https://plantuml.com/class-diagram) turns plain text into diagrams, which means they can live in the repository next to the code and change in the same commit:
+You don't need a drawing tool for this. [Mermaid](https://mermaid.js.org/syntax/classDiagram.html) turns plain text into diagrams, so they can live in the repository next to the code and change in the same commit. The diagram above comes from this source:
 
 ```text
-@startuml
-class BankAccount {
-  - m_owner : string
-  - m_number : int
-  - m_balancePence : int64
-  + deposit(pence : int64) : void
-  + withdraw(pence : int64) : bool
-  + balancePence() : int64
-}
-@enduml
+classDiagram
+    class BankAccount {
+        -m_owner : string
+        -m_number : int
+        -m_balancePence : int64
+        +deposit(pence : int64) void
+        +withdraw(pence : int64) bool
+        +balancePence() int64
+    }
 ```
 
-Editors such as VS Code have PlantUML extensions that preview the diagram as you type.
+Mermaid adds the colon before each return type when it draws the diagram. GitHub [renders Mermaid blocks](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams) in Markdown files, issues and pull requests, so a diagram in a README needs no extra tooling, and editors such as VS Code have extensions that preview it as you type.
 
 ## Summary
 

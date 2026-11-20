@@ -10,7 +10,30 @@ The Observer pattern sets up a one-to-many relationship: one object, the subject
 
 It's another of the patterns in *Design Patterns* (Gamma, Helm, Johnson and Vlissides, 1994), and you've used it even if you've never named it: GUI event handlers, signals and slots in Qt, and "listeners" in most frameworks are all observers.
 
-![UML class diagram of the Observer pattern: a Subject with attach, detach and notify, and Observers with update](observer-design-pattern-uml-class-diagram.png)
+```mermaid
+%% alt: UML class diagram of the Observer pattern: a Subject keeps a list of Observers and calls update on each; ConcreteObserverA and ConcreteObserverB implement the Observer interface
+classDiagram
+    direction TB
+    class Subject {
+        -observers : list of Observer
+        +attach(o : Observer) void
+        +detach(o : Observer) void
+        -notify() void
+    }
+    class Observer {
+        <<interface>>
+        +update(state) void
+    }
+    class ConcreteObserverA {
+        +update(state) void
+    }
+    class ConcreteObserverB {
+        +update(state) void
+    }
+    Subject --> "0..*" Observer : notifies
+    Observer <|.. ConcreteObserverA
+    Observer <|.. ConcreteObserverB
+```
 
 ## How it works
 
@@ -23,6 +46,35 @@ In C++, the interesting part of this pattern is lifetime. The subject holds refe
 ## Example: a weather station
 
 This is the weather station from *Head First Design Patterns*: a `WeatherData` object receives new measurements and three displays react to them.
+
+```mermaid
+%% alt: Class diagram of the weather station: WeatherData refers to zero or more Observers without owning them, passes Measurements to update, and three display classes implement Observer
+classDiagram
+    direction TB
+    class WeatherData {
+        -m_observers : weak_ptr list
+        -m_current : Measurements
+        +subscribe(o : Observer) void
+        +unsubscribe(o : Observer) void
+        +setMeasurements(m : Measurements) void
+    }
+    class Observer {
+        <<interface>>
+        +update(m : Measurements) void
+    }
+    class Measurements {
+        +temperature : double
+        +humidity : double
+        +pressure : double
+    }
+    WeatherData --> "0..*" Observer : notifies, does not own
+    WeatherData *-- Measurements
+    Observer <|.. CurrentConditionsDisplay
+    Observer <|.. StatisticsDisplay
+    Observer <|.. ForecastDisplay
+```
+
+The plain arrow is an association: `WeatherData` knows about its observers but doesn't own them. That's the `weak_ptr` decision explained below.
 
 ### The data and the observer interface
 

@@ -33,6 +33,9 @@
 .prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose figure.diagram{margin:var(--s4) 0}
+.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+@media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
 .prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}

@@ -14,7 +14,28 @@ The pattern comes from *Design Patterns* (Gamma, Helm, Johnson and Vlissides, 19
 
 ## The structure
 
-![UML class diagram of the Decorator pattern: Component, ConcreteComponent, an abstract Decorator holding a Component, and concrete decorators](decorator_uml_representation.png)
+```mermaid
+%% alt: UML class diagram of the Decorator pattern: ConcreteComponent and Decorator both implement Component; Decorator owns one wrapped Component; ConcreteDecoratorA and ConcreteDecoratorB extend Decorator
+classDiagram
+    direction TB
+    class Component {
+        <<interface>>
+        +operation() void
+    }
+    class ConcreteComponent {
+        +operation() void
+    }
+    class Decorator {
+        <<abstract>>
+        -inner : Component
+        +operation() void
+    }
+    Component <|.. ConcreteComponent
+    Component <|.. Decorator
+    Decorator *-- Component : wraps
+    Decorator <|-- ConcreteDecoratorA
+    Decorator <|-- ConcreteDecoratorB
+```
 
 There are four roles. The component is the interface everyone shares. A concrete component is the real object at the centre. The decorator implements the same interface and holds a component. Concrete decorators each add one piece of behaviour.
 
@@ -23,6 +44,35 @@ The textbook case outside C++ is Java's I/O library, where a `BufferedInputStrea
 ## Example: a coffee shop
 
 The shop sells a few coffees, and customers add condiments. Each condiment changes both the description and the price.
+
+```mermaid
+%% alt: Class diagram of the coffee shop: Coffee and Condiment implement Beverage; Espresso, DarkRoast and HouseBlend extend Coffee; Milk, Mocha and Soya extend Condiment; each Condiment owns the Beverage it wraps
+classDiagram
+    direction TB
+    class Beverage {
+        <<interface>>
+        +description() string
+        +costPence() int
+    }
+    class Coffee {
+        -m_name : string
+        -m_pence : int
+    }
+    class Condiment {
+        -m_inner : Beverage
+        -m_name : string
+        -m_pence : int
+    }
+    Beverage <|.. Coffee
+    Beverage <|.. Condiment
+    Condiment *-- Beverage : wraps
+    Coffee <|-- Espresso
+    Coffee <|-- DarkRoast
+    Coffee <|-- HouseBlend
+    Condiment <|-- Milk
+    Condiment <|-- Mocha
+    Condiment <|-- Soya
+```
 
 ### The component
 

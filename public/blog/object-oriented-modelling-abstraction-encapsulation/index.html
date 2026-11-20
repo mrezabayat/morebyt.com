@@ -33,6 +33,9 @@
 .prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
 .prose li{margin-bottom:6px}
 .prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose figure.diagram{margin:var(--s4) 0}
+.prose figure.diagram img{max-height:none;height:auto;padding:16px}
+@media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
 .prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
@@ -169,7 +172,8 @@
 <p>Two more benefits follow. Because callers only see the interface, the implementation can change without breaking them; the account could store its balance in a database tomorrow and <code>main</code> wouldn't notice. And each class can be understood as a black box: you need to know what goes in and what comes out, not how it works inside. That boundary is what makes large programs manageable.</p>
 <h2 id="drawing-it-in-uml">Drawing it in UML</h2>
 <p>A UML class diagram shows each class as a box with three sections: the name, the attributes and the operations.</p>
-<p><img loading="lazy" alt="UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner and balancePence" src="bank-account.svg" /></p>
+<figure class="diagram"><img loading="lazy" src="diagram-1e1d9de37aab.svg" alt="UML class diagram of BankAccount: private attributes m_owner, m_number and m_balancePence, and public operations deposit, withdraw, owner, number and balancePence" width="370" height="268"></figure>
+
 <p>Attributes are written as <code>name : type</code> and operations as <code>name(parameters) : return type</code>. A symbol in front shows who can see the member:</p>
 <table>
 <thead>
@@ -193,21 +197,20 @@
 </tr>
 </tbody>
 </table>
-<p>So <code>- m_balancePence : int64</code> is a private attribute, and <code>+ withdraw(pence : int64) : bool</code> is a public operation returning a <code>bool</code>. Reading the diagram, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.</p>
-<p>You don't need a drawing tool for this. <a href="https://plantuml.com/class-diagram">PlantUML</a> turns plain text into diagrams, which means they can live in the repository next to the code and change in the same commit:</p>
-<div class="hl"><pre><span></span><code>@startuml
-class BankAccount {
-  - m_owner : string
-  - m_number : int
-  - m_balancePence : int64
-  + deposit(pence : int64) : void
-  + withdraw(pence : int64) : bool
-  + balancePence() : int64
-}
-@enduml
+<p>So <code>-m_balancePence : int64</code> is a private attribute, and <code>+withdraw(pence : int64) : bool</code> is a public operation returning a <code>bool</code>. Reading the diagram, you can see the encapsulation at a glance: every attribute has a minus sign, and the only way in is through the plus-sign operations.</p>
+<p>You don't need a drawing tool for this. <a href="https://mermaid.js.org/syntax/classDiagram.html">Mermaid</a> turns plain text into diagrams, so they can live in the repository next to the code and change in the same commit. The diagram above comes from this source:</p>
+<div class="hl"><pre><span></span><code>classDiagram
+    class BankAccount {
+        -m_owner : string
+        -m_number : int
+        -m_balancePence : int64
+        +deposit(pence : int64) void
+        +withdraw(pence : int64) bool
+        +balancePence() int64
+    }
 </code></pre></div>
 
-<p>Editors such as VS Code have PlantUML extensions that preview the diagram as you type.</p>
+<p>Mermaid adds the colon before each return type when it draws the diagram. GitHub <a href="https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams">renders Mermaid blocks</a> in Markdown files, issues and pull requests, so a diagram in a README needs no extra tooling, and editors such as VS Code have extensions that preview it as you type.</p>
 <h2 id="summary">Summary</h2>
 <p>Abstraction decides what a class is, by keeping only what matters in its context. Encapsulation decides what a class guarantees, by making its rules impossible to break from outside. Part 2 looks at how classes relate to each other: <a href="/blog/object-oriented-modelling-decomposition-generalization/">decomposition and generalization</a>.</p>
 <p>The C++ examples compile with <code>clang++ -std=c++20 -Wall -Wextra</code> once <code>&lt;cstdint&gt;</code>, <code>&lt;stdexcept&gt;</code>, <code>&lt;string&gt;</code> and <code>&lt;utility&gt;</code> are included.</p>
