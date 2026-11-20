@@ -115,3 +115,6 @@ code{font:.88em var(--mono)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
+
+/* post cover drawings: amber accent shapes */
+.cover .acc,.thumb .acc{fill:var(--amber)}
