@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C++ Roadmap 2027 · Morebyt</title>
+<meta name="description" content="A free C++ roadmap for 2027: what to learn, in order, what to skip, and where the C++ jobs actually are. From a working C++ engineer.">
+<meta property="og:title" content="C++ Roadmap 2027: what to learn, what to skip, where the jobs are">
+<meta property="og:description" content="8 stages, 10 projects, 12 industries and the interview questions — free, from Morebyt.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://morebyt.com/roadmap">
+<meta name="theme-color" content="#0f3d73">
+<link rel="canonical" href="https://morebyt.com/roadmap">
+<style>
+
+:root{
+  --bp-0:#0b2f5c; --bp-1:#0f3d73; --bp-2:#174d8c; --bp-3:#1b5799;
+  --ink:#e8f1ff; --ink-2:rgba(232,241,255,.74); --ink-3:rgba(232,241,255,.5);
+  --line:rgba(232,241,255,.22); --line-2:rgba(232,241,255,.4);
+  --accent:#ffd166; --good:#7ee2b8; --warn:#ff9f80;
+  --sans:"Avenir Next","Avenir","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:17px/1.55 var(--sans);
+  background:var(--bp-1);
+  background-image:
+    radial-gradient(ellipse 1200px 900px at 50% 0, var(--bp-3), rgba(27,87,153,0) 70%),
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px),
+    linear-gradient(rgba(232,241,255,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,241,255,.07) 1px, transparent 1px);
+  background-size:100% 100%, 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-repeat:no-repeat, repeat, repeat, repeat, repeat}
+a{color:var(--ink)}
+code{font:.86em var(--mono);background:rgba(232,241,255,.1);border:1px solid var(--line);border-radius:4px;padding:0 .3em;white-space:nowrap}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.kicker{font:600 12px/1.3 var(--mono);letter-spacing:.14em;color:var(--ink-3);margin:0 0 6px}
+h1,h2,h3{line-height:1.15;margin:0}
+h2{font-size:clamp(28px,4vw,40px);font-weight:700;margin:0 0 8px}
+.lede{color:var(--ink-2);max-width:62ch;margin:0 0 28px}
+section{padding:72px 0 8px}
+
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+.brand{font-weight:700;font-size:20px;text-decoration:none;letter-spacing:.02em}
+.top nav a{font:13px var(--mono);margin-left:18px;color:var(--ink-2);text-decoration:none}
+.top nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.25fr .9fr;gap:40px;align-items:center;padding:64px 0 24px}
+.hero h1{font-size:clamp(44px,7.5vw,88px);font-weight:700;letter-spacing:-.01em}
+.hero h1 span{display:block;font:500 clamp(18px,2.4vw,24px)/1.35 var(--sans);color:var(--ink-2);letter-spacing:0;margin-top:14px}
+.byline{font:13px var(--mono);color:var(--ink-3);margin:18px 0 0}
+.box{border:1.5px solid var(--line-2);background:rgba(11,47,92,.72);border-radius:6px;padding:22px;position:relative}
+.box::before,.box::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--ink)}
+.box::before{top:-2px;left:-2px;border-right:0;border-bottom:0}
+.box::after{bottom:-2px;right:-2px;border-left:0;border-top:0}
+.signup{display:grid;gap:10px}
+.signup input{font:16px var(--sans);padding:13px 14px;border-radius:4px;border:1.5px solid var(--line-2);background:var(--bp-0);color:var(--ink)}
+.signup input::placeholder{color:var(--ink-3)}
+.signup button{font:700 16px var(--sans);padding:13px 14px;border-radius:4px;border:0;background:var(--accent);color:#1d2433;cursor:pointer}
+.signup button:hover{filter:brightness(1.06)}
+.fine{font-size:13px;color:var(--ink-3);margin:2px 0 0}
+.box h2{font-size:22px;margin-bottom:4px}
+.box > p{color:var(--ink-2);margin:0 0 14px;font-size:15px}
+
+/* tl;dr */
+.tldr{border-left:3px solid var(--accent);padding:6px 0 6px 18px;font-size:clamp(18px,2.2vw,21px);max-width:70ch;margin:24px 0 0}
+
+/* standards bar */
+.stds{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(4,1fr);border:1.5px solid var(--line-2);border-radius:6px;overflow:hidden}
+.std{padding:16px;border-right:1px solid var(--line)}
+.std:last-child{border-right:0}
+.std b{display:block;font:700 24px var(--mono)}
+.std span{display:block;color:var(--ink-2);font-size:14px}
+.std em{display:inline-block;margin-top:8px;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;font-style:normal;padding:3px 7px;border-radius:3px;border:1px solid var(--line-2)}
+.std-1{background:rgba(255,209,102,.13)} .std-1 em{background:var(--accent);color:#1d2433;border-color:var(--accent)}
+.std-3{opacity:.62} .std-3 b{text-decoration:line-through;text-decoration-thickness:2px}
+
+/* progress */
+.progress{position:sticky;top:0;z-index:5;background:rgba(11,47,92,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}
+.progress .wrap{display:flex;gap:14px;align-items:center;padding-top:10px;padding-bottom:10px;font:13px var(--mono);color:var(--ink-2)}
+.bar{flex:1;height:8px;border:1px solid var(--line-2);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+.progress button{font:12px var(--mono);background:none;border:1px solid var(--line-2);color:var(--ink-2);border-radius:3px;padding:3px 8px;cursor:pointer}
+
+/* the map */
+.map{list-style:none;padding:0;margin:8px 0 0;position:relative}
+.map::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed var(--line-2)}
+.stage{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:72px;margin:0 0 28px}
+.stage .node{position:absolute;left:50%;top:22px;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;
+  background:var(--bp-1);border:2px solid var(--ink);display:grid;place-items:center;font:700 18px var(--mono);z-index:1}
+.stage:nth-child(odd) .card{grid-column:1;grid-row:1}
+.stage:nth-child(even) .card{grid-column:2;grid-row:1}
+.stage:nth-child(odd) .spec{grid-column:2;grid-row:1}
+.stage:nth-child(even) .spec{grid-column:1;grid-row:1}
+.spec{align-self:start;margin-top:22px;border:1.5px dashed var(--line-2);border-radius:6px;padding:16px 18px;background:rgba(11,47,92,.45)}
+.spec .prove{margin:0 0 12px;font-size:15.5px}
+.design,.ai{border-top:1px dashed var(--line);padding:10px 0 8px}
+.design p,.ai p{margin:0 0 4px;font-size:14.5px;color:var(--ink-2)}
+.ai b{display:inline-block;min-width:68px;font:700 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:3px;margin-right:6px}
+.ai .hand{color:#1d2433;background:var(--good)}
+.ai .keep{color:#1d2433;background:var(--accent)}
+.flow{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:f}
+.flow li{position:relative;border:1.5px solid var(--line-2);border-right:0;padding:18px 18px 16px;background:rgba(11,47,92,.7)}
+.flow li:last-child{border-right:1.5px solid var(--line-2)}
+.flow li:not(:last-child)::after{content:"";position:absolute;right:-11px;top:50%;width:20px;height:20px;transform:translateY(-50%) rotate(45deg);border-top:1.5px solid var(--line-2);border-right:1.5px solid var(--line-2);background:var(--bp-0);z-index:1}
+.flow b{display:block;font:700 13px var(--mono);letter-spacing:.14em;color:var(--accent);margin-bottom:4px}
+.flow h3{font-size:19px;margin-bottom:6px}
+.flow p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.spec ul{margin:0;padding:0;list-style:none;font-size:14.5px}
+.spec li{padding:3px 0}
+.card{border:1.5px solid var(--line-2);background:rgba(11,47,92,.8);border-radius:6px;padding:22px 22px 14px;position:relative}
+.stage:nth-child(odd) .card::after,.stage:nth-child(even) .card::after{content:"";position:absolute;top:49px;width:44px;border-top:2px solid var(--line-2)}
+.stage:nth-child(odd) .card::after{right:-46px}
+.stage:nth-child(even) .card::after{left:-46px}
+.card h3{font-size:25px}
+.goal{color:var(--ink-2);margin:6px 0 14px}
+.dsa-tag{display:inline-block;white-space:nowrap;margin:2px 0 0 8px;color:var(--good);border:1px solid var(--good);border-radius:3px;padding:1px 6px;letter-spacing:.06em}
+.cols{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+h4{font:700 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px}
+.card ul{margin:0;padding:0;list-style:none;font-size:15px}
+.card li{padding:3px 0 3px 16px;position:relative}
+.learn li::before{content:"+";position:absolute;left:0;color:var(--good);font-family:var(--mono)}
+.skip li{color:var(--ink-2)}
+.skip li::before{content:"×";position:absolute;left:0;color:var(--warn);font-family:var(--mono)}
+.checks{border-top:1px dashed var(--line);padding-top:10px}
+.count{margin-left:6px;color:var(--good);letter-spacing:0}
+.checks label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.checks li{padding-left:0}
+.checks input{margin-top:5px;accent-color:#7ee2b8;width:16px;height:16px;flex:none}
+.checks input:checked + span{color:var(--ink-3);text-decoration:line-through}
+
+/* jobs */
+.jobs,.trends,.projs{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.jobs{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.job,.trend{border:1px solid var(--line-2);border-radius:6px;padding:16px;background:rgba(11,47,92,.66)}
+.job h3{font-size:19px;margin-bottom:6px}
+.job p{margin:0 0 6px;font-size:14.5px;color:var(--ink-2)}
+.job .extra b{color:var(--ink)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font:12px var(--mono);color:var(--ink-3)}
+.door{display:inline-flex;gap:3px}
+.door i{width:14px;height:8px;border:1px solid var(--line-2);border-radius:2px}
+.door i.on{background:var(--good);border-color:var(--good)}
+.sig{margin-left:auto;color:var(--accent)}
+.note{font-size:13px;color:var(--ink-3);margin:14px 0 0;max-width:80ch}
+
+.trends{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.trend h3{font-size:20px;margin-bottom:8px}
+.trend p{font-size:14.5px;color:var(--ink-2);margin:0 0 10px}
+.trend .todo{color:var(--ink);border-top:1px dashed var(--line-2);padding-top:10px;margin:0}
+
+.projs{grid-template-columns:1fr}
+.proj{display:grid;grid-template-columns:120px 1fr 1.2fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:5px;background:rgba(11,47,92,.55)}
+.proj .lvl{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.proj b{font-size:17px}
+.proj .why{color:var(--ink-2);font-size:14.5px}
+.film{font:600 12px var(--mono);color:#1d2433;background:var(--accent);padding:4px 8px;border-radius:3px;text-decoration:none;white-space:nowrap}
+
+.qs{margin:0;padding-left:1.4em;columns:2;column-gap:40px}
+.qs li{break-inside:avoid;margin:0 0 12px;font-size:15.5px}
+.qs li::marker{font-family:var(--mono);color:var(--ink-3)}
+
+.res{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.res li{padding:10px 0;border-bottom:1px dashed var(--line);font-size:15.5px}
+.res .tag{font:11px var(--mono);border:1px solid var(--line-2);border-radius:3px;padding:1px 6px;margin-left:6px;color:var(--ink-2)}
+.res .why{display:block;color:var(--ink-3);font-size:14px}
+
+.end{margin:72px 0 0;padding:28px;display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center}
+footer{border-top:1px solid var(--line);margin-top:72px;padding:28px 0 40px;font:13px var(--mono);color:var(--ink-3)}
+footer a{color:var(--ink-2)}
+.titleblock{display:inline-grid;grid-template-columns:auto auto;border:1px solid var(--line-2);margin-top:14px}
+.titleblock span{padding:6px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+
+@media (max-width:860px){
+  .hero,.end{grid-template-columns:1fr}
+  .stds{grid-template-columns:1fr 1fr}
+  .std:nth-child(2){border-right:0} .std:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .map::before{left:19px}
+  .stage{grid-template-columns:1fr;gap:0;padding-left:52px}
+  .stage .node{left:19px;top:16px;width:38px;height:38px;font-size:14px}
+  .card{padding:18px 16px 12px} .card h3{font-size:22px}
+  .stage:nth-child(odd) .card,.stage:nth-child(even) .card{grid-column:1;grid-row:1}
+  .stage:nth-child(odd) .spec,.stage:nth-child(even) .spec{grid-column:1;grid-row:2;margin-top:10px}
+  .stage:nth-child(odd) .card::after,.stage:nth-child(even) .card::after{left:-16px;right:auto;width:14px;top:35px}
+  .cols{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr}
+  .flow li{border-right:1.5px solid var(--line-2);border-bottom:0}
+  .flow li:last-child{border-bottom:1.5px solid var(--line-2)}
+  .flow li:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-11px;transform:translateX(-50%) rotate(135deg)}
+  .card,.spec{min-width:0}
+  code{white-space:normal;overflow-wrap:anywhere}
+  .proj{grid-template-columns:1fr;gap:4px}
+  .qs{columns:1}
+  .res{grid-template-columns:1fr}
+  .top nav a:not(:last-child){display:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} .bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="/">Morebyt</a>
+    <nav><a href="#agents">2027</a><a href="#map">The map</a><a href="#jobs">Jobs</a><a href="#projects">Projects</a><a href="#interview">Interview</a><a href="#get">Get the PDF</a></nav>
+  </div>
+
+  <div class="hero">
+    <div>
+      <p class="kicker">FREE · UPDATED 20 NOV 2026</p>
+      <h1>C++ Roadmap 2027<span>What to learn, in order. What to skip. Where the jobs actually are.</span></h1>
+      <p class="byline">BY MOHAMMAD REZA BAYAT · WORKING C++ ENGINEER · <a href="https://www.youtube.com/@morebyt">YOUTUBE.COM/@MOREBYT</a></p>
+    </div>
+    <div class="box" id="get">
+      <h2>Get the 1-page checklist</h2>
+      <p>All 42 steps on one printable page — tick them off as you go.</p>
+      
+<form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">
+  <!-- TODO: swap this form for the Kit embed (form action + field names) once the Kit form exists -->
+  <label class="sr" for="email">Email</label>
+  <input id="email" name="email_address" type="email" placeholder="you@example.com" required autocomplete="email">
+  <button type="submit">Send me the PDF</button>
+  <p class="fine">Free. One-page printable checklist + an email when the roadmap changes. Unsubscribe any time.</p>
+</form>
+    </div>
+  </div>
+
+  <p class="tldr">Learn C++ the way companies use it. Spend your time on <b>object lifetime, tools and how the machine works</b> — not syntax. Build <b>a few finished projects</b> a stranger can clone and build. Pick <b>one industry</b>. Let AI agents type, but <b>you</b> own the design and the review — an agent can't tell you who owns the memory. That's what the interview is about.</p>
+
+  <ul class="stds" aria-label="Which C++ standard to learn"><li class="std std-0"><b>C++17</b><span>Most job code</span><em>read it</em></li><li class="std std-1"><b>C++20</b><span>Your default</span><em>write it</em></li><li class="std std-2"><b>C++23</b><span>Where your compiler has it</span><em>use bits</em></li><li class="std std-3"><b>C++26</b><span>Not a standard yet</span><em>know the news</em></li></ul>
+</div>
+
+<div class="progress" aria-live="polite">
+  <div class="wrap"><span>YOUR PROGRESS</span><div class="bar"><i id="bar"></i></div><span id="done">0 / 42</span><button id="reset" type="button">reset</button></div>
+</div>
+
+<div class="wrap">
+  <section id="agents">
+    <p class="kicker">SHEET 0 · HOW TO WORK IN 2027</p>
+    <h2>You design. The agent types. The tests judge.</h2>
+    <p class="lede">AI agents now write much of the code. They're good inside a box and weak at deciding where the boxes go — and their C++ compiles even when it uses freed memory. So the junior skill of 2027 is design and review. Stages 1–3: write everything by hand. From Stage 4 on, work like this:</p>
+    <ol class="flow">
+      <li><b>01 · YOU</b><h3>Design</h3><p>A one-page DESIGN.md: the types, who owns what, the interfaces, how errors and threads work.</p></li>
+      <li><b>02 · AGENT</b><h3>Build</h3><p>The agent writes code inside your design, following your AGENTS.md.</p></li>
+      <li><b>03 · TOOLS</b><h3>Gate</h3><p>Tests, warnings, sanitizers and CI must pass. No exceptions.</p></li>
+      <li><b>04 · YOU</b><h3>Review</h3><p>Read every line. Find where it left the design. Explain it with the laptop closed.</p></li>
+    </ol>
+  </section>
+
+  <section id="map">
+    <p class="kicker">SHEET 1 · THE MAP</p>
+    <h2>8 stages, about 10–14 months</h2>
+    <p class="lede">At about 10 hours a week, if you can already program (6–9 months if you code for a living). Start data-structures-and-algorithms practice at Stage 3 and keep it going. Tick items as you go — your progress stays in this browser.</p>
+    <ol class="map">
+<li class="stage" id="stage-1">
+  <div class="node" aria-hidden="true"><span>01</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 1 · 4–6 weeks </p>
+      <h3>Tools and core language</h3>
+      <p class="goal">Compile, run, debug and commit a small program from the terminal.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li>A current GCC, Clang or Visual Studio</li><li>Warnings on: <code>-std=c++20 -Wall -Wextra</code></li><li>Types, <code>const</code>, references</li><li><code>string</code>, <code>vector</code>, <code>struct</code>, <code>enum class</code></li><li>What the preprocessor, compiler and linker do</li><li>A debugger: breakpoints and call stacks</li><li>Git from day one</li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>Turbo C++ and old college IDEs</li><li><code>bits/stdc++.h</code></li><li>“Predict the output” UB puzzles</li><li>C-style <code>char*</code> strings</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 1 · PROVE IT</p>
+    <p class="prove">A word counter that reads a file, prints the top 20 words, refuses a missing file and builds with zero warnings.</p>
+    <div class="design"><h4>Design</h4><p>Not yet. Write small, clear functions; name things well.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> Nothing. Use AI as a tutor: “explain this error”.</p><p><b class="keep">Keep</b> Every line of code. This is where understanding comes from.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="1">0/5</span></h4><ul><li><label><input type="checkbox" data-id="s1-0"><span>Compile with C++20 and all warnings on — zero warnings</span></label></li><li><label><input type="checkbox" data-id="s1-1"><span>Use references, <code>const</code>, <code>string</code>, <code>vector</code>, <code>struct</code>, <code>enum class</code></span></label></li><li><label><input type="checkbox" data-id="s1-2"><span>Split code into headers and sources; explain what the linker does</span></label></li><li><label><input type="checkbox" data-id="s1-3"><span>Step through a crash in a debugger; read the call stack</span></label></li><li><label><input type="checkbox" data-id="s1-4"><span>Commit daily; push to GitHub with a README</span></label></li></ul></div>
+  </aside>
+</li>
+<li class="stage" id="stage-2">
+  <div class="node" aria-hidden="true"><span>02</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 2 · 6–8 weeks </p>
+      <h3>Memory, lifetime and RAII</h3>
+      <p class="goal">Know when every object is created, copied, moved and destroyed, and who owns it.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li>Stack vs heap, pointers vs references</li><li>RAII and the Rule of Zero/Five</li><li>Copy vs move (<code>std::move</code> is only a cast)</li><li><code>unique_ptr</code> by default; what <code>shared_ptr</code> costs</li><li>Dangling: <code>string_view</code>, <code>span</code>, iterators</li><li>Virtual functions and destructors</li><li>Undefined behaviour you can name</li><li><code>-fsanitize=address,undefined</code> on every debug build</li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>Custom allocators and placement <code>new</code></li><li>Design-pattern catalogues</li><li><code>shared_ptr</code> instead of deciding who owns it</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 2 · PROVE IT</p>
+    <p class="prove">Your own <code>Vector&lt;T&gt;</code> with copy, move, growth and tests — clean under AddressSanitizer and UBSan.</p>
+    <div class="design"><h4>Design</h4><p>Ownership design: draw who owns what, and for how long, before you code.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> Nothing. Ask it to quiz you on lifetimes.</p><p><b class="keep">Keep</b> All the code — and the sanitizer reports.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="2">0/7</span></h4><ul><li><label><input type="checkbox" data-id="s2-0"><span>Explain stack vs heap, pointer vs reference</span></label></li><li><label><input type="checkbox" data-id="s2-1"><span>Apply RAII and the Rule of Zero/Five</span></label></li><li><label><input type="checkbox" data-id="s2-2"><span>Explain <code>std::move</code> (it&#x27;s only a cast)</span></label></li><li><label><input type="checkbox" data-id="s2-3"><span><code>unique_ptr</code> by default; know what <code>shared_ptr</code> costs</span></label></li><li><label><input type="checkbox" data-id="s2-4"><span>Every debug build runs AddressSanitizer + UBSan</span></label></li><li><label><input type="checkbox" data-id="s2-5"><span>Build your own <code>Vector&lt;T&gt;</code>, sanitizer-clean</span></label></li><li><label><input type="checkbox" data-id="s2-6"><span>Draw who owns what before you code</span></label></li></ul></div>
+  </aside>
+</li>
+<li class="stage" id="stage-3">
+  <div class="node" aria-hidden="true"><span>03</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 3 · 6–8 weeks <span class="dsa-tag" title="Data structures and algorithms practice runs alongside from Stage 3">+ DSA 2–3/wk</span></p>
+      <h3>Standard library and modern C++</h3>
+      <p class="goal">Solve problems with the standard library and read template code without fear.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li>Containers and their real costs</li><li>Iterator invalidation rules</li><li>Algorithms and lambdas</li><li><code>optional</code>, <code>variant</code>, <code>string_view</code>, <code>span</code></li><li>Templates constrained with concepts</li><li>C++17 → C++20 → C++23 where your compiler has it</li><li>One error policy: exceptions or <code>std::expected</code></li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>SFINAE and metaprogramming tricks</li><li>Coroutine internals</li><li>Modules and C++26 features</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 3 · PROVE IT</p>
+    <p class="prove">A generic <code>LRUCache&lt;K, V&gt;</code> with a concept-constrained key, <code>std::expected</code> errors and tests.</p>
+    <div class="design"><h4>Design</h4><p>Interfaces that are hard to misuse: strong types, <code>span</code>/<code>string_view</code> parameters, <code>[[nodiscard]]</code>, one error policy.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> Explaining template and concept errors.</p><p><b class="keep">Keep</b> Designing the interfaces and writing the templates.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="3">0/5</span></h4><ul><li><label><input type="checkbox" data-id="s3-0"><span>Choose the right container; know iterator invalidation</span></label></li><li><label><input type="checkbox" data-id="s3-1"><span>Use algorithms and lambdas instead of raw loops</span></label></li><li><label><input type="checkbox" data-id="s3-2"><span>Write a template constrained with a concept</span></label></li><li><label><input type="checkbox" data-id="s3-3"><span>Use <code>optional</code>, <code>variant</code>, <code>span</code>, <code>string_view</code>, <code>expected</code></span></label></li><li><label><input type="checkbox" data-id="s3-4"><span>2–3 DSA problems a week in clean C++</span></label></li></ul></div>
+  </aside>
+</li>
+<li class="stage" id="stage-4">
+  <div class="node" aria-hidden="true"><span>04</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 4 · 3–4 weeks <span class="dsa-tag" title="Data structures and algorithms practice runs alongside from Stage 3">+ DSA 2–3/wk</span></p>
+      <h3>A project a stranger can build</h3>
+      <p class="goal">Anyone can clone your repo, build it with one command and see the tests pass.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li>Target-based CMake with presets</li><li>One package manager: vcpkg or Conan 2</li><li>GoogleTest or Catch2 through CTest</li><li>clang-format and clang-tidy</li><li>Standard-library hardening in debug builds</li><li>GitHub Actions: build, test, sanitize</li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>Bazel and Meson</li><li>Learning both package managers</li><li>Cross-compiling (unless embedded)</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 4 · PROVE IT</p>
+    <p class="prove">Your earlier code with CMake presets, one dependency, tests and a green CI badge on two operating systems.</p>
+    <div class="design"><h4>Design</h4><p>Module boundaries: library vs app, one direction for dependencies, code you can test on its own.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> CMake, CI and boilerplate — a good first agent task.</p><p><b class="keep">Keep</b> Reviewing every line it wrote.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="4">0/6</span></h4><ul><li><label><input type="checkbox" data-id="s4-0"><span>Target-based CMake; one-command build</span></label></li><li><label><input type="checkbox" data-id="s4-1"><span>One dependency through vcpkg or Conan</span></label></li><li><label><input type="checkbox" data-id="s4-2"><span>Unit tests with GoogleTest or Catch2</span></label></li><li><label><input type="checkbox" data-id="s4-3"><span>clang-format, clang-tidy, standard-library hardening on</span></label></li><li><label><input type="checkbox" data-id="s4-4"><span>CI: build + tests + sanitizers on every push</span></label></li><li><label><input type="checkbox" data-id="s4-5"><span>AGENTS.md with the build, test and sanitizer gate</span></label></li></ul></div>
+  </aside>
+</li>
+<li class="stage" id="stage-5">
+  <div class="node" aria-hidden="true"><span>05</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 5 · 6–8 weeks <span class="dsa-tag" title="Data structures and algorithms practice runs alongside from Stage 3">+ DSA 2–3/wk</span></p>
+      <h3>How the machine works</h3>
+      <p class="goal">Explain why code is fast or slow — and prove it with numbers.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li>Caches, cache lines, locality</li><li>Alignment, padding, structs of arrays</li><li>Reading assembly on Compiler Explorer</li><li>Processes, threads, virtual memory, system calls</li><li>TCP, sockets, <code>epoll</code>/<code>kqueue</code></li><li>Google Benchmark, <code>perf</code>, flame graphs</li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>Writing assembly by hand</li><li>Lock-free anything</li><li>Optimising what you haven&#x27;t profiled</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 5 · PROVE IT</p>
+    <p class="prove">A published benchmark: <code>vector</code> vs <code>list</code> vs <code>map</code>, and row- vs column-first loops, explained with cache-miss counts.</p>
+    <div class="design"><h4>Design</h4><p>Data-oriented design: lay data out for how it&#x27;s used.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> Explaining assembly and profiler output.</p><p><b class="keep">Keep</b> Measuring. It can&#x27;t benchmark your machine for you.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="5">0/5</span></h4><ul><li><label><input type="checkbox" data-id="s5-0"><span>Explain caches, cache lines, alignment and padding</span></label></li><li><label><input type="checkbox" data-id="s5-1"><span>Read simple assembly on Compiler Explorer</span></label></li><li><label><input type="checkbox" data-id="s5-2"><span>Explain processes, threads, virtual memory, system calls</span></label></li><li><label><input type="checkbox" data-id="s5-3"><span>Write a TCP server with sockets</span></label></li><li><label><input type="checkbox" data-id="s5-4"><span>Profile, benchmark and publish a write-up</span></label></li></ul></div>
+  </aside>
+</li>
+<li class="stage" id="stage-6">
+  <div class="node" aria-hidden="true"><span>06</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 6 · 5–6 weeks <span class="dsa-tag" title="Data structures and algorithms practice runs alongside from Stage 3">+ DSA 2–3/wk</span></p>
+      <h3>Concurrency</h3>
+      <p class="goal">Multithreaded code that&#x27;s correct first and fast second.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li><code>jthread</code>, <code>mutex</code>, <code>scoped_lock</code>, <code>condition_variable</code>, <code>atomic</code></li><li>Data race (UB) vs race condition (logic bug)</li><li>Deadlock and lock order</li><li>ThreadSanitizer in its own build</li><li>False sharing</li><li>Acquire/release basics</li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>General lock-free structures</li><li><code>memory_order_relaxed</code> tricks</li><li>Async frameworks and GPU code</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 6 · PROVE IT</p>
+    <p class="prove">A bounded queue and thread pool, clean under ThreadSanitizer, with a throughput or latency graph.</p>
+    <div class="design"><h4>Design</h4><p>Concurrency design: which thread owns which data; decide it once.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> A first draft of the thread pool.</p><p><b class="keep">Keep</b> ThreadSanitizer and the review — agents write data races.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="6">0/3</span></h4><ul><li><label><input type="checkbox" data-id="s6-0"><span>Use threads, mutexes, condition variables, atomics correctly</span></label></li><li><label><input type="checkbox" data-id="s6-1"><span>Explain data race vs race condition, deadlock, false sharing</span></label></li><li><label><input type="checkbox" data-id="s6-2"><span>A thread pool + queue that&#x27;s clean under ThreadSanitizer</span></label></li></ul></div>
+  </aside>
+</li>
+<li class="stage" id="stage-7">
+  <div class="node" aria-hidden="true"><span>07</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 7 · 4–6 weeks <span class="dsa-tag" title="Data structures and algorithms practice runs alongside from Stage 3">+ DSA 2–3/wk</span></p>
+      <h3>Reading other people&#x27;s code</h3>
+      <p class="goal">Find your way around code you didn&#x27;t write, and get a change merged.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li>Build fmt, spdlog, Catch2, DuckDB or llama.cpp from source</li><li>clangd “go to definition”</li><li><code>git log -p</code>, <code>blame</code>, <code>bisect</code></li><li>Read the tests first</li><li>Follow CONTRIBUTING; keep PRs small</li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>Chromium, LLVM or Unreal as a first patch</li><li>Typo-only pull requests</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 7 · PROVE IT</p>
+    <p class="prove">One merged pull request that fixes a real bug or adds a missing test.</p>
+    <div class="design"><h4>Design</h4><p>Read how real projects draw their boundaries — and where they don&#x27;t.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> A guided tour of a big codebase.</p><p><b class="keep">Keep</b> Understanding what you read; writing the fix.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="7">0/2</span></h4><ul><li><label><input type="checkbox" data-id="s7-0"><span>Build an open-source C++ project from source</span></label></li><li><label><input type="checkbox" data-id="s7-1"><span>Get one meaningful pull request merged</span></label></li></ul></div>
+  </aside>
+</li>
+<li class="stage" id="stage-8">
+  <div class="node" aria-hidden="true"><span>08</span></div>
+  <article class="card">
+    <header>
+      <p class="kicker">STAGE 8 · 8–12 weeks <span class="dsa-tag" title="Data structures and algorithms practice runs alongside from Stage 3">+ DSA 2–3/wk</span></p>
+      <h3>Specialise and get hired</h3>
+      <p class="goal">Look like a junior in one industry — not a tourist in five.</p>
+    </header>
+    <div class="cols">
+      <div><h4>Learn</h4><ul class="learn"><li>The extra skills for one industry</li><li>Enough Python for scripts and tests</li><li>Interview DSA from a known list</li><li>Explaining your projects out loud</li><li>The interview questions below</li></ul></div>
+      <div><h4>Skip for now</h4><ul class="skip"><li>Rust at the same time</li><li>Certificates</li><li>A second industry</li><li>An unfinished engine, OS or compiler as your only project</li></ul></div>
+    </div>
+  </article>
+  <aside class="spec">
+    <p class="kicker">FIG. 8 · PROVE IT</p>
+    <p class="prove">One flagship project with benchmarks and a write-up you can defend for 20 minutes.</p>
+    <div class="design"><h4>Design</h4><p>Write a one-page DESIGN.md before building the flagship.</p></div>
+    <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> Building the flagship from your design.</p><p><b class="keep">Keep</b> The design, the review — and defending it alone, laptop closed.</p></div>
+    <div class="checks"><h4>Checklist <span class="count" data-stage="8">0/9</span></h4><ul><li><label><input type="checkbox" data-id="s8-0"><span>Pick one industry and learn its extra skills</span></label></li><li><label><input type="checkbox" data-id="s8-1"><span>Enough Python for build scripts and test tools</span></label></li><li><label><input type="checkbox" data-id="s8-2"><span>One flagship project with benchmarks and a write-up</span></label></li><li><label><input type="checkbox" data-id="s8-3"><span>~150 DSA problems in clean C++</span></label></li><li><label><input type="checkbox" data-id="s8-4"><span>10 interview questions out loud + one design problem in 45 min</span></label></li><li><label><input type="checkbox" data-id="s8-5"><span>One-page CV with numbers; 2–4 repos that build</span></label></li><li><label><input type="checkbox" data-id="s8-6"><span>Apply by job title; ask engineers for referrals</span></label></li><li><label><input type="checkbox" data-id="s8-7"><span>Write a one-page DESIGN.md before the flagship</span></label></li><li><label><input type="checkbox" data-id="s8-8"><span>Find a lifetime or design bug in an AI-written PR</span></label></li></ul></div>
+  </aside>
+</li></ol>
+  </section>
+
+  <section id="jobs">
+    <p class="kicker">SHEET 2 · WHERE THE JOBS ARE</p>
+    <h2>The seats aren't where the hype is</h2>
+    <p class="lede">Trading and game engines get the attention. The job ads say the seats are in embedded, robotics, chips, infrastructure and AI runtimes. Pick one of these and learn its extra skills.</p>
+    <ul class="jobs">
+<li class="job"><h3>Embedded, automotive, chips</h3><p>Firmware, drivers, car computers, chip software</p><p class="extra"><b>Extra:</b> C too, RTOS, CAN/SPI/I2C, datasheets, heap-free C++</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span><span class="sig">Large, steady</span></div></li>
+<li class="job"><h3>Robotics and autonomy</h3><p>Sensor drivers, perception, planning, control</p><p class="extra"><b>Extra:</b> ROS 2, Linux, linear algebra, Python</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span><span class="sig">Growing</span></div></li>
+<li class="job"><h3>Databases and infrastructure</h3><p>Storage engines, query execution, networking</p><p class="extra"><b>Extra:</b> Linux I/O, concurrency, B-trees/LSM, SQL</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 2 of 5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Biggest C++ role group</span></div></li>
+<li class="job"><h3>AI runtimes and inference</h3><p>llama.cpp, ONNX Runtime, TensorRT, GPU kernels</p><p class="extra"><b>Extra:</b> Python bindings, SIMD, CUDA, profiling</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 2 of 5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Fastest-growing</span></div></li>
+<li class="job"><h3>Simulation, HPC, CAD, EDA</h3><p>Solvers, CAD kernels, chip-design tools</p><p class="extra"><b>Extra:</b> Numerical methods, MPI/OpenMP/CUDA</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span><span class="sig">Growing (India semis)</span></div></li>
+<li class="job"><h3>Defence and aerospace</h3><p>Vehicles, sensors, simulation, control</p><p class="extra"><b>Extra:</b> Systems + embedded skills</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 2 of 5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Big in the US · citizens only</span></div></li>
+<li class="job"><h3>Networking and telecom</h3><p>Routers, 5G, packet processing</p><p class="extra"><b>Extra:</b> TCP/IP in depth, Linux networking, DPDK</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span><span class="sig">Big in India</span></div></li>
+<li class="job"><h3>Security</h3><p>Fuzzing, hardening, endpoint agents</p><p class="extra"><b>Extra:</b> OS internals, sanitizers, fuzzers, assembly</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 2 of 5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Rising with regulation</span></div></li>
+<li class="job"><h3>Audio and video</h3><p>Plugins, codecs, players, WebRTC</p><p class="extra"><b>Extra:</b> DSP, real-time rules, FFmpeg, JUCE</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 2 of 5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Small, steady</span></div></li>
+<li class="job"><h3>Games</h3><p>Unreal C++, engines, tools, rendering</p><p class="extra"><b>Extra:</b> 3D maths, Unreal or a graphics API</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 2 of 5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Shaky · layoffs</span></div></li>
+<li class="job"><h3>Browsers</h3><p>Chromium, WebKit, Gecko, V8</p><p class="extra"><b>Extra:</b> Huge codebases, security, some Rust</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 1 of 5"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Flat</span></div></li>
+<li class="job"><h3>Low-latency trading</h3><p>Market data, order gateways, risk</p><p class="extra"><b>Extra:</b> Linux tuning, networking, maths</p>
+<div class="meta"><span class="lbl">Junior door</span><span class="door" aria-label="junior door 1 of 5"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span><span class="sig">Few seats · top pay</span></div></li></ul>
+    <p class="note">Junior door = how realistic it is to get in as a junior (my judgment). Signals from job-ad snapshots, Nov 2026: 37,046 live postings required C++ vs about 6,000 for Rust (Alion); C++ is #4 on TIOBE (8.35%). Python is also required in 60% of C++ postings — learn enough of it.</p>
+  </section>
+
+  <section id="trends">
+    <p class="kicker">SHEET 3 · WHAT'S CHANGING</p>
+    <h2>4 things a 2027 learner must know</h2>
+    <ul class="trends"><li class="trend"><p class="kicker">TREND 01</p><h3>C++26 isn&#x27;t a standard yet</h3><p>It was finished in March 2026, then the ISO ballot failed in October over Contracts. The committee is deciding the next step.</p><p class="todo"><b>Do:</b> Learn C++20. Turn on hardening. Know what reflection and Contracts are — don&#x27;t study them.</p></li><li class="trend"><p class="kicker">TREND 02</p><h3>Memory safety and Rust</h3><p>New security-critical code is moving to memory-safe languages. But C++ postings outnumber Rust about 6 to 1, and 58% of jobs asking for Rust also ask for C++.</p><p class="todo"><b>Do:</b> Learn C++ first. Write safe-by-default C++. Learn to read Rust once you&#x27;re job-ready.</p></li><li class="trend"><p class="kicker">TREND 03</p><h3>Hardening now, profiles later</h3><p>Cheap bounds checks you can switch on today (~0.3% cost at Google). Compiler-enforced “safety profiles” are aimed at C++29.</p><p class="todo"><b>Do:</b> <code>-D_GLIBCXX_ASSERTIONS</code> · libc++ hardening mode · <code>_MSVC_STL_HARDENING=1</code></p></li><li class="trend"><p class="kicker">TREND 04</p><h3>AI agents write the code</h3><p>Agents are good inside a box — a function, a fix — and weak at deciding where the boxes go. Their C++ compiles and can still use freed memory or race. Interviews push back with in-person rounds.</p><p class="todo"><b>Do:</b> Write Stages 1–3 by hand. Then: you design, the agent types, tests and sanitizers judge, you review. Never ship code you can&#x27;t explain with the laptop closed.</p></li></ul>
+  </section>
+
+  <section id="projects">
+    <p class="kicker">SHEET 4 · PROJECTS THAT GET YOU HIRED</p>
+    <h2>Five finished beats eight abandoned</h2>
+    <p class="lede">Every project: builds in one command, has tests, runs sanitizers in CI, and has one measured number in the README. Skip to-do apps and tutorial clones.</p>
+    <ul class="projs"><li class="proj"><span class="lvl">Beginner</span><b>Word counter / log analyser</b><span class="why">You finish and ship</span></li><li class="proj"><span class="lvl">Beginner+</span><b>Your own Vector&lt;T&gt;</b><span class="why">Ownership, copy, move</span></li><li class="proj"><span class="lvl">Beginner+</span><b>CHIP-8 emulator</b><span class="why">How a CPU really runs code</span><a class="film" href="https://www.youtube.com/@morebyt/playlists" title="There is a Morebyt build series for this">▶ Morebyt series</a></li><li class="proj"><span class="lvl">Intermediate</span><b>Memory allocator</b><span class="why">Alignment, fragmentation, measuring</span><a class="film" href="https://www.youtube.com/@morebyt/playlists" title="There is a Morebyt build series for this">▶ Morebyt series</a></li><li class="proj"><span class="lvl">Intermediate</span><b>HTTP or Redis-style server</b><span class="why">Sockets, non-blocking I/O, safe parsing</span><a class="film" href="https://www.youtube.com/@morebyt/playlists" title="There is a Morebyt build series for this">▶ Morebyt series</a></li><li class="proj"><span class="lvl">Intermediate</span><b>Thread pool + bounded queue</b><span class="why">Concurrency that&#x27;s actually correct</span></li><li class="proj"><span class="lvl">Strong</span><b>Crash-safe storage engine</b><span class="why">Durability and binary formats</span></li><li class="proj"><span class="lvl">Strong</span><b>Tiny language / compiler</b><span class="why">Holding a whole program in your head</span><a class="film" href="https://www.youtube.com/@morebyt/playlists" title="There is a Morebyt build series for this">▶ Morebyt series</a></li><li class="proj"><span class="lvl">Strong</span><b>One industry flagship</b><span class="why">You fit the job you want</span></li><li class="proj"><span class="lvl">Any level</span><b>A merged pull request</b><span class="why">You can read code and survive review</span></li></ul>
+  </section>
+
+  <section id="interview">
+    <p class="kicker">SHEET 5 · THE INTERVIEW</p>
+    <h2>10 questions and one design problem</h2>
+    <ol class="qs"><li>What does <code>std::move</code> actually do, and what state is a moved-from object in?</li><li>Explain RAII. When do you write a destructor and copy/move operations — and when none of them?</li><li>Value vs <code>unique_ptr</code> vs <code>shared_ptr</code> vs <code>weak_ptr</code>: when do you use each, and what does <code>shared_ptr</code> cost?</li><li>How do virtual functions work underneath? Why does a base class need a virtual destructor?</li><li>What happens when <code>vector::push_back</code> runs out of capacity? What becomes invalid?</li><li><code>map</code> vs <code>unordered_map</code>: complexity, ordering, and when is the hash map slower?</li><li>What is undefined behaviour? Give three examples and how you&#x27;d catch them.</li><li>Two threads increment one counter. What&#x27;s wrong, and what&#x27;s the smallest fix?</li><li>Why is looping over a <code>vector</code> much faster than over a <code>std::list</code>?</li><li>Here are 30 lines that crash. Find the bug.</li><li>Design it: an LRU cache, a logger, a rate limiter or a thread-safe queue — the types, who owns what, the interface.</li></ol>
+    <p class="note">Search job titles, not “C++ developer”: embedded or firmware engineer, systems software engineer, graduate software engineer, robotics software engineer. Internships beat certificates. Never write “C/C++” on your CV.</p>
+  </section>
+
+  <section id="resources">
+    <p class="kicker">SHEET 6 · RESOURCES</p>
+    <h2>The short list</h2>
+    <ul class="res"><li><a href="https://www.learncpp.com" rel="noopener">learncpp.com</a> <span class="tag">Free</span><span class="why">The best structured modern-C++ course</span></li><li><a href="https://en.cppreference.com" rel="noopener">cppreference.com</a> <span class="tag">Free</span><span class="why">The reference — learn to read it</span></li><li><a href="https://godbolt.org" rel="noopener">Compiler Explorer</a> <span class="tag">Free</span><span class="why">See the assembly your code becomes</span></li><li><span class=nm>A Tour of C++, 3rd ed. — Stroustrup</span> <span class="tag">Book</span><span class="why">The shortest complete map of modern C++</span></li><li><span class=nm>Effective Modern C++ — Meyers</span> <span class="tag">Book</span><span class="why">Move semantics, smart pointers, lambdas</span></li><li><span class=nm>A Philosophy of Software Design — Ousterhout</span> <span class="tag">Book</span><span class="why">Short; the best book on keeping design simple</span></li><li><span class=nm>C++ Software Design — Iglberger</span> <span class="tag">Book</span><span class="why">Design in modern C++ terms, for Stages 3–8</span></li><li><span class=nm>C++ Concurrency in Action — Williams</span> <span class="tag">Book</span><span class="why">For Stage 6</span></li><li><a href="https://csapp.cs.cmu.edu/" rel="noopener">Computer Systems: A Programmer&#x27;s Perspective</a> <span class="tag">Book · free labs</span><span class="why">For Stage 5</span></li><li><a href="https://www.youtube.com/@CppCon" rel="noopener">CppCon “Back to Basics” + C++ Weekly</a> <span class="tag">Free</span><span class="why">One-hour talks on each core topic</span></li><li><a href="https://cliutils.gitlab.io/modern-cmake/" rel="noopener">An Introduction to Modern CMake</a> <span class="tag">Free</span><span class="why">CMake without the 2005 habits</span></li><li><a href="https://beej.us/guide/bgnet/" rel="noopener">Beej&#x27;s Guide to Network Programming</a> <span class="tag">Free</span><span class="why">Sockets, for Stage 5</span></li></ul>
+  </section>
+
+  <div class="box end">
+    <div><p class="kicker">BUILD IT TO UNDERSTAND IT</p><h2>Take the checklist with you</h2><p style="color:var(--ink-2);margin:0">One printable page, all 42 steps. You'll also get an email when the roadmap changes — for example when C++26 is finally settled.</p></div>
+    
+<form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">
+  <!-- TODO: swap this form for the Kit embed (form action + field names) once the Kit form exists -->
+  <label class="sr" for="email2">Email</label>
+  <input id="email2" name="email_address" type="email" placeholder="you@example.com" required autocomplete="email">
+  <button type="submit">Send me the PDF</button>
+  <p class="fine">Free. One-page printable checklist + an email when the roadmap changes. Unsubscribe any time.</p>
+</form>
+  </div>
+
+  <footer>
+    <div>Morebyt · <a href="https://www.youtube.com/@morebyt">YouTube</a> · <a href="/consulting">C++ consulting</a> · hello@morebyt.com</div>
+    <div class="titleblock"><span>PROJECT: C++ ROADMAP 2027</span><span>DRAWN BY: MOREBYT</span><span>REV: 20 NOV 2026</span><span>SHEET 1 OF ∞</span></div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var KEY='morebyt-roadmap-2027', state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ state={}; }
+  var boxes=[].slice.call(document.querySelectorAll('.checks input'));
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function render(){
+    var done=0;
+    boxes.forEach(function(b){ b.checked=!!state[b.dataset.id]; if(b.checked) done++; });
+    document.getElementById('done').textContent=done+' / '+boxes.length;
+    document.getElementById('bar').style.width=(100*done/boxes.length)+'%';
+    [].forEach.call(document.querySelectorAll('.count'),function(c){
+      var n=c.dataset.stage, all=document.querySelectorAll('input[data-id^="s'+n+'-"]'), k=0;
+      [].forEach.call(all,function(b){ if(b.checked) k++; });
+      c.textContent=k+'/'+all.length;
+    });
+  }
+  boxes.forEach(function(b){ b.addEventListener('change',function(){ state[b.dataset.id]=b.checked; save(); render(); }); });
+  document.getElementById('reset').addEventListener('click',function(){ state={}; save(); render(); });
+  render();
+})();
+</script>
+</body>
+</html>

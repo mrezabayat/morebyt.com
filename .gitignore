@@ -1,0 +1,3 @@
+.DS_Store
+# The roadmap PDF is the email-gated download (delivered by Kit), so keep it out of the repo
+*.pdf
