@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 190" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(33 14)"><rect x="6" y="18" width="108" height="70" rx="3"/><path d="M6 30h108M6 76h108" stroke-width="1.2"/><rect x="12" y="21" width="10" height="6"/><rect x="12" y="79" width="10" height="6"/><rect x="32" y="21" width="10" height="6"/><rect x="32" y="79" width="10" height="6"/><rect x="52" y="21" width="10" height="6"/><rect x="52" y="79" width="10" height="6"/><rect x="72" y="21" width="10" height="6"/><rect x="72" y="79" width="10" height="6"/><rect x="92" y="21" width="10" height="6"/><rect x="92" y="79" width="10" height="6"/><path class="acc" d="M50 40l24 13-24 13z" stroke="none"/><path d="M6 104h108" /><circle cx="44" cy="104" r="4"/></g>
+<text class="t" x="93" y="170" font-size="17" text-anchor="middle">video player</text>
+<g transform="translate(220 14)"><circle cx="84" cy="62" r="28"/><path d="M68 50a22 22 0 0 1 20-12" stroke-width="1.4"/><circle class="acc" cx="16" cy="58" r="6" stroke="none"/><path d="M22 56l42-10M22 58l40 6M22 61l46 20" stroke-dasharray="4 4"/><path d="M100 8l-8 14M110 18l-14 8" stroke-width="1.4"/></g>
+<text class="t" x="280" y="170" font-size="17" text-anchor="middle">ray tracer</text>
+<g transform="translate(407 14)"><path d="M20 40h80c10 0 16 8 16 18v20c0 10-10 18-20 12l-14-10H38L24 90c-10 6-20-2-20-12V58c0-10 6-18 16-18z"/><path d="M30 56v18M21 65h18"/><circle class="acc" cx="86" cy="58" r="5" stroke="none"/><circle cx="96" cy="70" r="5"/></g>
+<text class="t" x="467" y="170" font-size="17" text-anchor="middle">game engine</text>
+</svg>

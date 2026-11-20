@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 190" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(33 14)"><circle cx="20" cy="38" r="10"/><path d="M6 72c0-14 6-22 14-22s14 8 14 22"/><path d="M38 52h14M48 47l5 5-5 5"/><rect x="62" y="14" width="50" height="22" rx="3"/><rect class="acc" x="62" y="44" width="50" height="22" rx="3" stroke="none"/><rect x="62" y="44" width="50" height="22" rx="3"/><rect x="62" y="74" width="50" height="22" rx="3"/></g>
+<text class="t" x="93" y="170" font-size="17" text-anchor="middle">recommendations</text>
+<g transform="translate(220 14)"><circle cx="8" cy="30" r="3"/><circle cx="20" cy="44" r="3"/><circle cx="10" cy="58" r="3"/><circle cx="24" cy="70" r="3"/><path d="M32 30h14l12 20v20h-8V50L38 30" /><path d="M66 100V70M80 100V52M94 100V60M108 100V36" stroke-width="7"/><path class="acc" d="M108 100V36" stroke-width="7"/></g>
+<text class="t" x="280" y="170" font-size="17" text-anchor="middle">analytics</text>
+<g transform="translate(407 14)"><path d="M10 10v90h100" /><path d="M14 80l14-10 12 6 14-26 12 8 12-20 12 10 14-12" stroke-width="2"/><circle class="acc" cx="66" cy="58" r="5" stroke="none"/><path d="M30 100v4M50 100v4M70 100v4M90 100v4" stroke-width="1.2"/></g>
+<text class="t" x="467" y="170" font-size="17" text-anchor="middle">time-series DB</text>
+</svg>

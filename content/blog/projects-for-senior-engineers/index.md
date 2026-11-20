@@ -14,6 +14,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 
 ## Operating systems and storage
 
+!drawing[Line drawings of the three projects: an operating system kernel, a database and a web server](fig-os-storage.svg)
+
 1. **An operating system kernel.** A bootloader, a memory manager and a scheduler that switches between two processes. You learn what the CPU actually does when it boots, how virtual memory works, and why a bad pointer in kernel code takes the whole machine down. Start with the [OSDev wiki](https://wiki.osdev.org/) and MIT's teaching kernel [xv6](https://pdos.csail.mit.edu/6.828/2024/xv6.html). I'm building a tiny OS on [the Morebyt channel](https://www.youtube.com/@morebyt) from February 2027.
 
 2. **A database engine.** A B-tree on disk, a simple query parser and transactions. After this you will never forget an index again, because you will have felt what a full table scan costs. The [Let's Build a Simple Database](https://cstack.github.io/db_tutorial/) tutorial gets you to a working SQLite clone.
@@ -21,6 +23,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 3. **A web server.** Parse HTTP requests, serve files, handle many connections at once. The interesting part is concurrency: threads first, then an event loop with `epoll` or `kqueue`, and measuring the difference. [RFC 9112](https://www.rfc-editor.org/rfc/rfc9112) is the HTTP/1.1 spec you'll be reading.
 
 ## Compilers and languages
+
+!drawing[Line drawings of the three projects: a compiler turning source text into a syntax tree, a stack-based virtual machine, and a regex engine as a small automaton](fig-compilers.svg)
 
 4. **A compiler for a small language.** Tokens, a parser, a syntax tree and code generation, even if the target is just C or a simple assembly. You stop seeing compiler errors as noise and start seeing the stage that produced them. Robert Nystrom's [Crafting Interpreters](https://craftinginterpreters.com/) is the best free guide I know. A compiler series is on the Morebyt plan for August 2027.
 
@@ -30,6 +34,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 
 ## Algorithms, search and games
 
+!drawing[Line drawings of the three projects: a chess board, a search engine magnifying a document, and a Snake game for a reinforcement learning agent](fig-algorithms.svg)
+
 7. **A chess engine.** Move generation, minimax with alpha-beta pruning, then a transposition table. Getting move generation completely correct is harder than it sounds and teaches you to test against known positions. The [Chess Programming Wiki](https://www.chessprogramming.org/) covers every technique.
 
 8. **A small search engine.** Crawl a set of pages, build an inverted index and rank results with TF-IDF or BM25. The free book [Introduction to Information Retrieval](https://nlp.stanford.edu/IR-book/) explains both.
@@ -37,6 +43,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 9. **A reinforcement learning agent for Snake or Tetris.** Write the game, then an agent that learns to play it. Expect to spend more time on the reward function than on the learning code. Sutton and Barto's [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book.html) is free online.
 
 ## Networking and distributed systems
+
+!drawing[Line drawings of the three projects: a three-node Raft cluster with a leader, a mesh of BitTorrent peers, and nested packet layers of a TCP/IP stack](fig-networking.svg)
 
 10. **A distributed key-value store with Raft.** Three nodes that agree on the same data even when one dies. It teaches you what "the network is unreliable" means in practice. Read the [Raft paper and visualisation](https://raft.github.io/) first.
 
@@ -46,6 +54,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 
 ## Graphics and media
 
+!drawing[Line drawings of the three projects: a video player film strip, rays from a camera hitting a sphere, and a game controller for a game engine](fig-graphics.svg)
+
 13. **A video player.** Demux a file, decode the frames with a library like FFmpeg's libav, and keep audio and video in sync. The sync is the hard part, and it's where you learn how much timing work a player does for you.
 
 14. **A ray tracer.** Shoot rays, bounce them off spheres, get a picture. For the effort it takes, it's the most satisfying project on this list. [Ray Tracing in One Weekend](https://raytracing.github.io/) takes you from nothing to soft shadows and glass.
@@ -53,6 +63,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 15. **A small game engine.** A game loop, rendering, input and simple physics. You'll learn about fixed time steps and why engines separate the update rate from the frame rate. Jason Gregory's book *Game Engine Architecture* is the standard reference.
 
 ## Security and cryptography
+
+!drawing[Line drawings of the three projects: a TLS handshake between client and server, a chain of blocks, and a safe for a password manager](fig-security.svg)
 
 16. **A TLS 1.3 handshake.** Implement the handshake against a real server, using an existing library for the cryptographic primitives. You learn what the padlock in your browser actually checks. The spec is [RFC 8446](https://www.rfc-editor.org/rfc/rfc8446). Treat this as a learning project only; never use home-made TLS for real traffic.
 
@@ -62,6 +74,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 
 ## Developer tools
 
+!drawing[Line drawings of the three projects: a version control commit graph with a branch and merge, messy code becoming tidy for a formatter, and a breakpoint in a debugger](fig-dev-tools.svg)
+
 19. **A version control system.** Blobs, trees, commits and branches stored the way Git stores them. Once you've written it, Git's odd commands suddenly have obvious meanings. [Write yourself a Git](https://wyag.thb.lt/) walks through it in Python, and it's easy to follow in C++.
 
 20. **A code formatter or linter.** Parse real source code into a syntax tree and print it back out, or walk the tree looking for patterns. You'll find out how much of a language's grammar you never had to think about.
@@ -70,6 +84,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 
 ## Data systems
 
+!drawing[Line drawings of the three projects: a user getting item recommendations, events flowing into an analytics bar chart, and a time-series line chart](fig-data.svg)
+
 22. **A recommendation engine.** Collaborative filtering on a public ratings dataset, then a look at why the results are so often obvious. The data handling teaches as much as the maths.
 
 23. **A real-time analytics pipeline.** Events in, aggregates out, a dashboard that updates every second. You'll meet back-pressure, late events and windows, the same problems Kafka and stream processors solve.
@@ -77,6 +93,8 @@ If you're earlier in your career and want projects that get you hired, the [C++ 
 24. **A time-series database.** Store metrics compactly and query them by time range. Facebook's [Gorilla paper](https://www.vldb.org/pvldb/vol8/p1816-teller.pdf) describes the compression tricks that make this work.
 
 ## Classic challenges
+
+!drawing[Line drawings of the three projects: a CHIP-8 style emulator screen with keypad, rays cast across a maze for a raycaster, and swirling smoke and water for a fluid simulation](fig-classics.svg)
 
 25. **An emulator.** CHIP-8 first, then a Game Boy or NES if you get hooked. You write a CPU, memory, a screen and a keyboard in software, which is about the most direct way to learn how a computer runs a program. I filmed a [complete CHIP-8 emulator in C++](https://www.youtube.com/playlist?list=PLd0lXMskqFUU), one part per episode.
 

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 190" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(33 14)"><circle class="acc" cx="60" cy="20" r="14" stroke="none"/><circle cx="60" cy="20" r="14"/><circle cx="18" cy="90" r="14"/><circle cx="102" cy="90" r="14"/><path d="M52 32L26 78M68 32l26 46M32 90h56" /><path d="M24 70l2 8 7-4M96 70l-2 8-7-4" stroke-width="1.4"/></g>
+<text class="t" x="93" y="170" font-size="17" text-anchor="middle">Raft cluster</text>
+<g transform="translate(220 14)"><circle cx="60" cy="10" r="9"/><circle cx="108" cy="44" r="9"/><circle cx="90" cy="100" r="9"/><circle cx="30" cy="100" r="9"/><circle cx="12" cy="44" r="9"/><path d="M60 19v0M66 16l36 22M104 53l-10 39M81 100H39M26 92L14 53M18 38l36-22M60 19l26 72M60 19L34 91M100 47L21 47M98 50L37 95M22 50l61 45" stroke-width="1.2"/><circle class="acc" cx="60" cy="10" r="5" stroke="none"/></g>
+<text class="t" x="280" y="170" font-size="17" text-anchor="middle">BitTorrent client</text>
+<g transform="translate(407 14)"><rect x="6" y="20" width="108" height="76" rx="3"/><rect x="18" y="32" width="90" height="56" rx="3"/><rect x="30" y="44" width="72" height="34" rx="3"/><rect class="acc" x="42" y="54" width="54" height="14" stroke="none"/></g>
+<text class="t" x="467" y="170" font-size="17" text-anchor="middle">TCP/IP stack</text>
+</svg>

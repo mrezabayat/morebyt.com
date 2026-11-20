@@ -142,8 +142,10 @@ def diagrams(slug, body):
         _fix_svg_size(dark)
         w, h = _svg_size(light)
         size = f' width="{w}" height="{h}"' if w else ""
-        return (f'\n<figure class="diagram"><picture><source srcset="{dark.name}" media="(prefers-color-scheme: dark)">'
-                f'<img src="{light.name}" alt="{escape(alt_m.group(1).strip())}"{size}></picture></figure>\n')
+        return (f'\n<figure class="diagram"><a href="{light.name}" title="Open the full-size diagram">'
+                f'<picture><source srcset="{dark.name}" media="(prefers-color-scheme: dark)">'
+                f'<img src="{light.name}" alt="{escape(alt_m.group(1).strip())}"{size}></picture></a>'
+                f'<figcaption>Tap the diagram to open it full size.</figcaption></figure>\n')
 
     body = D2_RE.sub(repl, body)
     for old in list(folder.glob("diagram-*.svg")):
@@ -195,11 +197,13 @@ POST_CSS = """
 .prose figure.diagram img{max-height:none;height:auto;padding:12px;background:var(--sheet);border-color:var(--rule-2)}
 .prose figure.drawing{margin:var(--s4) 0;padding:var(--s3);background:var(--sheet);border:1px solid var(--rule-2);color:var(--line)}
 .prose figure.drawing svg{display:block;width:100%;height:auto}
-@media (max-width:640px){.prose figure.drawing{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.drawing svg{width:540px;max-width:none}}
 .prose figure.drawing .acc{fill:var(--amber)}
+.prose figure.drawing path.acc{stroke:var(--amber)}
 .prose figure.drawing .t{fill:var(--ink);stroke:none;font-family:var(--mono)}
 .prose figure.drawing .m{fill:var(--ink-2);stroke:none;font-family:var(--mono)}
-@media (max-width:640px){.prose figure.diagram{overflow-x:auto;-webkit-overflow-scrolling:touch}.prose figure.diagram img{max-width:none;width:auto;margin:0}}
+.prose figure.diagram a{display:block}
+.prose figure.diagram figcaption{font:13px var(--mono);color:var(--ink-2);margin-top:6px}
+@media (min-width:641px){.prose figure.diagram figcaption{display:none}}
 .prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
 .prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
 .prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}

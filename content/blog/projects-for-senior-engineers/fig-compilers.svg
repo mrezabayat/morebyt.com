@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 190" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(33 14)"><path d="M6 24h34M6 36h26M6 48h34M6 60h20" stroke-width="1.4"/><path d="M46 42h14M56 37l5 5-5 5"/><circle cx="92" cy="18" r="7"/><circle cx="76" cy="52" r="7"/><circle class="acc" cx="108" cy="52" r="7" stroke="none"/><path d="M88 24l-8 22M96 24l8 22"/><path d="M68 84h44M68 96h30" stroke-width="1.4"/></g>
+<text class="t" x="93" y="170" font-size="17" text-anchor="middle">compiler</text>
+<g transform="translate(220 14)"><rect x="30" y="66" width="60" height="22" rx="2"/><rect x="30" y="40" width="60" height="22" rx="2"/><rect class="acc" x="30" y="14" width="60" height="22" rx="2" stroke="none"/><rect x="30" y="14" width="60" height="22" rx="2"/><path d="M30 96h60" stroke-width="2.4"/><path d="M104 10v22M98 26l6 6 6-6"/></g>
+<text class="t" x="280" y="170" font-size="17" text-anchor="middle">virtual machine</text>
+<g transform="translate(407 14)"><circle cx="16" cy="58" r="13"/><circle cx="60" cy="58" r="13"/><circle cx="104" cy="58" r="13"/><circle class="acc" cx="104" cy="58" r="8" stroke="none"/><path d="M29 58h18M73 58h18"/><path d="M42 54l5 4-5 4M86 54l5 4-5 4"/><path d="M52 46c0-22 16-22 16 0" /><path d="M64 42l4 4 3-5" stroke-width="1.4"/></g>
+<text class="t" x="467" y="170" font-size="17" text-anchor="middle">regex engine</text>
+</svg>

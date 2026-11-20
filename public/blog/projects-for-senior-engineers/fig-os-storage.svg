@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 190" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(33 14)"><circle cx="60" cy="58" r="46"/><circle cx="60" cy="58" r="30"/><circle class="acc" cx="60" cy="58" r="13" stroke="none"/><path d="M60 12v8M60 96v8M14 58h8M98 58h8" stroke-width="1.4"/></g>
+<text class="t" x="93" y="170" font-size="17" text-anchor="middle">kernel</text>
+<g transform="translate(220 14)"><ellipse cx="60" cy="22" rx="40" ry="12"/><path d="M20 22v72c0 7 18 12 40 12s40-5 40-12V22"/><path d="M20 46c0 7 18 12 40 12s40-5 40-12M20 70c0 7 18 12 40 12s40-5 40-12"/><path class="acc" d="M86 30v12" stroke-width="4"/></g>
+<text class="t" x="280" y="170" font-size="17" text-anchor="middle">database</text>
+<g transform="translate(407 14)"><rect x="24" y="10" width="72" height="96" rx="4"/><path d="M24 42h72M24 74h72"/><circle class="acc" cx="84" cy="26" r="4" stroke="none"/><circle cx="84" cy="58" r="4"/><circle cx="84" cy="90" r="4"/><path d="M34 26h30M34 58h30M34 90h30" stroke-width="1.4"/></g>
+<text class="t" x="467" y="170" font-size="17" text-anchor="middle">web server</text>
+</svg>
