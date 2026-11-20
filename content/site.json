@@ -1,0 +1,55 @@
+{
+  "_help": "Edit this file to change what the home page and /projects show, then run the build. scripts/update_home_videos.py can refresh 'episodes' from the YouTube playlist.",
+
+  "now_building": {
+    "title": "Build a CHIP-8 emulator in C++",
+    "summary": "A whole computer in about 1,000 lines: memory, a CPU, a screen and a keyboard. Each episode adds one part and answers one question.",
+    "playlist_id": "PLd0lXMskqFUU",
+    "button": "Watch the CHIP-8 series",
+    "hero_caption": "Fig. 1: a CHIP-8 computer, front view. We build one in C++ in the series below.",
+    "episodes": [
+      {"id": "S_nsjcMowHY", "title": "How do zeros and ones actually run a program?"},
+      {"id": "3eyB1-JN-7w", "title": "How does computer memory actually work?"},
+      {"id": "zMQ3Vy03J24", "title": "How did old games draw pixels? The XOR trick"},
+      {"id": "GUtSNOKQATY", "title": "How does a computer read keys, keep time and roll dice?"},
+      {"id": "gvcfUgpRvsk", "title": "How does a CPU actually work? Fetch, decode, execute"}
+    ],
+    "next_episode": {"title": "Running Pong: the series finale", "when": "Tuesday 1 December"}
+  },
+
+  "builds": [
+    {"what": "CHIP-8 emulator", "status": "Filming now", "when": "Nov 2026"},
+    {"what": "A tiny operating system that boots", "status": "Next", "when": "From Feb 2027"},
+    {"what": "Your own memory allocator (malloc)", "status": "Planned", "when": "Jul 2027"},
+    {"what": "A small compiler", "status": "Planned", "when": "Aug 2027"}
+  ],
+
+  "projects": [
+    {
+      "name": "CHIP-8 emulator in C++",
+      "status": "Video series, filming now",
+      "icon": "chip8",
+      "text": "A CHIP-8 emulator written test-first in modern C++, built one part per episode: memory, the CPU loop, the screen, the keypad and the timers.",
+      "links": [
+        {"label": "Source code", "url": "https://github.com/mrezabayat/chip8-emulator-cpp"},
+        {"label": "Video series", "url": "https://www.youtube.com/playlist?list=PLd0lXMskqFUU"}
+      ]
+    },
+    {
+      "name": "CS Map",
+      "status": "Open source (MIT)",
+      "icon": "csmap",
+      "text": "A beginner-friendly map of computer science: short topic pages, learning paths and cross-linked concepts, from hardware and operating systems to networks, databases and security.",
+      "links": [
+        {"label": "Source code", "url": "https://github.com/mrezabayat/csmap"}
+      ]
+    },
+    {
+      "name": "Logichess",
+      "status": "Coming soon, free and open source",
+      "icon": "chess",
+      "text": "A chess tutor that explains why a move is good or bad in terms of what happens on the board. Stockfish finds the moves, a rule-based layer pulls out the reasons, and a language model writes the explanation from that evidence only.",
+      "links": []
+    }
+  ]
+}

@@ -89,6 +89,10 @@ code{font:.88em var(--mono)}
   .site-head .nav{grid-column:1 / -1;grid-row:2}
   .theme-toggle{grid-column:2;grid-row:1;margin-left:0}
 }
+@media (max-width:420px){
+  .site-head .nav{gap:4px 16px}
+  .site-head .nav a[href^="https://www.youtube.com"]{display:none}
+}
 .nav a{color:var(--ink-2);text-decoration:none;padding:10px 0;display:inline-block}
 .nav a:hover{color:var(--ink)}
 .nav a[aria-current="page"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--line)}

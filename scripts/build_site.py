@@ -6,6 +6,7 @@
 The roadmap page has its own generator (build_roadmap.py) but uses the same
 head(), header() and footer() from here.
 """
+import re
 from html import escape
 from pathlib import Path
 
@@ -15,25 +16,18 @@ PUB = ROOT / "public"
 YT = "https://www.youtube.com/@morebyt"
 EMAIL = "hello@morebyt.com"
 KIT_ACTION = "https://app.kit.com/forms/10219372/subscriptions"
-CHIP8_PLAYLIST = "https://www.youtube.com/playlist?list=PLd0lXMskqFUU"
 FONTS = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600"
          "&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap")
+import json as _json
+DATA = _json.loads((ROOT / "content" / "site.json").read_text(encoding="utf-8"))
+NOW = DATA["now_building"]
+PLAYLIST_URL = f"https://www.youtube.com/playlist?list={NOW['playlist_id']}"
 
-EPISODES = [
-    ("S_nsjcMowHY", "How do zeros and ones actually run a program?"),
-    ("3eyB1-JN-7w", "How does computer memory actually work?"),
-    ("zMQ3Vy03J24", "How did old games draw pixels? The XOR trick"),
-    ("GUtSNOKQATY", "How does a computer read keys, keep time and roll dice?"),
-    ("gvcfUgpRvsk", "How does a CPU actually work? Fetch, decode, execute"),
-]
-NEXT_EPISODE = ("Running Pong: the series finale", "Tuesday 1 December")
 
-BUILDS = [  # (what, status, when)
-    ("CHIP-8 emulator", "Filming now", "Nov 2026"),
-    ("A tiny operating system that boots", "Next", "From Feb 2027"),
-    ("Your own memory allocator (malloc)", "Planned", "Jul 2027"),
-    ("A small compiler", "Planned", "Aug 2027"),
-]
+def nb(text):
+    """Keep tokens like CHIP-8 on one line."""
+    return re.sub(r"\b([A-Z]+-\d+)\b", r'<span class="nb">\1</span>', escape(text))
+
 
 MARK_SVG = """<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
 <rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
@@ -103,7 +97,7 @@ def head(title, description, path, extra_css="", og_image=None, og_image_alt=Non
 
 
 def header(current):
-    items = [("/roadmap", "Roadmap"), ("/blog", "Blog"), ("/consulting", "Consulting"), (YT, "YouTube")]
+    items = [("/roadmap", "Roadmap"), ("/blog", "Blog"), ("/projects", "Projects"), ("/consulting", "Consulting"), (YT, "YouTube")]
     cur = ' aria-current="page"'
     links = "".join(f'<a href="{h}"{cur if h == current else ""}>{n}</a>' for h, n in items)
     return f"""<header class="site-head"><div class="wrap">
@@ -261,15 +255,19 @@ figcaption{font:14px/1.5 var(--mono);color:var(--ink-2);margin-top:var(--s2);bor
 
 
 def home():
+    pl = NOW["playlist_id"]
     eps = "".join(
-        f'<li class="ep"><a href="https://www.youtube.com/watch?v={vid}&list=PLd0lXMskqFUU">'
-        f'<img src="https://i.ytimg.com/vi/{vid}/mqdefault.jpg" width="320" height="180" loading="lazy" alt="">'
-        f'<span class="n">Episode {i}</span><span class="t">{escape(title)}</span></a></li>'
-        for i, (vid, title) in enumerate(EPISODES, 1))
-    eps += (f'<li class="ep next"><div class="box">Episode 6<br>{escape(NEXT_EPISODE[0])}<br>{escape(NEXT_EPISODE[1])}</div></li>')
+        f'<li class="ep"><a href="https://www.youtube.com/watch?v={e["id"]}&list={pl}">'
+        f'<img src="https://i.ytimg.com/vi/{e["id"]}/mqdefault.jpg" width="320" height="180" loading="lazy" alt="">'
+        f'<span class="n">Episode {i}</span><span class="t">{escape(e["title"])}</span></a></li>'
+        for i, e in enumerate(NOW["episodes"], 1))
+    nxt = NOW.get("next_episode")
+    if nxt:
+        when = f'<br>{escape(nxt["when"])}' if nxt.get("when") else ""
+        eps += (f'<li class="ep next"><div class="box">Episode {len(NOW["episodes"]) + 1}<br>{escape(nxt["title"])}{when}</div></li>')
     builds = "".join(
-        f'<tr><td>{i:02d}</td><td>{escape(w)}</td><td class="st{" now" if s == "Filming now" else ""}">{s}</td><td class="muted">{wh}</td></tr>'
-        for i, (w, s, wh) in enumerate(BUILDS, 1))
+        f'<tr><td>{i:02d}</td><td>{escape(b["what"])}</td><td class="st{" now" if b["status"] == "Filming now" else ""}">{escape(b["status"])}</td><td class="muted">{escape(b["when"])}</td></tr>'
+        for i, b in enumerate(DATA["builds"], 1))
     svg = CHIP8_SVG.replace("KEYS", keypad()).replace("SCORE", score())
     return (head("Morebyt: how computers really work, built from scratch in C++",
                  "Mohammad Reza Bayat builds emulators, operating systems and compilers from scratch in C++ on YouTube, one step at a time.",
@@ -285,24 +283,24 @@ def home():
         <p><b>Mohammad Reza Bayat</b><br><span class="muted">C++ engineer. I make Morebyt.</span></p>
       </div>
       <div class="actions">
-        <a class="btn btn-primary" href="{CHIP8_PLAYLIST}">Watch the <span class="nb">CHIP-8</span> series</a>
+        <a class="btn btn-primary" href="{PLAYLIST_URL}">{nb(NOW["button"])}</a>
         <a class="btn btn-ghost" href="/roadmap">Free C++ roadmap</a>
       </div>
     </div>
     <figure>
       {svg}
-      <figcaption>Fig. 1: a CHIP-8 computer, front view. We build one in C++ in the series below.</figcaption>
+      <figcaption>{escape(NOW["hero_caption"])}</figcaption>
     </figure>
   </section>
 </div>
 
 <section class="section" aria-labelledby="chip8-h"><div class="wrap">
   <div class="section-head">
-    <h2 id="chip8-h">Build a <span class="nb">CHIP-8</span> emulator in C++</h2>
-    <p class="lede">A whole computer in about 1,000 lines: memory, a CPU, a screen and a keyboard. Each episode adds one part and answers one question.</p>
+    <h2 id="chip8-h">{nb(NOW["title"])}</h2>
+    <p class="lede">{escape(NOW["summary"])}</p>
   </div>
   <ol class="eps">{eps}</ol>
-  <p style="margin-top:var(--s4)"><a href="{CHIP8_PLAYLIST}">The full playlist on YouTube</a></p>
+  <p style="margin-top:var(--s4)"><a href="{PLAYLIST_URL}">The full playlist on YouTube</a>. Everything else I build is on the <a href="/projects/">projects page</a>.</p>
 </div></section>
 
 <section class="section" aria-labelledby="builds-h"><div class="wrap split">
@@ -410,8 +408,58 @@ def blog():
 """ + footer())
 
 
+PROJECT_ICONS = {
+    "chip8": '<rect x="18" y="14" width="84" height="50" rx="3"/><rect x="28" y="30" width="4" height="14" fill="currentColor" stroke="none"/><rect x="88" y="38" width="4" height="14" fill="currentColor" stroke="none"/><rect class="acc" x="58" y="36" width="5" height="5" stroke="none"/><path d="M60 18v42" stroke-dasharray="2 4" stroke-width="1.2"/>'
+             + "".join(f'<rect x="{30 + c * 16}" y="{74 + r * 13}" width="12" height="9" rx="1" stroke-width="1.2"/>' for r in range(2) for c in range(4)),
+    "csmap": '<circle cx="60" cy="54" r="10"/><circle cx="22" cy="24" r="7"/><circle cx="98" cy="22" r="7"/><circle cx="20" cy="88" r="7"/><circle cx="100" cy="90" r="7"/><circle cx="60" cy="12" r="5"/>'
+             '<path d="M52 47 28 29M68 47l24-19M52 61 26 83M68 61l26 24M60 44V17M29 24h26M65 12l26 8" stroke-width="1.3"/><circle class="acc" cx="60" cy="54" r="5" stroke="none"/>',
+    "chess": "".join(f'<rect x="{20 + c * 20}" y="{12 + r * 20}" width="20" height="20"' + (' fill="currentColor" fill-opacity=".14"' if (r + c) % 2 else "") + "/>" for r in range(4) for c in range(4))
+             + '<path class="acc" d="M74 70l14-16" stroke-width="3"/><circle class="acc" cx="90" cy="52" r="4" stroke="none"/>',
+}
+
+PROJECTS_CSS = """
+<style>
+.page{padding:var(--s6) 0 var(--s5)}
+.page h1{margin-bottom:var(--s4)}
+.plist{list-style:none;margin:var(--s5) 0 0;padding:0}
+.plist li{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--s4) var(--s5);align-items:start;padding:var(--s4) 0;border-top:1px solid var(--rule)}
+.plist li:last-child{border-bottom:1px solid var(--rule)}
+.picon{background:var(--sheet);border:1px solid var(--rule-2);aspect-ratio:12/11;color:var(--line);padding:12px}
+.picon svg{display:block;width:100%;height:100%}
+.picon .acc{fill:var(--amber)} .picon path.acc{stroke:var(--amber);fill:none}
+.plist h2{font-size:clamp(20px,2.4vw,24px);margin:0 0 6px}
+.plist .st{font:500 14px var(--mono);color:var(--good);margin:0 0 10px}
+.plist p{max-width:68ch;color:var(--ink-2)}
+.plist .links{display:flex;flex-wrap:wrap;gap:8px 20px;font:500 15px var(--mono);margin:0}
+@media (max-width:640px){.plist li{grid-template-columns:96px minmax(0,1fr);gap:var(--s3)}}
+</style>"""
+
+
+def projects():
+    items = []
+    for pr in DATA["projects"]:
+        icon = PROJECT_ICONS.get(pr.get("icon"), PROJECT_ICONS["chip8"])
+        links = "".join(f'<a href="{escape(l["url"])}">{escape(l["label"])}</a>' for l in pr.get("links", []))
+        items.append(
+            f'<li><div class="picon"><svg viewBox="0 0 120 110" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">{icon}</svg></div>'
+            f'<div><h2>{nb(pr["name"])}</h2><p class="st">{escape(pr["status"])}</p><p>{escape(pr["text"])}</p>'
+            + (f'<p class="links">{links}</p>' if links else "") + "</div></li>")
+    return (head("Projects: Morebyt",
+                 "Things Mohammad Reza Bayat has built: a CHIP-8 emulator in C++, CS Map, and Logichess, a chess tutor that explains moves.",
+                 "/projects/") + PROJECTS_CSS + header("/projects") + f"""
+<main id="main"><div class="wrap"><div class="page">
+  <h1>Projects</h1>
+  <p class="lede">Things I've built, most of them on video. The code is open where it can be, so you can read it, run it and build your own.</p>
+  <ul class="plist">{"".join(items)}</ul>
+</div></div></main>
+""" + footer())
+
+
 def not_found():
-    return (head("Page not found: Morebyt", "This page doesn't exist.", "/404") + PAGE_CSS + header("") + """
+    page = head("Page not found: Morebyt", "This page doesn't exist.", "/404")
+    page = re.sub(r'<link rel="canonical"[^>]*>\n', '<meta name="robots" content="noindex">\n', page)
+    page = re.sub(r'<meta property="og:url"[^>]*>\n', "", page)
+    return (page + PAGE_CSS + header("") + """
 <main id="main"><div class="wrap"><div class="page">
   <h1>Nothing at this address</h1>
   <p class="lede">The page may have moved, or the link has a typo.</p>
@@ -435,6 +483,7 @@ def write(rel, text):
 if __name__ == "__main__":
     write("index.html", home())
     write("consulting/index.html", consulting())
+    write("projects/index.html", projects())
     # blog/index.html is built by build_blog.py
     write("404.html", not_found())
     write("assets/favicon.svg", FAVICON)

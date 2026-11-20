@@ -242,8 +242,8 @@ def web():
 <meta property="og:title" content="C++ Roadmap 2027: what to learn, what to skip, where the jobs are">
 <meta property="og:description" content="8 stages, 10 projects, 12 industries and the interview questions — free, from Morebyt.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://morebyt.com/roadmap">
-<link rel="canonical" href="https://morebyt.com/roadmap">
+<meta property="og:url" content="https://morebyt.com/roadmap/">
+<link rel="canonical" href="https://morebyt.com/roadmap/">
 <meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">

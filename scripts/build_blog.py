@@ -436,6 +436,17 @@ def feed(posts):
             f"{entries}</channel></rss>\n")
 
 
+STATIC_PAGES = ["/", "/roadmap/", "/projects/", "/blog/", "/consulting/"]
+
+
+def sitemap(posts):
+    urls = [f"<url><loc>{BASE}{u}</loc></url>" for u in STATIC_PAGES]
+    urls += [f"<url><loc>{BASE}/blog/{slug}/</loc><lastmod>{m.get('updated') or m['date']}</lastmod></url>"
+             for slug, m, _ in posts]
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + "\n".join(urls) + "\n</urlset>\n")
+
+
 def main():
     posts = []
     for d in sorted(p for p in SRC.iterdir() if (p / "index.md").exists()):
@@ -459,6 +470,8 @@ def main():
         print("built", out.relative_to(ROOT))
     (OUT / "index.html").write_text(index_page(posts), encoding="utf-8")
     (ROOT / "public" / "feed.xml").write_text(feed(posts), encoding="utf-8")
+    (ROOT / "public" / "sitemap.xml").write_text(sitemap(posts), encoding="utf-8")
+    (ROOT / "public" / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n", encoding="utf-8")
     print(f"built public/blog/index.html and feed.xml ({len(posts)} posts)")
 
 
