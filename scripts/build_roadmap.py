@@ -5,8 +5,10 @@
 
 Content source: ../roadmap-research/COMBINED-Cpp-Roadmap-2027.md (edit the data here when it changes).
 """
-import html, re
+import html, re, sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import build_site as site
 
 HERE = Path(__file__).resolve().parent.parent   # repo root
 UPDATED = "20 Nov 2026"
@@ -173,14 +175,8 @@ TOTAL_CHECKS = sum(len(s["check"]) for s in STAGES)
 
 # ---------------------------------------------------------------- shared bits
 CSS_TOKENS = """
-:root{
-  --bp-0:#0b2f5c; --bp-1:#0f3d73; --bp-2:#174d8c; --bp-3:#1b5799;
-  --ink:#e8f1ff; --ink-2:rgba(232,241,255,.74); --ink-3:rgba(232,241,255,.5);
-  --line:rgba(232,241,255,.22); --line-2:rgba(232,241,255,.4);
-  --accent:#ffd166; --good:#7ee2b8; --warn:#ff9f80;
-  --sans:"Avenir Next","Avenir","Segoe UI",system-ui,-apple-system,sans-serif;
-  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
-}
+:root{--warn:#B4462A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--warn:#F09A7E}}
 """
 
 def door_meter(n):
@@ -202,7 +198,7 @@ def web():
   <div class="node" aria-hidden="true"><span>{s['n']:02d}</span></div>
   <article class="card">
     <header>
-      <p class="kicker">STAGE {s['n']} · {t(s['weeks'])} {dsa}</p>
+      <p class="kicker">Stage {s['n']}, {t(s['weeks'])} {dsa}</p>
       <h3>{t(s['title'])}</h3>
       <p class="goal">{t(s['goal'])}</p>
     </header>
@@ -212,7 +208,7 @@ def web():
     </div>
   </article>
   <aside class="spec">
-    <p class="kicker">FIG. {s['n']} · PROVE IT</p>
+    <p class="kicker">Fig. {s['n']}: prove it</p>
     <p class="prove">{t(s['prove'])}</p>
     <div class="design"><h4>Design</h4><p>{t(s['design'])}</p></div>
     <div class="ai"><h4>With an AI agent</h4><p><b class="hand">Hand off</b> {t(s['hand'])}</p><p><b class="keep">Keep</b> {t(s['keep'])}</p></div>
@@ -224,8 +220,8 @@ def web():
     jobs = "".join(f"""
 <li class="job"><h3>{t(n)}</h3><p>{t(w)}</p><p class="extra"><b>Extra:</b> {t(x)}</p>
 <div class="meta"><span class="lbl">Junior door</span>{door_meter(d)}<span class="sig">{t(sig)}</span></div></li>""" for n, w, x, d, sig in JOBS)
-    trends = "".join(f'<li class="trend"><p class="kicker">TREND {i+1:02d}</p><h3>{t(a)}</h3><p>{t(b)}</p><p class="todo"><b>Do:</b> {t(c)}</p></li>' for i, (a, b, c) in enumerate(TRENDS))
-    film = f'<a class="film" href="{YT}/playlists" title="There is a Morebyt build series for this">▶ Morebyt series</a>'
+    trends = "".join(f'<li class="trend"><p class="kicker">Trend {i+1}</p><h3>{t(a)}</h3><p>{t(b)}</p><p class="todo"><b>Do:</b> {t(c)}</p></li>' for i, (a, b, c) in enumerate(TRENDS))
+    film = f'<a class="film" href="{YT}/playlists" title="There is a Morebyt build series for this">Morebyt series</a>'
     projects = "".join(
         f'<li class="proj"><span class="lvl">{t(l)}</span><b>{t(n)}</b><span class="why">{t(w)}</span>{film if f else ""}</li>'
         for n, l, w, f in PROJECTS)
@@ -234,188 +230,161 @@ def web():
         (f'<li><a href="{u}" rel="noopener">{t(n)}</a>' if u else f"<li><span class=nm>{t(n)}</span>")
         + f' <span class="tag">{t(k)}</span><span class="why">{t(w)}</span></li>' for n, u, k, w in RESOURCES)
 
-    signup = f"""
-<form class="signup" action="{SIGNUP_ACTION}" method="post">
-  <!-- TODO: swap this form for the Kit embed (form action + field names) once the Kit form exists -->
-  <label class="sr" for="email">Email</label>
-  <input id="email" name="email_address" type="email" placeholder="you@example.com" required autocomplete="email">
-  <button type="submit">Send me the PDF</button>
-  <p class="fine">Free. One-page printable checklist + an email when the roadmap changes. Unsubscribe any time.</p>
-</form>"""
+    signup = site.signup("email", button="Send me the PDF", label="Your email",
+                         fine="Free. The one-page printable checklist, plus an email when the roadmap changes. Unsubscribe any time.")
 
     return f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>C++ Roadmap 2027 · Morebyt</title>
+<title>C++ Roadmap 2027: Morebyt</title>
 <meta name="description" content="A free C++ roadmap for 2027: what to learn, in order, what to skip, and where the C++ jobs actually are. From a working C++ engineer.">
 <meta property="og:title" content="C++ Roadmap 2027: what to learn, what to skip, where the jobs are">
 <meta property="og:description" content="8 stages, 10 projects, 12 industries and the interview questions — free, from Morebyt.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://morebyt.com/roadmap">
-<meta name="theme-color" content="#0f3d73">
 <link rel="canonical" href="https://morebyt.com/roadmap">
+<meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{site.FONTS}">
+<link rel="stylesheet" href="/assets/site.css">
 <style>
 {CSS_TOKENS}
-*{{box-sizing:border-box}}
 html{{scroll-behavior:smooth}}
-body{{margin:0;color:var(--ink);font:17px/1.55 var(--sans);
-  background:var(--bp-1);
-  background-image:
-    radial-gradient(ellipse 1200px 900px at 50% 0, var(--bp-3), rgba(27,87,153,0) 70%),
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px),
-    linear-gradient(rgba(232,241,255,.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232,241,255,.07) 1px, transparent 1px);
-  background-size:100% 100%, 120px 120px, 120px 120px, 24px 24px, 24px 24px;
-  background-repeat:no-repeat, repeat, repeat, repeat, repeat}}
-a{{color:var(--ink)}}
-code{{font:.86em var(--mono);background:rgba(232,241,255,.1);border:1px solid var(--line);border-radius:4px;padding:0 .3em;white-space:nowrap}}
-.wrap{{max-width:1120px;margin:0 auto;padding:0 16px}}
-.sr{{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
-.kicker{{font:600 12px/1.3 var(--mono);letter-spacing:.14em;color:var(--ink-3);margin:0 0 6px}}
-h1,h2,h3{{line-height:1.15;margin:0}}
-h2{{font-size:clamp(28px,4vw,40px);font-weight:700;margin:0 0 8px}}
+code{{font:.86em var(--mono);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:0 .3em;white-space:nowrap}}
+.kicker{{font:500 14px/1.4 var(--mono);color:var(--ink-2);margin:0 0 8px}}
+
 .lede{{color:var(--ink-2);max-width:62ch;margin:0 0 28px}}
 section{{padding:72px 0 8px}}
 
-/* top bar */
-.top{{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}}
 .brand{{font-weight:700;font-size:20px;text-decoration:none;letter-spacing:.02em}}
 .top nav a{{font:13px var(--mono);margin-left:18px;color:var(--ink-2);text-decoration:none}}
 .top nav a:hover{{color:var(--ink)}}
 
 /* hero */
 .hero{{display:grid;grid-template-columns:1.25fr .9fr;gap:40px;align-items:center;padding:64px 0 24px}}
-.hero h1{{font-size:clamp(44px,7.5vw,88px);font-weight:700;letter-spacing:-.01em}}
-.hero h1 span{{display:block;font:500 clamp(18px,2.4vw,24px)/1.35 var(--sans);color:var(--ink-2);letter-spacing:0;margin-top:14px}}
-.byline{{font:13px var(--mono);color:var(--ink-3);margin:18px 0 0}}
-.box{{border:1.5px solid var(--line-2);background:rgba(11,47,92,.72);border-radius:6px;padding:22px;position:relative}}
-.box::before,.box::after{{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--ink)}}
+.hero h1{{font-size:clamp(40px,7vw,76px)}}
+.hero h1 span{{display:block;font:500 clamp(18px,2.4vw,24px)/1.35 var(--serif);color:var(--ink-2);letter-spacing:0;margin-top:14px}}
+.byline{{font:15px var(--mono);color:var(--ink-2);margin:18px 0 0}}
+.box{{border:1.5px solid var(--rule-2);background:var(--sheet);border-radius:6px;padding:22px;position:relative}}
+.box::before,.box::after{{content:"";position:absolute;width:12px;height:12px;border:2px solid var(--line)}}
 .box::before{{top:-2px;left:-2px;border-right:0;border-bottom:0}}
 .box::after{{bottom:-2px;right:-2px;border-left:0;border-top:0}}
-.signup{{display:grid;gap:10px}}
-.signup input{{font:16px var(--sans);padding:13px 14px;border-radius:4px;border:1.5px solid var(--line-2);background:var(--bp-0);color:var(--ink)}}
-.signup input::placeholder{{color:var(--ink-3)}}
-.signup button{{font:700 16px var(--sans);padding:13px 14px;border-radius:4px;border:0;background:var(--accent);color:#1d2433;cursor:pointer}}
-.signup button:hover{{filter:brightness(1.06)}}
-.fine{{font-size:13px;color:var(--ink-3);margin:2px 0 0}}
 .box h2{{font-size:22px;margin-bottom:4px}}
 .box > p{{color:var(--ink-2);margin:0 0 14px;font-size:15px}}
 
 /* tl;dr */
-.tldr{{border-left:3px solid var(--accent);padding:6px 0 6px 18px;font-size:clamp(18px,2.2vw,21px);max-width:70ch;margin:24px 0 0}}
+.tldr{{border-left:3px solid var(--amber);padding:6px 0 6px 18px;font-size:clamp(18px,2.2vw,21px);max-width:70ch;margin:24px 0 0}}
 
 /* standards bar */
-.stds{{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(4,1fr);border:1.5px solid var(--line-2);border-radius:6px;overflow:hidden}}
-.std{{padding:16px;border-right:1px solid var(--line)}}
+.stds{{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(4,1fr);border:1.5px solid var(--rule-2);border-radius:6px;overflow:hidden}}
+.std{{padding:16px;border-right:1px solid var(--rule)}}
 .std:last-child{{border-right:0}}
 .std b{{display:block;font:700 24px var(--mono)}}
 .std span{{display:block;color:var(--ink-2);font-size:14px}}
-.std em{{display:inline-block;margin-top:8px;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;font-style:normal;padding:3px 7px;border-radius:3px;border:1px solid var(--line-2)}}
-.std-1{{background:rgba(255,209,102,.13)}} .std-1 em{{background:var(--accent);color:#1d2433;border-color:var(--accent)}}
+.std em{{display:inline-block;margin-top:8px;font:600 12px var(--mono);font-style:normal;padding:3px 7px;border-radius:3px;border:1px solid var(--rule-2)}}
+.std-1{{background:color-mix(in srgb,var(--amber) 16%,transparent)}} .std-1 em{{background:var(--amber);color:var(--on-amber);border-color:var(--amber)}}
 .std-3{{opacity:.62}} .std-3 b{{text-decoration:line-through;text-decoration-thickness:2px}}
 
 /* progress */
-.progress{{position:sticky;top:0;z-index:5;background:rgba(11,47,92,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}}
+.progress{{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);}}
 .progress .wrap{{display:flex;gap:14px;align-items:center;padding-top:10px;padding-bottom:10px;font:13px var(--mono);color:var(--ink-2)}}
-.bar{{flex:1;height:8px;border:1px solid var(--line-2);border-radius:5px;overflow:hidden}}
+.bar{{flex:1;height:8px;border:1px solid var(--rule-2);border-radius:5px;overflow:hidden}}
 .bar i{{display:block;height:100%;width:0;background:var(--good);transition:width .3s}}
-.progress button{{font:12px var(--mono);background:none;border:1px solid var(--line-2);color:var(--ink-2);border-radius:3px;padding:3px 8px;cursor:pointer}}
+.progress button{{font:12px var(--mono);background:none;border:1px solid var(--rule-2);color:var(--ink-2);border-radius:3px;padding:3px 8px;cursor:pointer}}
 
 /* the map */
 .map{{list-style:none;padding:0;margin:8px 0 0;position:relative}}
-.map::before{{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed var(--line-2)}}
+.map::before{{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed var(--rule-2)}}
 .stage{{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:72px;margin:0 0 28px}}
 .stage .node{{position:absolute;left:50%;top:22px;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;
-  background:var(--bp-1);border:2px solid var(--ink);display:grid;place-items:center;font:700 18px var(--mono);z-index:1}}
+  background:var(--paper);border:2px solid var(--ink);display:grid;place-items:center;font:700 18px var(--mono);z-index:1}}
 .stage:nth-child(odd) .card{{grid-column:1;grid-row:1}}
 .stage:nth-child(even) .card{{grid-column:2;grid-row:1}}
 .stage:nth-child(odd) .spec{{grid-column:2;grid-row:1}}
 .stage:nth-child(even) .spec{{grid-column:1;grid-row:1}}
-.spec{{align-self:start;margin-top:22px;border:1.5px dashed var(--line-2);border-radius:6px;padding:16px 18px;background:rgba(11,47,92,.45)}}
+.spec{{align-self:start;margin-top:22px;border:1.5px dashed var(--rule-2);border-radius:6px;padding:16px 18px;background:var(--sheet)}}
 .spec .prove{{margin:0 0 12px;font-size:15.5px}}
-.design,.ai{{border-top:1px dashed var(--line);padding:10px 0 8px}}
+.design,.ai{{border-top:1px dashed var(--rule);padding:10px 0 8px}}
 .design p,.ai p{{margin:0 0 4px;font-size:14.5px;color:var(--ink-2)}}
-.ai b{{display:inline-block;min-width:68px;font:700 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:3px;margin-right:6px}}
-.ai .hand{{color:#1d2433;background:var(--good)}}
-.ai .keep{{color:#1d2433;background:var(--accent)}}
+.ai b{{display:inline-block;min-width:68px;font:600 12px var(--mono);padding:2px 6px;border-radius:3px;margin-right:6px}}
+.ai .hand{{color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent)}}
+.ai .keep{{color:var(--ink);background:color-mix(in srgb,var(--amber) 30%,transparent)}}
 .flow{{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:f}}
-.flow li{{position:relative;border:1.5px solid var(--line-2);border-right:0;padding:18px 18px 16px;background:rgba(11,47,92,.7)}}
-.flow li:last-child{{border-right:1.5px solid var(--line-2)}}
-.flow li:not(:last-child)::after{{content:"";position:absolute;right:-11px;top:50%;width:20px;height:20px;transform:translateY(-50%) rotate(45deg);border-top:1.5px solid var(--line-2);border-right:1.5px solid var(--line-2);background:var(--bp-0);z-index:1}}
-.flow b{{display:block;font:700 13px var(--mono);letter-spacing:.14em;color:var(--accent);margin-bottom:4px}}
+.flow li{{position:relative;border:1.5px solid var(--rule-2);border-right:0;padding:18px 18px 16px;background:var(--sheet)}}
+.flow li:last-child{{border-right:1.5px solid var(--rule-2)}}
+.flow li:not(:last-child)::after{{content:"";position:absolute;right:-11px;top:50%;width:20px;height:20px;transform:translateY(-50%) rotate(45deg);border-top:1.5px solid var(--rule-2);border-right:1.5px solid var(--rule-2);background:var(--paper);z-index:1}}
+.flow b{{display:block;font:600 14px var(--mono);color:var(--line);margin-bottom:4px}}
 .flow h3{{font-size:19px;margin-bottom:6px}}
 .flow p{{margin:0;font-size:14.5px;color:var(--ink-2)}}
 .spec ul{{margin:0;padding:0;list-style:none;font-size:14.5px}}
 .spec li{{padding:3px 0}}
-.card{{border:1.5px solid var(--line-2);background:rgba(11,47,92,.8);border-radius:6px;padding:22px 22px 14px;position:relative}}
-.stage:nth-child(odd) .card::after,.stage:nth-child(even) .card::after{{content:"";position:absolute;top:49px;width:44px;border-top:2px solid var(--line-2)}}
+.card{{border:1.5px solid var(--rule-2);background:var(--sheet);border-radius:6px;padding:22px 22px 14px;position:relative}}
+.stage:nth-child(odd) .card::after,.stage:nth-child(even) .card::after{{content:"";position:absolute;top:49px;width:44px;border-top:2px solid var(--rule-2)}}
 .stage:nth-child(odd) .card::after{{right:-46px}}
 .stage:nth-child(even) .card::after{{left:-46px}}
 .card h3{{font-size:25px}}
 .goal{{color:var(--ink-2);margin:6px 0 14px}}
 .dsa-tag{{display:inline-block;white-space:nowrap;margin:2px 0 0 8px;color:var(--good);border:1px solid var(--good);border-radius:3px;padding:1px 6px;letter-spacing:.06em}}
 .cols{{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}}
-h4{{font:700 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px}}
+h4{{font:600 14px var(--mono);color:var(--ink-2);margin:0 0 6px}}
 .card ul{{margin:0;padding:0;list-style:none;font-size:15px}}
 .card li{{padding:3px 0 3px 16px;position:relative}}
 .learn li::before{{content:"+";position:absolute;left:0;color:var(--good);font-family:var(--mono)}}
 .skip li{{color:var(--ink-2)}}
 .skip li::before{{content:"×";position:absolute;left:0;color:var(--warn);font-family:var(--mono)}}
-.checks{{border-top:1px dashed var(--line);padding-top:10px}}
+.checks{{border-top:1px dashed var(--rule);padding-top:10px}}
 .count{{margin-left:6px;color:var(--good);letter-spacing:0}}
 .checks label{{display:flex;gap:10px;align-items:flex-start;cursor:pointer}}
 .checks li{{padding-left:0}}
-.checks input{{margin-top:5px;accent-color:#7ee2b8;width:16px;height:16px;flex:none}}
-.checks input:checked + span{{color:var(--ink-3);text-decoration:line-through}}
+.checks input{{margin-top:5px;accent-color:var(--good);width:16px;height:16px;flex:none}}
+.checks input:checked + span{{color:var(--ink-2);text-decoration:line-through}}
 
 /* jobs */
 .jobs,.trends,.projs{{list-style:none;padding:0;margin:0;display:grid;gap:14px}}
 .jobs{{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}}
-.job,.trend{{border:1px solid var(--line-2);border-radius:6px;padding:16px;background:rgba(11,47,92,.66)}}
+.job,.trend{{border:1px solid var(--rule-2);border-radius:6px;padding:16px;background:var(--sheet)}}
 .job h3{{font-size:19px;margin-bottom:6px}}
 .job p{{margin:0 0 6px;font-size:14.5px;color:var(--ink-2)}}
 .job .extra b{{color:var(--ink)}}
-.meta{{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font:12px var(--mono);color:var(--ink-3)}}
+.meta{{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font:12px var(--mono);color:var(--ink-2)}}
 .door{{display:inline-flex;gap:3px}}
-.door i{{width:14px;height:8px;border:1px solid var(--line-2);border-radius:2px}}
+.door i{{width:14px;height:8px;border:1px solid var(--rule-2);border-radius:2px}}
 .door i.on{{background:var(--good);border-color:var(--good)}}
-.sig{{margin-left:auto;color:var(--accent)}}
-.note{{font-size:13px;color:var(--ink-3);margin:14px 0 0;max-width:80ch}}
+.sig{{margin-left:auto;color:var(--line)}}
+.note{{font-size:13px;color:var(--ink-2);margin:14px 0 0;max-width:80ch}}
 
 .trends{{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}}
 .trend h3{{font-size:20px;margin-bottom:8px}}
 .trend p{{font-size:14.5px;color:var(--ink-2);margin:0 0 10px}}
-.trend .todo{{color:var(--ink);border-top:1px dashed var(--line-2);padding-top:10px;margin:0}}
+.trend .todo{{color:var(--ink);border-top:1px dashed var(--rule-2);padding-top:10px;margin:0}}
 
 .projs{{grid-template-columns:1fr}}
-.proj{{display:grid;grid-template-columns:120px 1fr 1.2fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:5px;background:rgba(11,47,92,.55)}}
-.proj .lvl{{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}}
+.proj{{display:grid;grid-template-columns:120px 1fr 1.2fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--rule);border-radius:5px;background:var(--sheet)}}
+.proj .lvl{{font:500 13px var(--mono);color:var(--ink-2)}}
 .proj b{{font-size:17px}}
 .proj .why{{color:var(--ink-2);font-size:14.5px}}
-.film{{font:600 12px var(--mono);color:#1d2433;background:var(--accent);padding:4px 8px;border-radius:3px;text-decoration:none;white-space:nowrap}}
+.film{{font:600 12px var(--mono);color:var(--on-amber);background:var(--amber);padding:4px 8px;border-radius:3px;text-decoration:none;white-space:nowrap}}
 
 .qs{{margin:0;padding-left:1.4em;columns:2;column-gap:40px}}
 .qs li{{break-inside:avoid;margin:0 0 12px;font-size:15.5px}}
-.qs li::marker{{font-family:var(--mono);color:var(--ink-3)}}
+.qs li::marker{{font-family:var(--mono);color:var(--ink-2)}}
 
 .res{{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}}
-.res li{{padding:10px 0;border-bottom:1px dashed var(--line);font-size:15.5px}}
-.res .tag{{font:11px var(--mono);border:1px solid var(--line-2);border-radius:3px;padding:1px 6px;margin-left:6px;color:var(--ink-2)}}
-.res .why{{display:block;color:var(--ink-3);font-size:14px}}
+.res li{{padding:10px 0;border-bottom:1px dashed var(--rule);font-size:15.5px}}
+.res .tag{{font:11px var(--mono);border:1px solid var(--rule-2);border-radius:3px;padding:1px 6px;margin-left:6px;color:var(--ink-2)}}
+.res .why{{display:block;color:var(--ink-2);font-size:14px}}
 
 .end{{margin:72px 0 0;padding:28px;display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center}}
-footer{{border-top:1px solid var(--line);margin-top:72px;padding:28px 0 40px;font:13px var(--mono);color:var(--ink-3)}}
-footer a{{color:var(--ink-2)}}
-.titleblock{{display:inline-grid;grid-template-columns:auto auto;border:1px solid var(--line-2);margin-top:14px}}
-.titleblock span{{padding:6px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}}
 
 @media (max-width:860px){{
   .hero,.end{{grid-template-columns:1fr}}
   .stds{{grid-template-columns:1fr 1fr}}
-  .std:nth-child(2){{border-right:0}} .std:nth-child(-n+2){{border-bottom:1px solid var(--line)}}
+  .std:nth-child(2){{border-right:0}} .std:nth-child(-n+2){{border-bottom:1px solid var(--rule)}}
   .map::before{{left:19px}}
   .stage{{grid-template-columns:1fr;gap:0;padding-left:52px}}
   .stage .node{{left:19px;top:16px;width:38px;height:38px;font-size:14px}}
@@ -425,31 +394,29 @@ footer a{{color:var(--ink-2)}}
   .stage:nth-child(odd) .card::after,.stage:nth-child(even) .card::after{{left:-16px;right:auto;width:14px;top:35px}}
   .cols{{grid-template-columns:1fr}}
   .flow{{grid-template-columns:1fr}}
-  .flow li{{border-right:1.5px solid var(--line-2);border-bottom:0}}
-  .flow li:last-child{{border-bottom:1.5px solid var(--line-2)}}
+  .flow li{{border-right:1.5px solid var(--rule-2);border-bottom:0}}
+  .flow li:last-child{{border-bottom:1.5px solid var(--rule-2)}}
   .flow li:not(:last-child)::after{{right:auto;left:50%;top:auto;bottom:-11px;transform:translateX(-50%) rotate(135deg)}}
   .card,.spec{{min-width:0}}
   code{{white-space:normal;overflow-wrap:anywhere}}
   .proj{{grid-template-columns:1fr;gap:4px}}
   .qs{{columns:1}}
   .res{{grid-template-columns:1fr}}
-  .top nav a:not(:last-child){{display:none}}
 }}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}} .bar i{{transition:none}}}}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+{site.header("/roadmap")}
+<main id="main">
 <div class="wrap">
-  <div class="top">
-    <a class="brand" href="/">Morebyt</a>
-    <nav><a href="#agents">2027</a><a href="#map">The map</a><a href="#jobs">Jobs</a><a href="#projects">Projects</a><a href="#interview">Interview</a><a href="#get">Get the PDF</a></nav>
-  </div>
 
   <div class="hero">
     <div>
-      <p class="kicker">FREE · UPDATED {UPDATED.upper()}</p>
+      <p class="kicker">Free, updated {UPDATED}</p>
       <h1>C++ Roadmap 2027<span>What to learn, in order. What to skip. Where the jobs actually are.</span></h1>
-      <p class="byline">BY MOHAMMAD REZA BAYAT · WORKING C++ ENGINEER · <a href="{YT}">YOUTUBE.COM/@MOREBYT</a></p>
+      <p class="byline">By Mohammad Reza Bayat, C++ engineer. Videos at <a href="{YT}">youtube.com/@morebyt</a></p>
     </div>
     <div class="box" id="get">
       <h2>Get the 1-page checklist</h2>
@@ -464,31 +431,31 @@ footer a{{color:var(--ink-2)}}
 </div>
 
 <div class="progress" aria-live="polite">
-  <div class="wrap"><span>YOUR PROGRESS</span><div class="bar"><i id="bar"></i></div><span id="done">0 / {TOTAL_CHECKS}</span><button id="reset" type="button">reset</button></div>
+  <div class="wrap"><span>Your progress</span><div class="bar"><i id="bar"></i></div><span id="done">0 / {TOTAL_CHECKS}</span><button id="reset" type="button">reset</button></div>
 </div>
 
 <div class="wrap">
   <section id="agents">
-    <p class="kicker">SHEET 0 · HOW TO WORK IN 2027</p>
+    <p class="kicker">Sheet 0: how to work in 2027</p>
     <h2>You design. The agent types. The tests judge.</h2>
     <p class="lede">AI agents now write much of the code. They're good inside a box and weak at deciding where the boxes go — and their C++ compiles even when it uses freed memory. So the junior skill of 2027 is design and review. Stages 1–3: write everything by hand. From Stage 4 on, work like this:</p>
     <ol class="flow">
-      <li><b>01 · YOU</b><h3>Design</h3><p>A one-page DESIGN.md: the types, who owns what, the interfaces, how errors and threads work.</p></li>
-      <li><b>02 · AGENT</b><h3>Build</h3><p>The agent writes code inside your design, following your AGENTS.md.</p></li>
-      <li><b>03 · TOOLS</b><h3>Gate</h3><p>Tests, warnings, sanitizers and CI must pass. No exceptions.</p></li>
-      <li><b>04 · YOU</b><h3>Review</h3><p>Read every line. Find where it left the design. Explain it with the laptop closed.</p></li>
+      <li><b>1. You</b><h3>Design</h3><p>A one-page DESIGN.md: the types, who owns what, the interfaces, how errors and threads work.</p></li>
+      <li><b>2. Agent</b><h3>Build</h3><p>The agent writes code inside your design, following your AGENTS.md.</p></li>
+      <li><b>3. Tools</b><h3>Gate</h3><p>Tests, warnings, sanitizers and CI must pass. No exceptions.</p></li>
+      <li><b>4. You</b><h3>Review</h3><p>Read every line. Find where it left the design. Explain it with the laptop closed.</p></li>
     </ol>
   </section>
 
   <section id="map">
-    <p class="kicker">SHEET 1 · THE MAP</p>
+    <p class="kicker">Sheet 1: the map</p>
     <h2>8 stages, about 10–14 months</h2>
     <p class="lede">At about 10 hours a week, if you can already program (6–9 months if you code for a living). Start data-structures-and-algorithms practice at Stage 3 and keep it going. Tick items as you go — your progress stays in this browser.</p>
     <ol class="map">{''.join(stages)}</ol>
   </section>
 
   <section id="jobs">
-    <p class="kicker">SHEET 2 · WHERE THE JOBS ARE</p>
+    <p class="kicker">Sheet 2: where the jobs are</p>
     <h2>The seats aren't where the hype is</h2>
     <p class="lede">Trading and game engines get the attention. The job ads say the seats are in embedded, robotics, chips, infrastructure and AI runtimes. Pick one of these and learn its extra skills.</p>
     <ul class="jobs">{jobs}</ul>
@@ -496,41 +463,39 @@ footer a{{color:var(--ink-2)}}
   </section>
 
   <section id="trends">
-    <p class="kicker">SHEET 3 · WHAT'S CHANGING</p>
+    <p class="kicker">Sheet 3: what's changing</p>
     <h2>4 things a 2027 learner must know</h2>
     <ul class="trends">{trends}</ul>
   </section>
 
   <section id="projects">
-    <p class="kicker">SHEET 4 · PROJECTS THAT GET YOU HIRED</p>
+    <p class="kicker">Sheet 4: projects that get you hired</p>
     <h2>Five finished beats eight abandoned</h2>
     <p class="lede">Every project: builds in one command, has tests, runs sanitizers in CI, and has one measured number in the README. Skip to-do apps and tutorial clones.</p>
     <ul class="projs">{projects}</ul>
   </section>
 
   <section id="interview">
-    <p class="kicker">SHEET 5 · THE INTERVIEW</p>
+    <p class="kicker">Sheet 5: the interview</p>
     <h2>10 questions and one design problem</h2>
     <ol class="qs">{qs}</ol>
     <p class="note">Search job titles, not “C++ developer”: embedded or firmware engineer, systems software engineer, graduate software engineer, robotics software engineer. Internships beat certificates. Never write “C/C++” on your CV.</p>
   </section>
 
   <section id="resources">
-    <p class="kicker">SHEET 6 · RESOURCES</p>
+    <p class="kicker">Sheet 6: resources</p>
     <h2>The short list</h2>
     <ul class="res">{res}</ul>
   </section>
 
   <div class="box end">
-    <div><p class="kicker">BUILD IT TO UNDERSTAND IT</p><h2>Take the checklist with you</h2><p style="color:var(--ink-2);margin:0">One printable page, all {TOTAL_CHECKS} steps. You'll also get an email when the roadmap changes — for example when C++26 is finally settled.</p></div>
-    {signup.replace('id="email"', 'id="email2"').replace('for="email"', 'for="email2"')}
+    <div><h2>Take the checklist with you</h2><p style="color:var(--ink-2);margin:0">One printable page, all {TOTAL_CHECKS} steps. You'll also get an email when the roadmap changes — for example when C++26 is finally settled.</p></div>
+    {site.signup("email2", button="Send me the PDF", fine="Free. Unsubscribe any time.")}
   </div>
 
-  <footer>
-    <div>Morebyt · <a href="{YT}">YouTube</a> · <a href="/consulting">C++ consulting</a> · hello@morebyt.com</div>
-    <div class="titleblock"><span>PROJECT: C++ ROADMAP 2027</span><span>DRAWN BY: MOREBYT</span><span>REV: {UPDATED.upper()}</span><span>SHEET 1 OF ∞</span></div>
-  </footer>
+
 </div>
+</main>
 
 <script>
 (function(){{
@@ -554,8 +519,7 @@ footer a{{color:var(--ink-2)}}
   render();
 }})();
 </script>
-</body>
-</html>"""
+""" + site.footer()
 
 # ---------------------------------------------------------------- printable checklist (PDF)
 def printable():
