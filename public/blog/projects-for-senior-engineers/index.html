@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>27 projects every senior engineer should build once: Morebyt</title>
+<meta name="description" content="Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.">
+<meta property="og:title" content="27 projects every senior engineer should build once: Morebyt">
+<meta property="og:description" content="Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.">
+<meta property="og:url" content="https://morebyt.com/blog/projects-for-senior-engineers/">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://morebyt.com/blog/projects-for-senior-engineers/">
+<meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"27 projects every senior engineer should build once","description":"Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.","datePublished":"2025-09-27","dateModified":"2026-11-20","author":{"@type":"Person","name":"Mohammad Reza Bayat","url":"https://morebyt.com/"},"mainEntityOfPage":"https://morebyt.com/blog/projects-for-senior-engineers/"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<style>
+.post{max-width:72ch;padding:var(--s6) 0 var(--s5)}
+.post header{margin-bottom:var(--s5)}
+.post h1{font-size:clamp(30px,5vw,46px);margin-bottom:var(--s3)}
+.meta{font:14px/1.6 var(--mono);color:var(--ink-2)}
+.meta a{color:var(--ink-2)}
+.prose{font-size:19px;line-height:1.7}
+.prose h2{font-size:clamp(23px,3vw,28px);margin:var(--s6) 0 var(--s3)}
+.prose h3{font-size:20px;margin:var(--s5) 0 var(--s2)}
+.prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
+.prose li{margin-bottom:6px}
+.prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
+.prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
+.prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
+.prose th{font:600 14px var(--mono);color:var(--ink-2);border-bottom-color:var(--rule-2)}
+.prose :not(pre)>code{font-size:.84em;background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:.05em .3em;overflow-wrap:anywhere}
+.prose pre{font:15px/1.55 var(--mono);background:var(--sheet);border:1px solid var(--rule-2);padding:var(--s3);overflow-x:auto;tab-size:4}
+.prose hr{border:0;border-top:1px solid var(--rule);margin:var(--s5) 0}
+.video{position:relative;aspect-ratio:16/9;margin:0 0 var(--s5);border:1px solid var(--rule-2)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.after{margin-top:var(--s6)}
+/* code colours: light */
+.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:#7a2e8a}
+.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:#1f6a3a}
+.hl .c,.hl .c1,.hl .cm{color:#6a7785;font-style:italic}
+.hl .m,.hl .mi,.hl .mf,.hl .mh{color:#a3501a}
+.hl .nf,.hl .nc{color:#1E4F86}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl .k,:root:not([data-theme="light"]) .hl .kd,:root:not([data-theme="light"]) .hl .kt,:root:not([data-theme="light"]) .hl .kr,:root:not([data-theme="light"]) .hl .kn,:root:not([data-theme="light"]) .hl .cp{color:#d6a3f0}
+:root:not([data-theme="light"]) .hl .s,:root:not([data-theme="light"]) .hl .s1,:root:not([data-theme="light"]) .hl .s2,:root:not([data-theme="light"]) .hl .sc,:root:not([data-theme="light"]) .hl .cpf{color:#8fd9a8}
+:root:not([data-theme="light"]) .hl .c,:root:not([data-theme="light"]) .hl .c1,:root:not([data-theme="light"]) .hl .cm{color:#8b99a8}
+:root:not([data-theme="light"]) .hl .m,:root:not([data-theme="light"]) .hl .mi,:root:not([data-theme="light"]) .hl .mf,:root:not([data-theme="light"]) .hl .mh{color:#f0b07a}
+:root:not([data-theme="light"]) .hl .nf,:root:not([data-theme="light"]) .hl .nc{color:#8DB6E6}}
+</style><header class="site-head"><div class="wrap">
+  <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+<rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
+<path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>morebyt</a>
+  <nav class="nav" aria-label="Main"><a href="/roadmap">Roadmap</a><a href="/blog" aria-current="page">Blog</a><a href="/consulting">Consulting</a><a href="https://www.youtube.com/@morebyt">YouTube</a></nav>
+</div></header>
+<main id="main"><div class="wrap"><article class="post">
+  <header>
+    <h1>27 projects every senior engineer should build once</h1>
+    <p class="meta">By Mohammad Reza Bayat · <time datetime="2025-09-27">27 September 2025</time> · updated <time datetime="2026-11-20">20 November 2026</time> · 7 min read</p>
+  </header>
+  
+  <div class="prose">
+<p>After a few years in the job, most of us know our own stack well and everything under it only vaguely. We call the database, the network and the compiler, but we have never had to build one. The fastest way I know to fix that is to build a small, bad version of the thing yourself. You won't ship it. You will understand the real one much better afterwards.</p>
+<p>Here are 27 projects I'd recommend, three per area. None of them is a weekend job. Each one puts you in front of problems a CRUD app never shows you. For each I've noted what it teaches and a good place to start. Many people collect similar lists; the <a href="https://github.com/codecrafters-io/build-your-own-x">build-your-own-x</a> repository is the biggest, with tutorials for most of these.</p>
+<p>If you're earlier in your career and want projects that get you hired, the <a href="/roadmap/#projects">C++ Roadmap 2027</a> has a shorter list aimed at that.</p>
+<h2 id="operating-systems-and-storage">Operating systems and storage</h2>
+<ol>
+<li>
+<p><strong>An operating system kernel.</strong> A bootloader, a memory manager and a scheduler that switches between two processes. You learn what the CPU actually does when it boots, how virtual memory works, and why a bad pointer in kernel code takes the whole machine down. Start with the <a href="https://wiki.osdev.org/">OSDev wiki</a> and MIT's teaching kernel <a href="https://pdos.csail.mit.edu/6.828/2024/xv6.html">xv6</a>. I'm building a tiny OS on <a href="https://www.youtube.com/@morebyt">the Morebyt channel</a> from February 2027.</p>
+</li>
+<li>
+<p><strong>A database engine.</strong> A B-tree on disk, a simple query parser and transactions. After this you will never forget an index again, because you will have felt what a full table scan costs. The <a href="https://cstack.github.io/db_tutorial/">Let's Build a Simple Database</a> tutorial gets you to a working SQLite clone.</p>
+</li>
+<li>
+<p><strong>A web server.</strong> Parse HTTP requests, serve files, handle many connections at once. The interesting part is concurrency: threads first, then an event loop with <code>epoll</code> or <code>kqueue</code>, and measuring the difference. <a href="https://www.rfc-editor.org/rfc/rfc9112">RFC 9112</a> is the HTTP/1.1 spec you'll be reading.</p>
+</li>
+</ol>
+<h2 id="compilers-and-languages">Compilers and languages</h2>
+<ol start="4">
+<li>
+<p><strong>A compiler for a small language.</strong> Tokens, a parser, a syntax tree and code generation, even if the target is just C or a simple assembly. You stop seeing compiler errors as noise and start seeing the stage that produced them. Robert Nystrom's <a href="https://craftinginterpreters.com/">Crafting Interpreters</a> is the best free guide I know. A compiler series is on the Morebyt plan for August 2027.</p>
+</li>
+<li>
+<p><strong>A virtual machine.</strong> Run the bytecode your compiler emits, on a stack machine or a register machine. You'll see why the JVM and Python's interpreter are designed the way they are. The second half of Crafting Interpreters builds exactly this.</p>
+</li>
+<li>
+<p><strong>A regex engine.</strong> Turn a pattern into an automaton and match strings with it. Russ Cox's article <a href="https://swtch.com/~rsc/regexp/regexp1.html">Regular Expression Matching Can Be Simple And Fast</a> explains why the backtracking approach most languages use can take exponential time, and how to avoid it.</p>
+</li>
+</ol>
+<h2 id="algorithms-search-and-games">Algorithms, search and games</h2>
+<ol start="7">
+<li>
+<p><strong>A chess engine.</strong> Move generation, minimax with alpha-beta pruning, then a transposition table. Getting move generation completely correct is harder than it sounds and teaches you to test against known positions. The <a href="https://www.chessprogramming.org/">Chess Programming Wiki</a> covers every technique.</p>
+</li>
+<li>
+<p><strong>A small search engine.</strong> Crawl a set of pages, build an inverted index and rank results with TF-IDF or BM25. The free book <a href="https://nlp.stanford.edu/IR-book/">Introduction to Information Retrieval</a> explains both.</p>
+</li>
+<li>
+<p><strong>A reinforcement learning agent for Snake or Tetris.</strong> Write the game, then an agent that learns to play it. Expect to spend more time on the reward function than on the learning code. Sutton and Barto's <a href="http://incompleteideas.net/book/the-book.html">Reinforcement Learning: An Introduction</a> is free online.</p>
+</li>
+</ol>
+<h2 id="networking-and-distributed-systems">Networking and distributed systems</h2>
+<ol start="10">
+<li>
+<p><strong>A distributed key-value store with Raft.</strong> Three nodes that agree on the same data even when one dies. It teaches you what "the network is unreliable" means in practice. Read the <a href="https://raft.github.io/">Raft paper and visualisation</a> first.</p>
+</li>
+<li>
+<p><strong>A BitTorrent client.</strong> Talk to a tracker, connect to peers, download pieces in parallel and check their hashes. The original protocol, <a href="https://www.bittorrent.org/beps/bep_0003.html">BEP 3</a>, is short enough to read in an evening.</p>
+</li>
+<li>
+<p><strong>A TCP/IP stack.</strong> Handle Ethernet frames, IP and TCP yourself on a TUN/TAP device. You'll implement the handshake, retransmission and windows, and ordinary network bugs will start to make sense. The current TCP spec is <a href="https://www.rfc-editor.org/rfc/rfc9293">RFC 9293</a>.</p>
+</li>
+</ol>
+<h2 id="graphics-and-media">Graphics and media</h2>
+<ol start="13">
+<li>
+<p><strong>A video player.</strong> Demux a file, decode the frames with a library like FFmpeg's libav, and keep audio and video in sync. The sync is the hard part, and it's where you learn how much timing work a player does for you.</p>
+</li>
+<li>
+<p><strong>A ray tracer.</strong> Shoot rays, bounce them off spheres, get a picture. For the effort it takes, it's the most satisfying project on this list. <a href="https://raytracing.github.io/">Ray Tracing in One Weekend</a> takes you from nothing to soft shadows and glass.</p>
+</li>
+<li>
+<p><strong>A small game engine.</strong> A game loop, rendering, input and simple physics. You'll learn about fixed time steps and why engines separate the update rate from the frame rate. Jason Gregory's book <em>Game Engine Architecture</em> is the standard reference.</p>
+</li>
+</ol>
+<h2 id="security-and-cryptography">Security and cryptography</h2>
+<ol start="16">
+<li>
+<p><strong>A TLS 1.3 handshake.</strong> Implement the handshake against a real server, using an existing library for the cryptographic primitives. You learn what the padlock in your browser actually checks. The spec is <a href="https://www.rfc-editor.org/rfc/rfc8446">RFC 8446</a>. Treat this as a learning project only; never use home-made TLS for real traffic.</p>
+</li>
+<li>
+<p><strong>A toy blockchain.</strong> Blocks, hashes, proof of work and a few nodes that agree on the longest chain. It's a compact way to learn about hashing, Merkle trees and consensus. Start with the <a href="https://bitcoin.org/bitcoin.pdf">Bitcoin paper</a>, which is nine pages long.</p>
+</li>
+<li>
+<p><strong>A password manager.</strong> An encrypted vault, a key derived from a master password, and safe handling of secrets in memory. Use a vetted library such as <a href="https://doc.libsodium.org/">libsodium</a> and a slow key-derivation function like Argon2; the lesson is in using cryptography correctly, not inventing it.</p>
+</li>
+</ol>
+<h2 id="developer-tools">Developer tools</h2>
+<ol start="19">
+<li>
+<p><strong>A version control system.</strong> Blobs, trees, commits and branches stored the way Git stores them. Once you've written it, Git's odd commands suddenly have obvious meanings. <a href="https://wyag.thb.lt/">Write yourself a Git</a> walks through it in Python, and it's easy to follow in C++.</p>
+</li>
+<li>
+<p><strong>A code formatter or linter.</strong> Parse real source code into a syntax tree and print it back out, or walk the tree looking for patterns. You'll find out how much of a language's grammar you never had to think about.</p>
+</li>
+<li>
+<p><strong>A debugger.</strong> Start a process, set a breakpoint by writing a trap instruction into its memory, read registers and step through code. Sy Brand's <a href="https://blog.tartanllama.xyz/writing-a-linux-debugger-setup/">Writing a Linux Debugger</a> series shows how <code>ptrace</code> makes this possible.</p>
+</li>
+</ol>
+<h2 id="data-systems">Data systems</h2>
+<ol start="22">
+<li>
+<p><strong>A recommendation engine.</strong> Collaborative filtering on a public ratings dataset, then a look at why the results are so often obvious. The data handling teaches as much as the maths.</p>
+</li>
+<li>
+<p><strong>A real-time analytics pipeline.</strong> Events in, aggregates out, a dashboard that updates every second. You'll meet back-pressure, late events and windows, the same problems Kafka and stream processors solve.</p>
+</li>
+<li>
+<p><strong>A time-series database.</strong> Store metrics compactly and query them by time range. Facebook's <a href="https://www.vldb.org/pvldb/vol8/p1816-teller.pdf">Gorilla paper</a> describes the compression tricks that make this work.</p>
+</li>
+</ol>
+<h2 id="classic-challenges">Classic challenges</h2>
+<ol start="25">
+<li>
+<p><strong>An emulator.</strong> CHIP-8 first, then a Game Boy or NES if you get hooked. You write a CPU, memory, a screen and a keyboard in software, which is about the most direct way to learn how a computer runs a program. I filmed a <a href="https://www.youtube.com/playlist?list=PLd0lXMskqFUU">complete CHIP-8 emulator in C++</a>, one part per episode.</p>
+</li>
+<li>
+<p><strong>A Doom-style raycaster.</strong> The 2.5D trick behind Wolfenstein 3D: cast one ray per screen column and draw a wall slice. <a href="https://lodev.org/cgtutor/raycasting.html">Lode's raycasting tutorial</a> gets you to textured walls quickly.</p>
+</li>
+<li>
+<p><strong>A fluid simulation.</strong> Smoke or water on a grid. The maths looks frightening, but Jos Stam's paper <em>Real-Time Fluid Dynamics for Games</em> (2003) reduces it to a few short functions, and the results look great.</p>
+</li>
+</ol>
+<h2 id="where-to-start">Where to start</h2>
+<p>Pick the one that matches the layer you understand least. If databases feel like magic, build the database. If you've never wondered how your program reaches the CPU, start with the emulator, because it's the smallest project here that still covers a whole machine.</p>
+<p>Keep the first version small and finish it. A working toy teaches more than an ambitious design that stops halfway, and it gives you something real to talk about in your next interview.</p>
+  </div>
+  <div class="after sheet">
+    <h2 style="font-size:20px">Get the next post by email</h2>
+    <form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">
+  <label for="email-post">Your email</label>
+  <div class="row">
+    <input id="email-post" name="email_address" type="email" autocomplete="email" required placeholder="you@example.com">
+    <button class="btn btn-primary" type="submit">Join the list</button>
+  </div>
+  <p class="fine">Free. You get the one-page C++ Roadmap 2027 checklist, then an email when a new video or post is out. Unsubscribe any time.</p>
+</form>
+  </div>
+</article></div></main>
+<footer class="site-foot"><div class="wrap">
+  <div class="titleblock">
+    <div><span>Project</span>Morebyt: build it to understand it</div>
+    <div><span>Drawn by</span>Mohammad Reza Bayat</div>
+    <div><span>Videos</span><a href="https://www.youtube.com/@morebyt">youtube.com/@morebyt</a></div>
+    <div><span>Contact</span><a href="mailto:hello@morebyt.com">hello@morebyt.com</a></div>
+  </div>
+</div></footer>
+</body>
+</html>

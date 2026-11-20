@@ -400,6 +400,6 @@ def write(rel, text):
 if __name__ == "__main__":
     write("index.html", home())
     write("consulting/index.html", consulting())
-    write("blog/index.html", blog())
+    # blog/index.html is built by build_blog.py
     write("404.html", not_found())
     write("assets/favicon.svg", FAVICON)

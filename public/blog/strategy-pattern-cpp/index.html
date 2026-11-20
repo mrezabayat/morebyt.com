@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Strategy pattern in modern C++: Morebyt</title>
+<meta name="description" content="How the Strategy pattern lets an object swap behaviour at runtime, shown with a C++20 example using std::unique_ptr, plus the lighter std::function version.">
+<meta property="og:title" content="The Strategy pattern in modern C++: Morebyt">
+<meta property="og:description" content="How the Strategy pattern lets an object swap behaviour at runtime, shown with a C++20 example using std::unique_ptr, plus the lighter std::function version.">
+<meta property="og:url" content="https://morebyt.com/blog/strategy-pattern-cpp/">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://morebyt.com/blog/strategy-pattern-cpp/">
+<meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Strategy pattern in modern C++","description":"How the Strategy pattern lets an object swap behaviour at runtime, shown with a C++20 example using std::unique_ptr, plus the lighter std::function version.","datePublished":"2025-01-17","dateModified":"2026-11-20","author":{"@type":"Person","name":"Mohammad Reza Bayat","url":"https://morebyt.com/"},"mainEntityOfPage":"https://morebyt.com/blog/strategy-pattern-cpp/"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<style>
+.post{max-width:72ch;padding:var(--s6) 0 var(--s5)}
+.post header{margin-bottom:var(--s5)}
+.post h1{font-size:clamp(30px,5vw,46px);margin-bottom:var(--s3)}
+.meta{font:14px/1.6 var(--mono);color:var(--ink-2)}
+.meta a{color:var(--ink-2)}
+.prose{font-size:19px;line-height:1.7}
+.prose h2{font-size:clamp(23px,3vw,28px);margin:var(--s6) 0 var(--s3)}
+.prose h3{font-size:20px;margin:var(--s5) 0 var(--s2)}
+.prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
+.prose li{margin-bottom:6px}
+.prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
+.prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
+.prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
+.prose th{font:600 14px var(--mono);color:var(--ink-2);border-bottom-color:var(--rule-2)}
+.prose :not(pre)>code{font-size:.84em;background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:.05em .3em;overflow-wrap:anywhere}
+.prose pre{font:15px/1.55 var(--mono);background:var(--sheet);border:1px solid var(--rule-2);padding:var(--s3);overflow-x:auto;tab-size:4}
+.prose hr{border:0;border-top:1px solid var(--rule);margin:var(--s5) 0}
+.video{position:relative;aspect-ratio:16/9;margin:0 0 var(--s5);border:1px solid var(--rule-2)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.after{margin-top:var(--s6)}
+/* code colours: light */
+.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:#7a2e8a}
+.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:#1f6a3a}
+.hl .c,.hl .c1,.hl .cm{color:#6a7785;font-style:italic}
+.hl .m,.hl .mi,.hl .mf,.hl .mh{color:#a3501a}
+.hl .nf,.hl .nc{color:#1E4F86}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl .k,:root:not([data-theme="light"]) .hl .kd,:root:not([data-theme="light"]) .hl .kt,:root:not([data-theme="light"]) .hl .kr,:root:not([data-theme="light"]) .hl .kn,:root:not([data-theme="light"]) .hl .cp{color:#d6a3f0}
+:root:not([data-theme="light"]) .hl .s,:root:not([data-theme="light"]) .hl .s1,:root:not([data-theme="light"]) .hl .s2,:root:not([data-theme="light"]) .hl .sc,:root:not([data-theme="light"]) .hl .cpf{color:#8fd9a8}
+:root:not([data-theme="light"]) .hl .c,:root:not([data-theme="light"]) .hl .c1,:root:not([data-theme="light"]) .hl .cm{color:#8b99a8}
+:root:not([data-theme="light"]) .hl .m,:root:not([data-theme="light"]) .hl .mi,:root:not([data-theme="light"]) .hl .mf,:root:not([data-theme="light"]) .hl .mh{color:#f0b07a}
+:root:not([data-theme="light"]) .hl .nf,:root:not([data-theme="light"]) .hl .nc{color:#8DB6E6}}
+</style><header class="site-head"><div class="wrap">
+  <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+<rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
+<path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>morebyt</a>
+  <nav class="nav" aria-label="Main"><a href="/roadmap">Roadmap</a><a href="/blog" aria-current="page">Blog</a><a href="/consulting">Consulting</a><a href="https://www.youtube.com/@morebyt">YouTube</a></nav>
+</div></header>
+<main id="main"><div class="wrap"><article class="post">
+  <header>
+    <h1>The Strategy pattern in modern C++</h1>
+    <p class="meta">By Mohammad Reza Bayat · <time datetime="2025-01-17">17 January 2025</time> · updated <time datetime="2026-11-20">20 November 2026</time> · 3 min read</p>
+  </header>
+  
+  <div class="prose">
+<p>The Strategy pattern lets an object change how it does something without changing its own code. You pull the behaviour that varies into its own small class behind an interface, and the object holds whichever version it currently needs. Swapping the behaviour at runtime then means swapping one pointer.</p>
+<p>It's one of the original 23 patterns in <em>Design Patterns</em> by Gamma, Helm, Johnson and Vlissides (1994), where it's described as defining a family of algorithms, encapsulating each one and making them interchangeable. The duck example below is the one <em>Head First Design Patterns</em> made famous, rewritten here in modern C++.</p>
+<h2 id="the-three-parts">The three parts</h2>
+<p><img loading="lazy" alt="UML class diagram of the Strategy pattern: a Context holding a Strategy interface with several concrete strategies" src="key_components_uml_class_diagram.png" /></p>
+<p>The context is the class your code talks to. It holds a strategy and forwards the work to it, and it can be given a different strategy later. The strategy interface declares the operation every variant must provide. The concrete strategies are the variants themselves, each one a small class.</p>
+<p>Adding a new behaviour means adding a new concrete strategy. Neither the context nor the existing strategies change, which is the open-closed principle in practice.</p>
+<h2 id="example-ducks-that-fly-and-quack-differently">Example: ducks that fly and quack differently</h2>
+<p>A <code>Duck</code> can fly and quack, but not every duck does either the same way. A mallard flies with wings, a wooden model duck can't fly at all, and we might want to bolt a rocket onto the model later. Putting all of that into a <code>Duck</code> class hierarchy with overrides gets messy quickly, so flying and quacking become strategies.</p>
+<h3 id="the-strategy-interfaces">The strategy interfaces</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">duck</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FlyBehavior</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">FlyBehavior</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">fly</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">QuackBehavior</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">QuackBehavior</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">quack</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace duck</span>
+</code></pre></div>
+
+<p>The virtual destructor matters: strategies are deleted through a base-class pointer, and without it that would be undefined behaviour.</p>
+<h3 id="the-concrete-strategies">The concrete strategies</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">duck</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FlyWithWings</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">FlyBehavior</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">fly</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"I'm flying with wings!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FlyNoWay</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">FlyBehavior</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">fly</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"I can't fly.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FlyRocketPowered</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">FlyBehavior</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">fly</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"I'm flying with a rocket!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Quack</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">QuackBehavior</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">quack</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Quack!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MuteQuack</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">QuackBehavior</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">quack</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"...</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace duck</span>
+</code></pre></div>
+
+<h3 id="the-context-duck">The context: Duck</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">duck</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Duck</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">Duck</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">swim</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"I'm swimming.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">display</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">performFly</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">m_fly</span><span class="o">-&gt;</span><span class="n">fly</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">performQuack</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">m_quack</span><span class="o">-&gt;</span><span class="n">quack</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">setFlyBehavior</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">FlyBehavior</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fly</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">m_fly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">fly</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">setQuackBehavior</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">QuackBehavior</span><span class="o">&gt;</span><span class="w"> </span><span class="n">quack</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">m_quack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">quack</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Duck</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">FlyBehavior</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fly</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">QuackBehavior</span><span class="o">&gt;</span><span class="w"> </span><span class="n">quack</span><span class="p">)</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">m_fly</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">fly</span><span class="p">)),</span><span class="w"> </span><span class="n">m_quack</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">quack</span><span class="p">))</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">FlyBehavior</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_fly</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">QuackBehavior</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_quack</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace duck</span>
+</code></pre></div>
+
+<p>Each duck owns its strategies, so <code>std::unique_ptr</code> is the right type: there's exactly one owner, and the strategy is deleted when the duck is. The setters take the pointer by value, which makes the transfer of ownership visible at the call site, where the caller has to write <code>std::move</code> or pass a temporary.</p>
+<p>The class declares no copy or move operations, because <code>std::unique_ptr</code> already makes <code>Duck</code> movable and non-copyable. Writing those by hand would only add code that can go wrong. The constructor takes both strategies, so a duck can never exist without them, and there's no null pointer to check in <code>performFly</code>.</p>
+<h3 id="two-kinds-of-duck">Two kinds of duck</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">duck</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MallardDuck</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Duck</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">MallardDuck</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Duck</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">FlyWithWings</span><span class="o">&gt;</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Quack</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">display</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"I'm a mallard duck.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelDuck</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Duck</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">ModelDuck</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Duck</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">FlyNoWay</span><span class="o">&gt;</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Quack</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">display</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"I'm a model duck.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace duck</span>
+</code></pre></div>
+
+<h3 id="swapping-a-strategy-at-runtime">Swapping a strategy at runtime</h3>
+<div class="hl"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">duck</span><span class="o">::</span><span class="n">MallardDuck</span><span class="w"> </span><span class="n">mallard</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mallard</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mallard</span><span class="p">.</span><span class="n">performQuack</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mallard</span><span class="p">.</span><span class="n">performFly</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">duck</span><span class="o">::</span><span class="n">ModelDuck</span><span class="w"> </span><span class="n">model</span><span class="p">;</span>
+<span class="w">    </span><span class="n">model</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+<span class="w">    </span><span class="n">model</span><span class="p">.</span><span class="n">performFly</span><span class="p">();</span><span class="w">                                              </span><span class="c1">// I can't fly.</span>
+<span class="w">    </span><span class="n">model</span><span class="p">.</span><span class="n">setFlyBehavior</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">duck</span><span class="o">::</span><span class="n">FlyRocketPowered</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="n">model</span><span class="p">.</span><span class="n">performFly</span><span class="p">();</span><span class="w">                                              </span><span class="c1">// I'm flying with a rocket!</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The model duck starts out unable to fly. One call to <code>setFlyBehavior</code> later it flies with a rocket, and <code>ModelDuck</code> itself never changed.</p>
+<h2 id="the-lighter-version-a-callable">The lighter version: a callable</h2>
+<p>When a strategy is a single operation with no state of its own, a whole class hierarchy is often more than you need. <code>std::function</code> holds any callable with the right signature, so a lambda can be the strategy:</p>
+<div class="hl"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Robot</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">Robot</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="n">move</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m_move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">move</span><span class="p">))</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">setMove</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="n">move</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">m_move</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">move</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">move</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">m_move</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_move</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">Robot</span><span class="w"> </span><span class="n">robot</span><span class="p">{[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rolling.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">}};</span>
+<span class="n">robot</span><span class="p">.</span><span class="n">move</span><span class="p">();</span>
+<span class="n">robot</span><span class="p">.</span><span class="n">setMove</span><span class="p">([]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Walking.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="n">robot</span><span class="p">.</span><span class="n">move</span><span class="p">();</span>
+</code></pre></div>
+
+<p>I'd use the interface version when a strategy has several related operations or its own state, or when you want each variant to have a name in the codebase. I'd use <code>std::function</code> for one-off behaviour like a comparison, a retry policy or a callback. If the strategy never changes at runtime, a template parameter avoids the indirect call entirely; that's how the standard library takes the comparator in <code>std::sort</code>.</p>
+<h2 id="when-it-helps-and-when-it-doesnt">When it helps and when it doesn't</h2>
+<p>Strategy pays off when one part of a class's behaviour varies independently of the rest, especially when it has to change while the program runs. It's a poor fit when there's only ever one behaviour, since the interface becomes ceremony, or when the variants need deep access to the context's internals, which is a sign they belong in the context after all.</p>
+<p>Put together in one file with <code>&lt;functional&gt;</code>, <code>&lt;iostream&gt;</code>, <code>&lt;memory&gt;</code> and <code>&lt;utility&gt;</code> included, the code above compiles with <code>clang++ -std=c++20 -Wall -Wextra</code> and runs cleanly under AddressSanitizer and UBSan.</p>
+  </div>
+  <div class="after sheet">
+    <h2 style="font-size:20px">Get the next post by email</h2>
+    <form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">
+  <label for="email-post">Your email</label>
+  <div class="row">
+    <input id="email-post" name="email_address" type="email" autocomplete="email" required placeholder="you@example.com">
+    <button class="btn btn-primary" type="submit">Join the list</button>
+  </div>
+  <p class="fine">Free. You get the one-page C++ Roadmap 2027 checklist, then an email when a new video or post is out. Unsubscribe any time.</p>
+</form>
+  </div>
+</article></div></main>
+<footer class="site-foot"><div class="wrap">
+  <div class="titleblock">
+    <div><span>Project</span>Morebyt: build it to understand it</div>
+    <div><span>Drawn by</span>Mohammad Reza Bayat</div>
+    <div><span>Videos</span><a href="https://www.youtube.com/@morebyt">youtube.com/@morebyt</a></div>
+    <div><span>Contact</span><a href="mailto:hello@morebyt.com">hello@morebyt.com</a></div>
+  </div>
+</div></footer>
+</body>
+</html>

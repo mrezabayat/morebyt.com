@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="520" height="300" font-family="IBM Plex Mono, ui-monospace, Menlo, monospace" font-size="14" fill="#14212E">
+  <rect x="10" y="10" width="500" height="280" fill="#fff" stroke="#14212E" stroke-width="1.6"/>
+  <line x1="10" y1="48" x2="510" y2="48" stroke="#14212E" stroke-width="1.2"/>
+  <line x1="10" y1="132" x2="510" y2="132" stroke="#14212E" stroke-width="1.2"/>
+  <text x="260" y="35" text-anchor="middle" font-weight="600" font-size="16">BankAccount</text>
+  <text x="26" y="74">- m_owner : string</text>
+  <text x="26" y="96">- m_number : int</text>
+  <text x="26" y="118">- m_balancePence : int64</text>
+  <text x="26" y="158">+ BankAccount(owner : string, number : int,</text>
+  <text x="26" y="178">              openingPence : int64)</text>
+  <text x="26" y="202">+ deposit(pence : int64) : void</text>
+  <text x="26" y="224">+ withdraw(pence : int64) : bool</text>
+  <text x="26" y="246">+ owner() : string</text>
+  <text x="26" y="268">+ balancePence() : int64</text>
+  <text x="300" y="268" fill="#44546A" font-size="12">(number() omitted)</text>
+</svg>

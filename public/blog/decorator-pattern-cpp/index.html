@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Decorator pattern in modern C++: Morebyt</title>
+<meta name="description" content="How the Decorator pattern adds behaviour to one object by wrapping it, shown with a C++20 coffee shop that uses unique_ptr, prices in pence and no duplicated members.">
+<meta property="og:title" content="The Decorator pattern in modern C++: Morebyt">
+<meta property="og:description" content="How the Decorator pattern adds behaviour to one object by wrapping it, shown with a C++20 coffee shop that uses unique_ptr, prices in pence and no duplicated members.">
+<meta property="og:url" content="https://morebyt.com/blog/decorator-pattern-cpp/">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://morebyt.com/blog/decorator-pattern-cpp/">
+<meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Decorator pattern in modern C++","description":"How the Decorator pattern adds behaviour to one object by wrapping it, shown with a C++20 coffee shop that uses unique_ptr, prices in pence and no duplicated members.","datePublished":"2025-01-26","dateModified":"2026-11-20","author":{"@type":"Person","name":"Mohammad Reza Bayat","url":"https://morebyt.com/"},"mainEntityOfPage":"https://morebyt.com/blog/decorator-pattern-cpp/"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<style>
+.post{max-width:72ch;padding:var(--s6) 0 var(--s5)}
+.post header{margin-bottom:var(--s5)}
+.post h1{font-size:clamp(30px,5vw,46px);margin-bottom:var(--s3)}
+.meta{font:14px/1.6 var(--mono);color:var(--ink-2)}
+.meta a{color:var(--ink-2)}
+.prose{font-size:19px;line-height:1.7}
+.prose h2{font-size:clamp(23px,3vw,28px);margin:var(--s6) 0 var(--s3)}
+.prose h3{font-size:20px;margin:var(--s5) 0 var(--s2)}
+.prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
+.prose li{margin-bottom:6px}
+.prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
+.prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
+.prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
+.prose th{font:600 14px var(--mono);color:var(--ink-2);border-bottom-color:var(--rule-2)}
+.prose :not(pre)>code{font-size:.84em;background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:.05em .3em;overflow-wrap:anywhere}
+.prose pre{font:15px/1.55 var(--mono);background:var(--sheet);border:1px solid var(--rule-2);padding:var(--s3);overflow-x:auto;tab-size:4}
+.prose hr{border:0;border-top:1px solid var(--rule);margin:var(--s5) 0}
+.video{position:relative;aspect-ratio:16/9;margin:0 0 var(--s5);border:1px solid var(--rule-2)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.after{margin-top:var(--s6)}
+/* code colours: light */
+.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:#7a2e8a}
+.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:#1f6a3a}
+.hl .c,.hl .c1,.hl .cm{color:#6a7785;font-style:italic}
+.hl .m,.hl .mi,.hl .mf,.hl .mh{color:#a3501a}
+.hl .nf,.hl .nc{color:#1E4F86}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl .k,:root:not([data-theme="light"]) .hl .kd,:root:not([data-theme="light"]) .hl .kt,:root:not([data-theme="light"]) .hl .kr,:root:not([data-theme="light"]) .hl .kn,:root:not([data-theme="light"]) .hl .cp{color:#d6a3f0}
+:root:not([data-theme="light"]) .hl .s,:root:not([data-theme="light"]) .hl .s1,:root:not([data-theme="light"]) .hl .s2,:root:not([data-theme="light"]) .hl .sc,:root:not([data-theme="light"]) .hl .cpf{color:#8fd9a8}
+:root:not([data-theme="light"]) .hl .c,:root:not([data-theme="light"]) .hl .c1,:root:not([data-theme="light"]) .hl .cm{color:#8b99a8}
+:root:not([data-theme="light"]) .hl .m,:root:not([data-theme="light"]) .hl .mi,:root:not([data-theme="light"]) .hl .mf,:root:not([data-theme="light"]) .hl .mh{color:#f0b07a}
+:root:not([data-theme="light"]) .hl .nf,:root:not([data-theme="light"]) .hl .nc{color:#8DB6E6}}
+</style><header class="site-head"><div class="wrap">
+  <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+<rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
+<path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>morebyt</a>
+  <nav class="nav" aria-label="Main"><a href="/roadmap">Roadmap</a><a href="/blog" aria-current="page">Blog</a><a href="/consulting">Consulting</a><a href="https://www.youtube.com/@morebyt">YouTube</a></nav>
+</div></header>
+<main id="main"><div class="wrap"><article class="post">
+  <header>
+    <h1>The Decorator pattern in modern C++</h1>
+    <p class="meta">By Mohammad Reza Bayat · <time datetime="2025-01-26">26 January 2025</time> · updated <time datetime="2026-11-20">20 November 2026</time> · 3 min read</p>
+  </header>
+  
+  <div class="prose">
+<p>The Decorator pattern adds behaviour to a single object by wrapping it in another object with the same interface. The wrapper forwards each call to the object inside and adds its own part before or after. Because a wrapper looks exactly like the thing it wraps, you can wrap a wrapper, and stack as many layers as you need at runtime.</p>
+<p>It's the alternative to building every combination with subclasses. If a coffee can have milk, mocha or soya in any combination and quantity, subclasses like <code>DarkRoastWithDoubleMochaAndMilk</code> explode in number. Decorators let you build that drink by wrapping a <code>DarkRoast</code> in two <code>Mocha</code>s and a <code>Milk</code>.</p>
+<p>The pattern comes from <em>Design Patterns</em> (Gamma, Helm, Johnson and Vlissides, 1994), and the coffee shop example below is the one used in <em>Head First Design Patterns</em>.</p>
+<h2 id="the-structure">The structure</h2>
+<p><img loading="lazy" alt="UML class diagram of the Decorator pattern: Component, ConcreteComponent, an abstract Decorator holding a Component, and concrete decorators" src="decorator_uml_representation.png" /></p>
+<p>There are four roles. The component is the interface everyone shares. A concrete component is the real object at the centre. The decorator implements the same interface and holds a component. Concrete decorators each add one piece of behaviour.</p>
+<p>The textbook case outside C++ is Java's I/O library, where a <code>BufferedInputStream</code> wraps a <code>FileInputStream</code>. In everyday code, a logging or caching wrapper around a service is the same idea.</p>
+<h2 id="example-a-coffee-shop">Example: a coffee shop</h2>
+<p>The shop sells a few coffees, and customers add condiments. Each condiment changes both the description and the price.</p>
+<h3 id="the-component">The component</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">sb</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Beverage</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">Beverage</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">description</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">costPence</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace sb</span>
+</code></pre></div>
+
+<p>Prices are whole pence in an <code>int</code>. Money in a <code>double</code> works until it doesn't: 0.1 has no exact binary representation, and the rounding errors show up once you start adding and comparing prices.</p>
+<h3 id="the-concrete-components">The concrete components</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">sb</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Coffee</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Beverage</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Coffee</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pence</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m_name</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">name</span><span class="p">)),</span><span class="w"> </span><span class="n">m_pence</span><span class="p">(</span><span class="n">pence</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">description</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_name</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">costPence</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_pence</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_name</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">m_pence</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Espresso</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Coffee</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Espresso</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Coffee</span><span class="p">(</span><span class="s">"Espresso"</span><span class="p">,</span><span class="w"> </span><span class="mi">199</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DarkRoast</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Coffee</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">DarkRoast</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Coffee</span><span class="p">(</span><span class="s">"Dark Roast Coffee"</span><span class="p">,</span><span class="w"> </span><span class="mi">199</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HouseBlend</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Coffee</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">HouseBlend</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Coffee</span><span class="p">(</span><span class="s">"House Blend Coffee"</span><span class="p">,</span><span class="w"> </span><span class="mi">189</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace sb</span>
+</code></pre></div>
+
+<p>Each coffee passes its name and price to the constructor. The common alternative, assigning to a protected <code>m_description</code> inside each subclass's constructor body, leaves a moment where the object holds a placeholder and lets a new subclass forget to set it. Constructor arguments make the values impossible to skip.</p>
+<h3 id="the-decorator-base">The decorator base</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">sb</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Condiment</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Beverage</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Condiment</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Beverage</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inner</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pence</span><span class="p">)</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">m_inner</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">inner</span><span class="p">)),</span><span class="w"> </span><span class="n">m_name</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">name</span><span class="p">)),</span><span class="w"> </span><span class="n">m_pence</span><span class="p">(</span><span class="n">pence</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">description</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_inner</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">", "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_name</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">costPence</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_inner</span><span class="o">-&gt;</span><span class="n">costPence</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_pence</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Beverage</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_inner</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_name</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">m_pence</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace sb</span>
+</code></pre></div>
+
+<p>The decorator owns the drink it wraps, and nothing else needs it, so <code>std::unique_ptr</code> is the right choice. The whole order is a chain of single owners: delete the outermost layer and every layer inside goes with it. <code>std::shared_ptr</code> would work too, but it would suggest that someone else shares the inner drink, which isn't true, and it costs a reference count for nothing.</p>
+<p>Because every condiment does the same two things (append a name, add a price), the shared logic lives here once.</p>
+<h3 id="the-concrete-decorators">The concrete decorators</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">sb</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Milk</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Condiment</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">Milk</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Beverage</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Condiment</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="s">"Milk"</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Mocha</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Condiment</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">Mocha</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Beverage</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Condiment</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="s">"Mocha"</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Soya</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Condiment</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">Soya</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Beverage</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Condiment</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="s">"Soya"</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace sb</span>
+</code></pre></div>
+
+<p>Each condiment is now one line of real content. Adding oat milk tomorrow means adding one more class like these; nothing else changes.</p>
+<h3 id="building-orders">Building orders</h3>
+<div class="hl"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">sb</span><span class="o">::</span><span class="n">Beverage</span><span class="o">&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">"{} £{}.{:02}</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">description</span><span class="p">(),</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">costPence</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">costPence</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">sb</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="n">Espresso</span><span class="p">{});</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Beverage</span><span class="o">&gt;</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">DarkRoast</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Mocha</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">order</span><span class="p">));</span>
+<span class="w">    </span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Mocha</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">order</span><span class="p">));</span>
+<span class="w">    </span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Milk</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">order</span><span class="p">));</span>
+<span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="o">*</span><span class="n">order</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">order2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Milk</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Mocha</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Soya</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">HouseBlend</span><span class="o">&gt;</span><span class="p">())));</span>
+<span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="o">*</span><span class="n">order2</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Output:</p>
+<div class="hl"><pre><span></span><code>Espresso £1.99
+Dark Roast Coffee, Mocha, Mocha, Milk £2.49
+House Blend Coffee, Soya, Mocha, Milk £2.34
+</code></pre></div>
+
+<p>The first order is built one layer at a time, moving the drink into each new wrapper. The second nests the calls, which reads inside out: house blend, then soya, then mocha, then milk.</p>
+<h2 id="trade-offs">Trade-offs</h2>
+<p>Decorators keep each piece of behaviour small and let you combine them freely, which is why they show up in I/O libraries and middleware. The cost is many small objects and many small classes. A deep stack is harder to debug, because a call passes through several layers before it reaches real work, and the order of the layers can matter: a logging decorator outside a caching one logs every request, while the same decorator inside it logs only cache misses.</p>
+<p>If you only ever need a fixed set of combinations known at compile time, plain composition or a template is simpler. Decorators earn their keep when the combination is decided at runtime.</p>
+<p>Put together in one file with <code>&lt;format&gt;</code>, <code>&lt;iostream&gt;</code>, <code>&lt;memory&gt;</code>, <code>&lt;string&gt;</code> and <code>&lt;utility&gt;</code> included, the code above compiles with <code>clang++ -std=c++20 -Wall -Wextra</code> and runs cleanly under AddressSanitizer and UBSan. The <a href="/blog/strategy-pattern-cpp/">Strategy</a> and <a href="/blog/observer-pattern-cpp/">Observer</a> posts cover two related patterns.</p>
+  </div>
+  <div class="after sheet">
+    <h2 style="font-size:20px">Get the next post by email</h2>
+    <form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">
+  <label for="email-post">Your email</label>
+  <div class="row">
+    <input id="email-post" name="email_address" type="email" autocomplete="email" required placeholder="you@example.com">
+    <button class="btn btn-primary" type="submit">Join the list</button>
+  </div>
+  <p class="fine">Free. You get the one-page C++ Roadmap 2027 checklist, then an email when a new video or post is out. Unsubscribe any time.</p>
+</form>
+  </div>
+</article></div></main>
+<footer class="site-foot"><div class="wrap">
+  <div class="titleblock">
+    <div><span>Project</span>Morebyt: build it to understand it</div>
+    <div><span>Drawn by</span>Mohammad Reza Bayat</div>
+    <div><span>Videos</span><a href="https://www.youtube.com/@morebyt">youtube.com/@morebyt</a></div>
+    <div><span>Contact</span><a href="mailto:hello@morebyt.com">hello@morebyt.com</a></div>
+  </div>
+</div></footer>
+</body>
+</html>

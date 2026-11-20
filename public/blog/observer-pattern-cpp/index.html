@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Observer pattern in C++, without the lifetime bugs: Morebyt</title>
+<meta name="description" content="How the Observer pattern lets one object notify many others, built as a C++20 weather station that uses weak_ptr so the subject never keeps dead observers alive.">
+<meta property="og:title" content="The Observer pattern in C++, without the lifetime bugs: Morebyt">
+<meta property="og:description" content="How the Observer pattern lets one object notify many others, built as a C++20 weather station that uses weak_ptr so the subject never keeps dead observers alive.">
+<meta property="og:url" content="https://morebyt.com/blog/observer-pattern-cpp/">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://morebyt.com/blog/observer-pattern-cpp/">
+<meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Observer pattern in C++, without the lifetime bugs","description":"How the Observer pattern lets one object notify many others, built as a C++20 weather station that uses weak_ptr so the subject never keeps dead observers alive.","datePublished":"2025-01-20","dateModified":"2026-11-20","author":{"@type":"Person","name":"Mohammad Reza Bayat","url":"https://morebyt.com/"},"mainEntityOfPage":"https://morebyt.com/blog/observer-pattern-cpp/"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<style>
+.post{max-width:72ch;padding:var(--s6) 0 var(--s5)}
+.post header{margin-bottom:var(--s5)}
+.post h1{font-size:clamp(30px,5vw,46px);margin-bottom:var(--s3)}
+.meta{font:14px/1.6 var(--mono);color:var(--ink-2)}
+.meta a{color:var(--ink-2)}
+.prose{font-size:19px;line-height:1.7}
+.prose h2{font-size:clamp(23px,3vw,28px);margin:var(--s6) 0 var(--s3)}
+.prose h3{font-size:20px;margin:var(--s5) 0 var(--s2)}
+.prose p,.prose ul,.prose ol,.prose table,.prose blockquote,.prose pre{margin:0 0 var(--s4)}
+.prose li{margin-bottom:6px}
+.prose img{display:block;margin:var(--s4) auto;max-height:560px;background:#fff;border:1px solid var(--rule);padding:8px}
+.prose blockquote{border-left:3px solid var(--amber);padding:2px 0 2px var(--s3);color:var(--ink-2)}
+.prose table{border-collapse:collapse;width:100%;font-size:16px;display:block;overflow-x:auto}
+.prose th,.prose td{border-bottom:1px solid var(--rule);padding:8px 12px 8px 0;text-align:left;vertical-align:top}
+.prose th{font:600 14px var(--mono);color:var(--ink-2);border-bottom-color:var(--rule-2)}
+.prose :not(pre)>code{font-size:.84em;background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:.05em .3em;overflow-wrap:anywhere}
+.prose pre{font:15px/1.55 var(--mono);background:var(--sheet);border:1px solid var(--rule-2);padding:var(--s3);overflow-x:auto;tab-size:4}
+.prose hr{border:0;border-top:1px solid var(--rule);margin:var(--s5) 0}
+.video{position:relative;aspect-ratio:16/9;margin:0 0 var(--s5);border:1px solid var(--rule-2)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.after{margin-top:var(--s6)}
+/* code colours: light */
+.hl .k,.hl .kd,.hl .kt,.hl .kr,.hl .kn,.hl .cp{color:#7a2e8a}
+.hl .s,.hl .s1,.hl .s2,.hl .sc,.hl .cpf{color:#1f6a3a}
+.hl .c,.hl .c1,.hl .cm{color:#6a7785;font-style:italic}
+.hl .m,.hl .mi,.hl .mf,.hl .mh{color:#a3501a}
+.hl .nf,.hl .nc{color:#1E4F86}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl .k,:root:not([data-theme="light"]) .hl .kd,:root:not([data-theme="light"]) .hl .kt,:root:not([data-theme="light"]) .hl .kr,:root:not([data-theme="light"]) .hl .kn,:root:not([data-theme="light"]) .hl .cp{color:#d6a3f0}
+:root:not([data-theme="light"]) .hl .s,:root:not([data-theme="light"]) .hl .s1,:root:not([data-theme="light"]) .hl .s2,:root:not([data-theme="light"]) .hl .sc,:root:not([data-theme="light"]) .hl .cpf{color:#8fd9a8}
+:root:not([data-theme="light"]) .hl .c,:root:not([data-theme="light"]) .hl .c1,:root:not([data-theme="light"]) .hl .cm{color:#8b99a8}
+:root:not([data-theme="light"]) .hl .m,:root:not([data-theme="light"]) .hl .mi,:root:not([data-theme="light"]) .hl .mf,:root:not([data-theme="light"]) .hl .mh{color:#f0b07a}
+:root:not([data-theme="light"]) .hl .nf,:root:not([data-theme="light"]) .hl .nc{color:#8DB6E6}}
+</style><header class="site-head"><div class="wrap">
+  <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+<rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
+<path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>morebyt</a>
+  <nav class="nav" aria-label="Main"><a href="/roadmap">Roadmap</a><a href="/blog" aria-current="page">Blog</a><a href="/consulting">Consulting</a><a href="https://www.youtube.com/@morebyt">YouTube</a></nav>
+</div></header>
+<main id="main"><div class="wrap"><article class="post">
+  <header>
+    <h1>The Observer pattern in C++, without the lifetime bugs</h1>
+    <p class="meta">By Mohammad Reza Bayat · <time datetime="2025-01-20">20 January 2025</time> · updated <time datetime="2026-11-20">20 November 2026</time> · 3 min read</p>
+  </header>
+  
+  <div class="prose">
+<p>The Observer pattern sets up a one-to-many relationship: one object, the subject, keeps a list of other objects, the observers, and tells all of them when its state changes. The subject only knows that its observers have an <code>update</code> function. It doesn't know what they are or what they do with the news, so you can add a new observer without touching the subject.</p>
+<p>It's another of the patterns in <em>Design Patterns</em> (Gamma, Helm, Johnson and Vlissides, 1994), and you've used it even if you've never named it: GUI event handlers, signals and slots in Qt, and "listeners" in most frameworks are all observers.</p>
+<p><img loading="lazy" alt="UML class diagram of the Observer pattern: a Subject with attach, detach and notify, and Observers with update" src="observer-design-pattern-uml-class-diagram.png" /></p>
+<h2 id="how-it-works">How it works</h2>
+<p>Observers register with the subject. When the subject's state changes, it walks its list and calls <code>update</code> on each one. Each observer decides what to do with the new state, and observers can join or leave while the program runs.</p>
+<p>The subject can send the new data along with the call (the push model), or just say "something changed" and let each observer ask for what it needs (the pull model). Push is simpler; pull is better when observers want very different slices of a large state.</p>
+<p>In C++, the interesting part of this pattern is lifetime. The subject holds references to objects it doesn't own, which is exactly the situation where dangling pointers and leaks come from. Most short examples get this wrong, so the example below is built around it.</p>
+<h2 id="example-a-weather-station">Example: a weather station</h2>
+<p>This is the weather station from <em>Head First Design Patterns</em>: a <code>WeatherData</code> object receives new measurements and three displays react to them.</p>
+<h3 id="the-data-and-the-observer-interface">The data and the observer interface</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ws</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Measurements</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">temperature</span><span class="p">{};</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">humidity</span><span class="p">{};</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">pressure</span><span class="p">{};</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Observer</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">Observer</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Measurements</span><span class="o">&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace ws</span>
+</code></pre></div>
+
+<p>Passing one <code>Measurements</code> struct (push model) instead of three loose <code>double</code>s means adding a new measurement later won't change every observer's signature.</p>
+<h3 id="the-subject">The subject</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ws</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">WeatherData</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">subscribe</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">observer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">m_observers</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">observer</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">observer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">erase_if</span><span class="p">(</span><span class="n">m_observers</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">w</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="n">o</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">observer</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">setMeasurements</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Measurements</span><span class="o">&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m_current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">;</span>
+<span class="w">        </span><span class="n">notify</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">notify</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Work on a copy: an observer may unsubscribe while we are notifying.</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">observers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_observers</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">observers</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">lock</span><span class="p">())</span><span class="w"> </span><span class="n">o</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="n">m_current</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">erase_if</span><span class="p">(</span><span class="n">m_observers</span><span class="p">,</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">w</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">expired</span><span class="p">();</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">m_observers</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Measurements</span><span class="w"> </span><span class="n">m_current</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace ws</span>
+</code></pre></div>
+
+<p>Three decisions here prevent the usual bugs.</p>
+<p>The subject stores <code>std::weak_ptr</code>, not <code>std::shared_ptr</code>. A weather station shouldn't decide how long a display lives. If it held <code>shared_ptr</code>s, a display the rest of the program had finished with would stay alive and keep printing, just because the subject still pointed at it. With <code>weak_ptr</code>, <code>lock()</code> returns an empty pointer once the display is gone, and the subject skips it.</p>
+<p><code>notify</code> iterates over a copy of the list. If an observer calls <code>unsubscribe</code> from inside its own <code>update</code>, it changes <code>m_observers</code> while we're looping over it, which invalidates the iterator. Looping over a copy avoids that.</p>
+<p>Dead entries are pruned after each notification with C++20's <code>std::erase_if</code>, so the list doesn't grow forever.</p>
+<h3 id="three-observers">Three observers</h3>
+<div class="hl"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ws</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CurrentConditionsDisplay</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Observer</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">update</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Measurements</span><span class="o">&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Current conditions: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">temperature</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"F and "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">humidity</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"% humidity</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StatisticsDisplay</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Observer</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">update</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Measurements</span><span class="o">&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">++</span><span class="n">m_readings</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">temperature</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">m_max</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">temperature</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">m_min</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">temperature</span><span class="p">);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Avg/Max/Min temperature = "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">m_sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">m_readings</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">m_max</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">m_min</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">m_readings</span><span class="p">{};</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">m_sum</span><span class="p">{};</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">m_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">m_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ForecastDisplay</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Observer</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">update</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Measurements</span><span class="o">&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m_last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_current</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">pressure</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Forecast: "</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_current</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_last</span><span class="p">)</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Improving weather on the way!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_current</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">m_last</span><span class="p">)</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Same weather ahead!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Cooler, rainy weather ahead!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">m_current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">29.92</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">m_last</span><span class="p">{};</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace ws</span>
+</code></pre></div>
+
+<p>One detail in <code>StatisticsDisplay</code> catches a lot of people: the starting maximum is <code>numeric_limits&lt;double&gt;::lowest()</code>, not <code>min()</code>. For floating-point types, <code>min()</code> is the smallest positive value, about 2.2 × 10⁻³⁰⁸. Start from that and a run of below-zero temperatures would report a maximum just above zero.</p>
+<h3 id="using-it">Using it</h3>
+<div class="hl"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ws</span><span class="o">::</span><span class="n">WeatherData</span><span class="w"> </span><span class="n">weather</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">ws</span><span class="o">::</span><span class="n">CurrentConditionsDisplay</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">stats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">ws</span><span class="o">::</span><span class="n">StatisticsDisplay</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">weather</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">current</span><span class="p">);</span>
+<span class="w">    </span><span class="n">weather</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">stats</span><span class="p">);</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">forecast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">ws</span><span class="o">::</span><span class="n">ForecastDisplay</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">weather</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">forecast</span><span class="p">);</span>
+<span class="w">        </span><span class="n">weather</span><span class="p">.</span><span class="n">setMeasurements</span><span class="p">({</span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mf">30.4</span><span class="p">});</span>
+<span class="w">        </span><span class="n">weather</span><span class="p">.</span><span class="n">setMeasurements</span><span class="p">({</span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span><span class="w"> </span><span class="mf">29.2</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span><span class="w">  </span><span class="c1">// forecast is destroyed here; WeatherData does not keep it alive</span>
+<span class="w">    </span><span class="n">weather</span><span class="p">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">current</span><span class="p">);</span>
+<span class="w">    </span><span class="n">weather</span><span class="p">.</span><span class="n">setMeasurements</span><span class="p">({</span><span class="mi">-5</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mf">29.2</span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The forecast display leaves the scope after two readings and simply stops receiving updates. The current-conditions display unsubscribes explicitly. The last reading reaches only the statistics display, which now reports <code>82/-5</code> as its maximum and minimum.</p>
+<h2 id="things-to-watch-for">Things to watch for</h2>
+<p>Notification order isn't something observers should depend on. Here it's the order they subscribed, but if one observer needs another to have run first, the two are more coupled than the pattern suggests.</p>
+<p>Notifications are synchronous, so a slow observer slows down everything that changes the subject. If an update can take a while, have the observer queue the work instead of doing it inside <code>update</code>.</p>
+<p>An observer that changes the subject from inside <code>update</code> triggers another round of notifications. That can be fine, but it's an easy way to build an infinite loop.</p>
+<p>Put together in one file with <code>&lt;algorithm&gt;</code>, <code>&lt;iostream&gt;</code>, <code>&lt;limits&gt;</code>, <code>&lt;memory&gt;</code> and <code>&lt;vector&gt;</code> included, the code above compiles with <code>clang++ -std=c++20 -Wall -Wextra</code> and runs cleanly under AddressSanitizer and UBSan.</p>
+<p>The <a href="/blog/strategy-pattern-cpp/">Strategy pattern</a> post uses the same approach to ownership with <code>std::unique_ptr</code>, where the object does own its parts.</p>
+  </div>
+  <div class="after sheet">
+    <h2 style="font-size:20px">Get the next post by email</h2>
+    <form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">
+  <label for="email-post">Your email</label>
+  <div class="row">
+    <input id="email-post" name="email_address" type="email" autocomplete="email" required placeholder="you@example.com">
+    <button class="btn btn-primary" type="submit">Join the list</button>
+  </div>
+  <p class="fine">Free. You get the one-page C++ Roadmap 2027 checklist, then an email when a new video or post is out. Unsubscribe any time.</p>
+</form>
+  </div>
+</article></div></main>
+<footer class="site-foot"><div class="wrap">
+  <div class="titleblock">
+    <div><span>Project</span>Morebyt: build it to understand it</div>
+    <div><span>Drawn by</span>Mohammad Reza Bayat</div>
+    <div><span>Videos</span><a href="https://www.youtube.com/@morebyt">youtube.com/@morebyt</a></div>
+    <div><span>Contact</span><a href="mailto:hello@morebyt.com">hello@morebyt.com</a></div>
+  </div>
+</div></footer>
+</body>
+</html>

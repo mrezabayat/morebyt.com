@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Blog: Morebyt</title>
-<meta name="description" content="Written versions of the Morebyt videos, with the code: how computers really work, built from scratch in C++.">
+<meta name="description" content="Written versions of the Morebyt videos and longer posts on C++, software design and how computers work.">
 <meta property="og:title" content="Blog: Morebyt">
-<meta property="og:description" content="Written versions of the Morebyt videos, with the code: how computers really work, built from scratch in C++.">
+<meta property="og:description" content="Written versions of the Morebyt videos and longer posts on C++, software design and how computers work.">
 <meta property="og:url" content="https://morebyt.com/blog/">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://morebyt.com/blog/">
@@ -23,16 +23,15 @@
 <style>
 .page{padding:var(--s6) 0 var(--s5);max-width:860px}
 .page h1{margin-bottom:var(--s4)}
-.services{list-style:none;margin:var(--s5) 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
-.services h2{font-size:20px;margin-bottom:var(--s2)}
-.services p{margin:0;color:var(--ink-2)}
-.services .fit{margin-top:var(--s2);font-size:16px}
-.steps{margin:var(--s3) 0 0;padding-left:1.4em;max-width:var(--measure)}
-.steps li{margin-bottom:var(--s2);padding-left:6px}
-.steps li::marker{font-family:var(--mono);color:var(--ink-2)}
-.empty{margin-top:var(--s5)}
-.empty h2{font-size:22px}
-@media (max-width:760px){.services{grid-template-columns:1fr}}
+.posts{list-style:none;margin:var(--s5) 0 0;padding:0}
+.posts li{padding:var(--s4) 0;border-top:1px solid var(--rule)}
+.posts li:last-child{border-bottom:1px solid var(--rule)}
+.posts h2{font-size:22px;margin:0 0 6px}
+.posts h2 a{color:var(--ink);text-decoration:none}
+.posts h2 a:hover{text-decoration:underline;text-underline-offset:4px}
+.posts p{margin:0 0 6px;color:var(--ink-2)}
+.posts .meta{font:14px var(--mono);color:var(--ink-2)}
+.join{margin-top:var(--s6)}
 </style><header class="site-head"><div class="wrap">
   <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
 <rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
@@ -41,10 +40,10 @@
 </div></header>
 <main id="main"><div class="wrap"><div class="page">
   <h1>Blog</h1>
-  <p class="lede">Written versions of the videos, with the code and the diagrams, so you can read at your own pace and copy what you need.</p>
-  <div class="empty sheet">
-    <h2>No posts yet</h2>
-    <p>The first posts arrive in January 2027, starting with the CHIP-8 series. Join the email list and you'll get each one when it's out, plus the free C++ roadmap checklist.</p>
+  <p class="lede">Posts on C++, software design and how computers work underneath. From January 2027, every build video gets a written version here too, with the code.</p>
+  <ul class="posts"><li><h2><a href="/blog/four-cyberattacks-that-changed-computing/">From Brain to Equifax: 4 cyberattacks that changed computing</a></h2><p>How the Brain virus, the Morris worm, ILOVEYOU and the Equifax breach worked, why each one spread, and what it changed for the people who build software.</p><p class="meta"><time datetime="2026-04-18">18 April 2026</time> · security, history</p></li><li><h2><a href="/blog/projects-for-senior-engineers/">27 projects every senior engineer should build once</a></h2><p>Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.</p><p class="meta"><time datetime="2025-09-27">27 September 2025</time> · projects, systems programming, career</p></li><li><h2><a href="/blog/decorator-pattern-cpp/">The Decorator pattern in modern C++</a></h2><p>How the Decorator pattern adds behaviour to one object by wrapping it, shown with a C++20 coffee shop that uses unique_ptr, prices in pence and no duplicated members.</p><p class="meta"><time datetime="2025-01-26">26 January 2025</time> · C++, design patterns</p></li><li><h2><a href="/blog/observer-pattern-cpp/">The Observer pattern in C++, without the lifetime bugs</a></h2><p>How the Observer pattern lets one object notify many others, built as a C++20 weather station that uses weak_ptr so the subject never keeps dead observers alive.</p><p class="meta"><time datetime="2025-01-20">20 January 2025</time> · C++, design patterns</p></li><li><h2><a href="/blog/strategy-pattern-cpp/">The Strategy pattern in modern C++</a></h2><p>How the Strategy pattern lets an object swap behaviour at runtime, shown with a C++20 example using std::unique_ptr, plus the lighter std::function version.</p><p class="meta"><time datetime="2025-01-17">17 January 2025</time> · C++, design patterns</p></li><li><h2><a href="/blog/object-oriented-modelling-decomposition-generalization/">Object-oriented modelling, part 2: decomposition and generalization</a></h2><p>How to split a system into parts with association, aggregation and composition, how inheritance generalizes shared behaviour, and how each one maps to C++ ownership.</p><p class="meta"><time datetime="2023-03-13">13 March 2023</time> · C++, software design, UML</p></li><li><h2><a href="/blog/object-oriented-modelling-abstraction-encapsulation/">Object-oriented modelling, part 1: abstraction and encapsulation</a></h2><p>What abstraction and encapsulation mean in practice, how programming languages arrived at them, and how to show them in C++ code and UML class diagrams.</p><p class="meta"><time datetime="2023-03-10">10 March 2023</time> · C++, software design, UML</p></li></ul>
+  <div class="join sheet">
+    <h2 style="font-size:20px">Get new posts by email</h2>
     <form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">
   <label for="email-blog">Your email</label>
   <div class="row">

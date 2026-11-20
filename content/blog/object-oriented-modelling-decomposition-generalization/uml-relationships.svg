@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" font-family="IBM Plex Mono, ui-monospace, Menlo, monospace" font-size="14" fill="#14212E">
+  <rect x="0" y="0" width="640" height="400" fill="#fff"/>
+  <defs>
+    <marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto">
+      <path d="M1 1 11 6 1 11" fill="none" stroke="#14212E" stroke-width="1.4"/></marker>
+    <marker id="hollowDiamond" viewBox="0 0 20 12" refX="1" refY="6" markerWidth="20" markerHeight="12" orient="auto">
+      <path d="M1 6 10 1 19 6 10 11Z" fill="#fff" stroke="#14212E" stroke-width="1.4"/></marker>
+    <marker id="filledDiamond" viewBox="0 0 20 12" refX="1" refY="6" markerWidth="20" markerHeight="12" orient="auto">
+      <path d="M1 6 10 1 19 6 10 11Z" fill="#14212E" stroke="#14212E" stroke-width="1.4"/></marker>
+    <marker id="triangle" viewBox="0 0 16 16" refX="15" refY="8" markerWidth="16" markerHeight="16" orient="auto">
+      <path d="M1 1 15 8 1 15Z" fill="#fff" stroke="#14212E" stroke-width="1.4"/></marker>
+  </defs>
+  <g stroke="#14212E" stroke-width="1.5" fill="#fff">
+    <!-- association -->
+    <rect x="30" y="30" width="130" height="40"/><rect x="420" y="30" width="130" height="40"/>
+    <line x1="160" y1="50" x2="418" y2="50" marker-end="url(#open)"/>
+    <!-- aggregation -->
+    <rect x="30" y="120" width="130" height="40"/><rect x="420" y="120" width="130" height="40"/>
+    <line x1="160" y1="140" x2="420" y2="140" marker-start="url(#hollowDiamond)"/>
+    <!-- composition -->
+    <rect x="30" y="210" width="130" height="40"/><rect x="420" y="210" width="130" height="40"/>
+    <line x1="160" y1="230" x2="420" y2="230" marker-start="url(#filledDiamond)"/>
+    <!-- generalization -->
+    <rect x="30" y="300" width="130" height="40"/><rect x="420" y="300" width="130" height="40"/>
+    <line x1="160" y1="320" x2="418" y2="320" marker-end="url(#triangle)"/>
+  </g>
+  <g text-anchor="middle">
+    <text x="95" y="55">Course</text><text x="485" y="55">Student</text>
+    <text x="95" y="145">ReadingList</text><text x="485" y="145">Book</text>
+    <text x="95" y="235">Fridge</text><text x="485" y="235">Thermostat</text>
+    <text x="95" y="325">Circle</text><text x="485" y="325">Shape</text>
+  </g>
+  <g font-size="12" fill="#44546A">
+    <text x="290" y="42" text-anchor="middle">association: knows about</text>
+    <text x="400" y="66" text-anchor="end">0..*</text>
+    <text x="290" y="132" text-anchor="middle">aggregation: has, does not own alone</text>
+    <text x="400" y="156" text-anchor="end">0..*</text>
+    <text x="290" y="222" text-anchor="middle">composition: owns, same lifetime</text>
+    <text x="400" y="246" text-anchor="end">1</text>
+    <text x="290" y="312" text-anchor="middle">generalization: is a</text>
+  </g>
+</svg>
