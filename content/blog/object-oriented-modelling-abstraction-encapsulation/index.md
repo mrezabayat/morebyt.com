@@ -138,6 +138,8 @@ classDiagram
         -m_balancePence : int64
         +deposit(pence : int64) void
         +withdraw(pence : int64) bool
+        +owner() string
+        +number() int
         +balancePence() int64
     }
 ```
