@@ -40,10 +40,17 @@ MARK_SVG = """<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="cu
 <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>"""
 
 
-def head(title, description, path, extra_css=""):
+def head(title, description, path, extra_css="", og_image=None, og_image_alt=None, og_type="website"):
     url = "https://morebyt.com" + path
     css = '<link rel="stylesheet" href="/assets/site.css">' + (
         f'\n<link rel="stylesheet" href="{extra_css}">' if extra_css else "")
+    if og_image:
+        img = og_image if og_image.startswith("http") else "https://morebyt.com" + og_image
+        css += (f'\n<meta property="og:image" content="{img}">'
+                '\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">'
+                f'\n<meta property="og:image:alt" content="{escape(og_image_alt or title)}">'
+                '\n<meta name="twitter:card" content="summary_large_image">'
+                f'\n<meta name="twitter:image" content="{img}">')
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -54,7 +61,7 @@ def head(title, description, path, extra_css=""):
 <meta property="og:title" content="{escape(title)}">
 <meta property="og:description" content="{escape(description)}">
 <meta property="og:url" content="{url}">
-<meta property="og:type" content="website">
+<meta property="og:type" content="{og_type}">
 <link rel="canonical" href="{url}">
 <meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">

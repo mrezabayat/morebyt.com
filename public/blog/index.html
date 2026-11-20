@@ -21,17 +21,22 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <style>
-.page{padding:var(--s6) 0 var(--s5);max-width:860px}
+.page{padding:var(--s6) 0 var(--s5)}
 .page h1{margin-bottom:var(--s4)}
+.page .lede{margin-bottom:0}
 .posts{list-style:none;margin:var(--s5) 0 0;padding:0}
-.posts li{padding:var(--s4) 0;border-top:1px solid var(--rule)}
+.posts li{display:grid;grid-template-columns:300px minmax(0,1fr);gap:var(--s4) var(--s5);align-items:center;padding:var(--s4) 0;border-top:1px solid var(--rule)}
 .posts li:last-child{border-bottom:1px solid var(--rule)}
-.posts h2{font-size:22px;margin:0 0 6px}
+.thumb{display:block;background:var(--sheet);border:1px solid var(--rule-2);aspect-ratio:16/9;color:var(--line)}
+.thumb svg,.thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.posts li:hover .thumb{border-color:var(--line)}
+.posts h2{font-size:clamp(20px,2.2vw,24px);margin:0 0 8px}
 .posts h2 a{color:var(--ink);text-decoration:none}
 .posts h2 a:hover{text-decoration:underline;text-underline-offset:4px}
-.posts p{margin:0 0 6px;color:var(--ink-2)}
-.posts .meta{font:14px var(--mono);color:var(--ink-2)}
-.join{margin-top:var(--s6)}
+.posts p{margin:0 0 8px;color:var(--ink-2);max-width:68ch}
+.posts .meta{font:14px var(--mono);color:var(--ink-2);display:flex;flex-wrap:wrap;gap:4px 18px}
+.join{margin-top:var(--s6);max-width:760px}
+@media (max-width:760px){.posts li{grid-template-columns:1fr;gap:var(--s3)}}
 </style><header class="site-head"><div class="wrap">
   <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
 <rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
@@ -41,7 +46,99 @@
 <main id="main"><div class="wrap"><div class="page">
   <h1>Blog</h1>
   <p class="lede">Posts on C++, software design and how computers work underneath. From January 2027, every build video gets a written version here too, with the code.</p>
-  <ul class="posts"><li><h2><a href="/blog/four-cyberattacks-that-changed-computing/">From Brain to Equifax: 4 cyberattacks that changed computing</a></h2><p>How the Brain virus, the Morris worm, ILOVEYOU and the Equifax breach worked, why each one spread, and what it changed for the people who build software.</p><p class="meta"><time datetime="2026-04-18">18 April 2026</time> · security, history</p></li><li><h2><a href="/blog/projects-for-senior-engineers/">27 projects every senior engineer should build once</a></h2><p>Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.</p><p class="meta"><time datetime="2025-09-27">27 September 2025</time> · projects, systems programming, career</p></li><li><h2><a href="/blog/decorator-pattern-cpp/">The Decorator pattern in modern C++</a></h2><p>How the Decorator pattern adds behaviour to one object by wrapping it, shown with a C++20 coffee shop that uses unique_ptr, prices in pence and no duplicated members.</p><p class="meta"><time datetime="2025-01-26">26 January 2025</time> · C++, design patterns</p></li><li><h2><a href="/blog/observer-pattern-cpp/">The Observer pattern in C++, without the lifetime bugs</a></h2><p>How the Observer pattern lets one object notify many others, built as a C++20 weather station that uses weak_ptr so the subject never keeps dead observers alive.</p><p class="meta"><time datetime="2025-01-20">20 January 2025</time> · C++, design patterns</p></li><li><h2><a href="/blog/strategy-pattern-cpp/">The Strategy pattern in modern C++</a></h2><p>How the Strategy pattern lets an object swap behaviour at runtime, shown with a C++20 example using std::unique_ptr, plus the lighter std::function version.</p><p class="meta"><time datetime="2025-01-17">17 January 2025</time> · C++, design patterns</p></li><li><h2><a href="/blog/object-oriented-modelling-decomposition-generalization/">Object-oriented modelling, part 2: decomposition and generalization</a></h2><p>How to split a system into parts with association, aggregation and composition, how inheritance generalizes shared behaviour, and how each one maps to C++ ownership.</p><p class="meta"><time datetime="2023-03-13">13 March 2023</time> · C++, software design, UML</p></li><li><h2><a href="/blog/object-oriented-modelling-abstraction-encapsulation/">Object-oriented modelling, part 1: abstraction and encapsulation</a></h2><p>What abstraction and encapsulation mean in practice, how programming languages arrived at them, and how to show them in C++ code and UML class diagrams.</p><p class="meta"><time datetime="2023-03-10">10 March 2023</time> · C++, software design, UML</p></li></ul>
+  <ul class="posts"><li><a class="thumb" href="/blog/four-cyberattacks-that-changed-computing/" tabindex="-1" aria-hidden="true"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M70 50h120l20 20v150H70z"/>
+<rect x="100" y="50" width="74" height="46"/>
+<rect class="acc" x="150" y="58" width="14" height="30" stroke="none"/>
+<rect x="88" y="128" width="104" height="80" rx="3"/>
+<path d="M100 148h80M100 164h80M100 180h56" stroke-width="1.2"/>
+<circle cx="80" cy="210" r="3"/>
+<path d="M210 140h50" stroke-dasharray="4 6"/>
+<rect x="262" y="118" width="52" height="40" rx="3"/><path d="M276 166h24M288 158v8"/>
+<path d="M314 138c30 0 30-60 60-60" stroke-dasharray="4 6"/>
+<rect x="374" y="58" width="52" height="40" rx="3"/><path d="M388 106h24M400 98v8"/>
+<path d="M314 138c30 0 30 60 60 60" stroke-dasharray="4 6"/>
+<rect x="374" y="178" width="52" height="40" rx="3"/><path d="M388 226h24M400 218v8"/>
+<path d="M382 186l12 8 12-8M382 186h24v14h-24z" stroke-width="1.2"/>
+</svg></a><div><h2><a href="/blog/four-cyberattacks-that-changed-computing/">From Brain to Equifax: 4 cyberattacks that changed computing</a></h2><p>How the Brain virus, the Morris worm, ILOVEYOU and the Equifax breach worked, why each one spread, and what it changed for the people who build software.</p><p class="meta"><time datetime="2026-04-18">18 April 2026</time><span>security, history</span></p></div></li><li><a class="thumb" href="/blog/projects-for-senior-engineers/" tabindex="-1" aria-hidden="true"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M120 60h200l40 20H160z"/>
+<path d="M120 120h200l40 20H160z"/>
+<path d="M120 180h200l40 20H160z"/>
+<path d="M120 60v6l40 20v-6M360 80v6H160" stroke-width="1.2"/>
+<path d="M120 120v6l40 20v-6M360 140v6H160" stroke-width="1.2"/>
+<path d="M120 180v6l40 20v-6M360 200v6H160" stroke-width="1.2"/>
+<path d="M140 86v34M340 86v34M140 146v34M340 146v34" stroke-dasharray="3 5" stroke-width="1.2"/>
+<path class="acc" d="M232 64h40l8 8h-40z" stroke="none"/>
+<path d="M200 70h30M250 70h40M196 130h18l6 4h40M190 190h60M270 190h30" stroke-width="1.2"/>
+<path d="M372 70h34M372 130h34M372 190h34" stroke-width="1"/>
+<circle cx="372" cy="70" r="2.5"/><circle cx="372" cy="130" r="2.5"/><circle cx="372" cy="190" r="2.5"/>
+<path d="M412 64h28M412 76h18M412 124h28M412 136h22M412 184h28M412 196h14" stroke-width="1.2"/>
+</svg></a><div><h2><a href="/blog/projects-for-senior-engineers/">27 projects every senior engineer should build once</a></h2><p>Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.</p><p class="meta"><time datetime="2025-09-27">27 September 2025</time><span>projects, systems programming, career</span></p></div></li><li><a class="thumb" href="/blog/decorator-pattern-cpp/" tabindex="-1" aria-hidden="true"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M120 80h150l-16 150H136z"/>
+<path d="M270 110c40 0 40 70-6 70" />
+<path d="M124 118h142M128 150h134M131 182h128" stroke-width="1.2"/>
+<path class="acc" d="M131.5 186h127l-4.4 40H135.9z" stroke="none"/>
+<path d="M120 80h150" />
+<path d="M100 230h190" />
+<path d="M160 64c-6-10 6-14 0-24M190 64c-6-10 6-14 0-24M220 64c-6-10 6-14 0-24" stroke-width="1.2"/>
+<path d="M320 100h28M320 134h28M320 166h28M320 206h28" stroke-width="1"/>
+<circle cx="320" cy="100" r="2.5"/><circle cx="320" cy="134" r="2.5"/><circle cx="320" cy="166" r="2.5"/><circle cx="320" cy="206" r="2.5"/>
+<path d="M356 94h56M356 106h34M356 128h48M356 140h30M356 160h52M356 172h24M356 200h60M356 212h38" stroke-width="1.2"/>
+</svg></a><div><h2><a href="/blog/decorator-pattern-cpp/">The Decorator pattern in modern C++</a></h2><p>How the Decorator pattern adds behaviour to one object by wrapping it, shown with a C++20 coffee shop that uses unique_ptr, prices in pence and no duplicated members.</p><p class="meta"><time datetime="2025-01-26">26 January 2025</time><span>C++, design patterns</span></p></div></li><li><a class="thumb" href="/blog/observer-pattern-cpp/" tabindex="-1" aria-hidden="true"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M120 230V90M100 230h40"/>
+<path d="M120 90l-30-14M120 90l30-14M120 90v-30"/>
+<circle cx="86" cy="74" r="8"/><circle cx="154" cy="74" r="8"/><circle cx="120" cy="54" r="8"/>
+<rect x="104" y="140" width="32" height="40" rx="2"/>
+<circle class="acc" cx="120" cy="154" r="5" stroke="none"/>
+<path d="M112 168h16M112 174h10" stroke-width="1.2"/>
+<path d="M170 110a40 40 0 0 1 0 50M186 96a60 60 0 0 1 0 78M202 82a80 80 0 0 1 0 106" stroke-width="1.2"/>
+<rect x="300" y="44" width="110" height="52" rx="3"/><path d="M314 60h40M314 72h70M314 84h24" stroke-width="1.2"/>
+<rect x="300" y="110" width="110" height="52" rx="3"/><path d="M314 148l16-14 14 8 18-18 14 10" stroke-width="1.2"/>
+<rect x="300" y="176" width="110" height="52" rx="3"/><path d="M322 210a14 14 0 0 1 28 0zM356 196l8-8M372 196h14" stroke-width="1.2"/>
+<path d="M226 120l70-44M226 135h70M226 150l70 52" stroke-dasharray="4 6"/>
+</svg></a><div><h2><a href="/blog/observer-pattern-cpp/">The Observer pattern in C++, without the lifetime bugs</a></h2><p>How the Observer pattern lets one object notify many others, built as a C++20 weather station that uses weak_ptr so the subject never keeps dead observers alive.</p><p class="meta"><time datetime="2025-01-20">20 January 2025</time><span>C++, design patterns</span></p></div></li><li><a class="thumb" href="/blog/strategy-pattern-cpp/" tabindex="-1" aria-hidden="true"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="60" y="90" width="170" height="120" rx="6"/>
+<rect x="90" y="110" width="70" height="44" rx="2"/>
+<path d="M98 122h14M98 132h40M98 142h26" stroke-width="1.2"/>
+<path d="M180 120v70M196 120v70" />
+<path d="M84 180h50M84 192h30" stroke-width="1.2"/>
+<circle cx="212" cy="108" r="4"/>
+<path d="M300 70h56v60h-56zM306 130v8h44v-8"/>
+<path d="M314 84h28M314 96h28M314 108h16" stroke-width="1.2"/>
+<path d="M300 160h56v60h-56zM306 220v8h44v-8"/>
+<circle class="acc" cx="328" cy="186" r="12" stroke="none"/>
+<path d="M290 100c-40 0-60 10-82 30" stroke-dasharray="4 6"/>
+<path d="M208 124l0 8 8-2" />
+<path d="M380 70h56v60h-56zM386 130v8h44v-8"/>
+<path d="M394 84l28 28M422 84l-28 28" stroke-width="1.2"/>
+</svg></a><div><h2><a href="/blog/strategy-pattern-cpp/">The Strategy pattern in modern C++</a></h2><p>How the Strategy pattern lets an object swap behaviour at runtime, shown with a C++20 example using std::unique_ptr, plus the lighter std::function version.</p><p class="meta"><time datetime="2025-01-17">17 January 2025</time><span>C++, design patterns</span></p></div></li><li><a class="thumb" href="/blog/object-oriented-modelling-decomposition-generalization/" tabindex="-1" aria-hidden="true"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="190" y="30" width="100" height="44" rx="3"/>
+<path d="M214 52h52" stroke-width="1.2"/>
+<path d="M240 74v14"/><path d="M240 88l-8 8 8 8 8-8z"/>
+<path d="M240 104v14H110v20M240 118h130v20"/>
+<rect x="60" y="138" width="100" height="44" rx="3"/><path d="M84 160h52" stroke-width="1.2"/>
+<rect x="320" y="138" width="100" height="44" rx="3"/><path d="M344 160h52" stroke-width="1.2"/>
+<path d="M110 182v12"/><path d="M110 194l-8 8 8 8 8-8z" fill="currentColor"/>
+<path d="M110 210v10H60v12M110 220h50v12"/>
+<rect x="30" y="232" width="60" height="28" rx="3"/><rect x="130" y="232" width="60" height="28" rx="3"/>
+<path d="M370 182l-10 16h20z"/>
+<path d="M370 198v34"/>
+<rect class="acc" x="340" y="232" width="60" height="28" rx="3" stroke="none"/>
+<rect x="340" y="232" width="60" height="28" rx="3"/>
+</svg></a><div><h2><a href="/blog/object-oriented-modelling-decomposition-generalization/">Object-oriented modelling, part 2: decomposition and generalization</a></h2><p>How to split a system into parts with association, aggregation and composition, how inheritance generalizes shared behaviour, and how each one maps to C++ ownership.</p><p class="meta"><time datetime="2023-03-13">13 March 2023</time><span>C++, software design, UML</span></p></div></li><li><a class="thumb" href="/blog/object-oriented-modelling-abstraction-encapsulation/" tabindex="-1" aria-hidden="true"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="140" y="60" width="200" height="150" rx="6"/>
+<path d="M140 100h200"/>
+<path d="M170 80h80" stroke-width="1.2"/>
+<path d="M168 124h60M168 140h84M168 156h50" stroke-width="1.2" stroke-dasharray="3 4"/>
+<rect x="284" y="134" width="34" height="28" rx="3"/>
+<path d="M290 134v-8a11 11 0 0 1 22 0v8"/>
+<circle class="acc" cx="301" cy="148" r="4" stroke="none"/>
+<path d="M140 180h-50M90 172l-10 8 10 8" />
+<path d="M340 186h50M380 178l10 8-10 8" />
+<rect x="128" y="174" width="12" height="12"/><rect x="340" y="180" width="12" height="12"/>
+<path d="M60 230h90M330 230h90" stroke-width="1"/>
+<path d="M60 222v16M150 222v16M330 222v16M420 222v16" stroke-width="1"/>
+</svg></a><div><h2><a href="/blog/object-oriented-modelling-abstraction-encapsulation/">Object-oriented modelling, part 1: abstraction and encapsulation</a></h2><p>What abstraction and encapsulation mean in practice, how programming languages arrived at them, and how to show them in C++ code and UML class diagrams.</p><p class="meta"><time datetime="2023-03-10">10 March 2023</time><span>C++, software design, UML</span></p></div></li></ul>
   <div class="join sheet">
     <h2 style="font-size:20px">Get new posts by email</h2>
     <form class="signup" action="https://app.kit.com/forms/10219372/subscriptions" method="post">

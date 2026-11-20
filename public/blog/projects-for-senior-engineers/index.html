@@ -17,16 +17,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"27 projects every senior engineer should build once","description":"Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.","datePublished":"2025-09-27","dateModified":"2026-11-20","author":{"@type":"Person","name":"Mohammad Reza Bayat","url":"https://morebyt.com/"},"mainEntityOfPage":"https://morebyt.com/blog/projects-for-senior-engineers/"}</script>
+<meta property="og:image" content="https://morebyt.com/blog/projects-for-senior-engineers/og-908ab234cbf4.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="27 projects every senior engineer should build once">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://morebyt.com/blog/projects-for-senior-engineers/og-908ab234cbf4.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"27 projects every senior engineer should build once","description":"Twenty-seven hard projects, from an OS kernel and a compiler to a TCP/IP stack and a ray tracer, with what each one teaches you and where to start.","image":"https://morebyt.com/blog/projects-for-senior-engineers/og-908ab234cbf4.png","datePublished":"2025-09-27","dateModified":"2026-11-20","author":{"@type":"Person","name":"Mohammad Reza Bayat","url":"https://morebyt.com/"},"mainEntityOfPage":"https://morebyt.com/blog/projects-for-senior-engineers/"}</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <style>
-.post{max-width:72ch;padding:var(--s6) 0 var(--s5)}
 .post header{margin-bottom:var(--s5)}
 .post h1{font-size:clamp(30px,5vw,46px);margin-bottom:var(--s3)}
-.meta{font:14px/1.6 var(--mono);color:var(--ink-2)}
-.meta a{color:var(--ink-2)}
 .prose{font-size:19px;line-height:1.7}
 .prose h2{font-size:clamp(23px,3vw,28px);margin:var(--s6) 0 var(--s3)}
 .prose h3{font-size:20px;margin:var(--s5) 0 var(--s2)}
@@ -57,17 +60,63 @@
 :root:not([data-theme="light"]) .hl .c,:root:not([data-theme="light"]) .hl .c1,:root:not([data-theme="light"]) .hl .cm{color:#8b99a8}
 :root:not([data-theme="light"]) .hl .m,:root:not([data-theme="light"]) .hl .mi,:root:not([data-theme="light"]) .hl .mf,:root:not([data-theme="light"]) .hl .mh{color:#f0b07a}
 :root:not([data-theme="light"]) .hl .nf,:root:not([data-theme="light"]) .hl .nc{color:#8DB6E6}}
+</style>
+<style>
+.post-wrap{padding-top:var(--s6);padding-bottom:var(--s5)}
+@media (max-width:1099px){.post{margin:0 auto}}
+.post-grid{display:block}
+.post{max-width:780px;min-width:0}
+.cover{margin:0 0 var(--s4);background:var(--sheet);border:1px solid var(--rule-2);aspect-ratio:16/9;color:var(--line);position:relative}
+.cover svg,.cover img{display:block;width:100%;height:100%;object-fit:cover}
+.cover .acc,.thumb .acc{fill:var(--amber)}
+.cover::before,.cover::after{content:"";position:absolute;width:12px;height:12px;border:2px solid var(--line)}
+.cover::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.cover::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.post header{margin-bottom:var(--s5)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 18px;font:14px/1.6 var(--mono);color:var(--ink-2);margin:0}
+.prose h2{scroll-margin-top:24px}
+.toc-side{display:none}
+.toc-top{margin:0 0 var(--s5);border:1px solid var(--rule-2);background:var(--sheet)}
+.toc-top summary{cursor:pointer;padding:12px 16px;font:600 15px var(--mono);list-style-position:inside}
+.toc-top nav{padding:0 16px 12px}
+.toc ol{list-style:none;margin:0;padding:0}
+.toc li{margin:0}
+.toc a{display:block;padding:6px 0 6px 12px;border-left:2px solid var(--rule);color:var(--ink-2);text-decoration:none;font:14px/1.4 var(--mono)}
+.toc a:hover{color:var(--ink)}
+.toc a[aria-current="true"]{color:var(--ink);border-left-color:var(--line)}
+.toc-title{font:600 14px var(--mono);color:var(--ink);margin:0 0 10px}
+@media (min-width:1100px){
+  .post-grid{display:grid;grid-template-columns:minmax(0,780px) 240px;gap:56px;justify-content:space-between}
+  .toc-side{display:block;position:sticky;top:24px;align-self:start;max-height:calc(100vh - 48px);overflow:auto;padding-top:4px}
+  .toc-top{display:none}
+}
 </style><header class="site-head"><div class="wrap">
   <a class="mark" href="/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
 <rect x="5" y="5" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="6" height="6"/>
 <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>morebyt</a>
   <nav class="nav" aria-label="Main"><a href="/roadmap">Roadmap</a><a href="/blog" aria-current="page">Blog</a><a href="/consulting">Consulting</a><a href="https://www.youtube.com/@morebyt">YouTube</a></nav>
 </div></header>
-<main id="main"><div class="wrap"><article class="post">
+<main id="main"><div class="wrap post-wrap"><div class="post-grid">
+<article class="post">
   <header>
+    <div class="cover"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M120 60h200l40 20H160z"/>
+<path d="M120 120h200l40 20H160z"/>
+<path d="M120 180h200l40 20H160z"/>
+<path d="M120 60v6l40 20v-6M360 80v6H160" stroke-width="1.2"/>
+<path d="M120 120v6l40 20v-6M360 140v6H160" stroke-width="1.2"/>
+<path d="M120 180v6l40 20v-6M360 200v6H160" stroke-width="1.2"/>
+<path d="M140 86v34M340 86v34M140 146v34M340 146v34" stroke-dasharray="3 5" stroke-width="1.2"/>
+<path class="acc" d="M232 64h40l8 8h-40z" stroke="none"/>
+<path d="M200 70h30M250 70h40M196 130h18l6 4h40M190 190h60M270 190h30" stroke-width="1.2"/>
+<path d="M372 70h34M372 130h34M372 190h34" stroke-width="1"/>
+<circle cx="372" cy="70" r="2.5"/><circle cx="372" cy="130" r="2.5"/><circle cx="372" cy="190" r="2.5"/>
+<path d="M412 64h28M412 76h18M412 124h28M412 136h22M412 184h28M412 196h14" stroke-width="1.2"/>
+</svg></div>
     <h1>27 projects every senior engineer should build once</h1>
-    <p class="meta">By Mohammad Reza Bayat · <time datetime="2025-09-27">27 September 2025</time> · updated <time datetime="2026-11-20">20 November 2026</time> · 7 min read</p>
+    <p class="meta"><span>Mohammad Reza Bayat</span><time datetime="2025-09-27">27 September 2025</time><span>Updated <time datetime="2026-11-20">20 November 2026</time></span><span>7 min read</span></p>
   </header>
+  <details class="toc toc-top"><summary>On this page</summary><nav aria-label="On this page"><ol><li><a href="#operating-systems-and-storage">Operating systems and storage</a></li><li><a href="#compilers-and-languages">Compilers and languages</a></li><li><a href="#algorithms-search-and-games">Algorithms, search and games</a></li><li><a href="#networking-and-distributed-systems">Networking and distributed systems</a></li><li><a href="#graphics-and-media">Graphics and media</a></li><li><a href="#security-and-cryptography">Security and cryptography</a></li><li><a href="#developer-tools">Developer tools</a></li><li><a href="#data-systems">Data systems</a></li><li><a href="#classic-challenges">Classic challenges</a></li><li><a href="#where-to-start">Where to start</a></li></ol></nav></details>
   
   <div class="prose">
 <p>After a few years in the job, most of us know our own stack well and everything under it only vaguely. We call the database, the network and the compiler, but we have never had to build one. The fastest way I know to fix that is to build a small, bad version of the thing yourself. You won't ship it. You will understand the real one much better afterwards.</p>
@@ -196,7 +245,23 @@
   <p class="fine">Free. You get the one-page C++ Roadmap 2027 checklist, then an email when a new video or post is out. Unsubscribe any time.</p>
 </form>
   </div>
-</article></div></main>
+</article>
+<aside class="toc toc-side"><nav aria-label="On this page"><p class="toc-title">On this page</p><ol><li><a href="#operating-systems-and-storage">Operating systems and storage</a></li><li><a href="#compilers-and-languages">Compilers and languages</a></li><li><a href="#algorithms-search-and-games">Algorithms, search and games</a></li><li><a href="#networking-and-distributed-systems">Networking and distributed systems</a></li><li><a href="#graphics-and-media">Graphics and media</a></li><li><a href="#security-and-cryptography">Security and cryptography</a></li><li><a href="#developer-tools">Developer tools</a></li><li><a href="#data-systems">Data systems</a></li><li><a href="#classic-challenges">Classic challenges</a></li><li><a href="#where-to-start">Where to start</a></li></ol></nav></aside>
+</div></div></main>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.toc-side a'));
+  if(!links.length||!('IntersectionObserver' in window))return;
+  var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var heads=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));}).filter(Boolean);
+  function set(id){links.forEach(function(a){a.removeAttribute('aria-current');});if(map[id])map[id].setAttribute('aria-current','true');}
+  var io=new IntersectionObserver(function(){
+    var cur=heads[0];heads.forEach(function(h){if(h.getBoundingClientRect().top<140)cur=h;});set(cur.id);
+  },{rootMargin:'0px 0px -60% 0px',threshold:[0,1]});
+  heads.forEach(function(h){io.observe(h);});
+  window.addEventListener('scroll',function(){var cur=heads[0];heads.forEach(function(h){if(h.getBoundingClientRect().top<140)cur=h;});set(cur.id);},{passive:true});
+})();
+</script>
 <footer class="site-foot"><div class="wrap">
   <div class="titleblock">
     <div><span>Project</span>Morebyt: build it to understand it</div>
