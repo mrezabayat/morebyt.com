@@ -144,7 +144,7 @@ BankAccount: {
 }
 ```
 
-Each line is a member and its type. Operations are quoted because they contain parentheses and colons. Running `d2 bank.d2 bank.svg` turns the text into an SVG image, and `d2 --watch bank.d2` opens a preview in the browser that redraws every time you save the file.
+Each line is a member and its type. Operations are quoted because they contain parentheses and colons. Running `d2 bank.d2 bank.svg` turns the text into an SVG image, and `d2 --watch bank.d2` serves a live preview that redraws every time you save the file.
 
 ## Summary
 
