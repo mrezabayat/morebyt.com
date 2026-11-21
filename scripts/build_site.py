@@ -3,7 +3,7 @@
 
     python3 scripts/build_site.py      -> public/index.html, consulting/, blog/, 404.html
 
-The roadmap page has its own generator (build_roadmap.py) but uses the same
+The C++ roadmap page (/career/cpp-roadmap-2027/) has its own generator (build_roadmap.py) but uses the same
 head(), header() and footer() from here.
 """
 import re
@@ -97,7 +97,7 @@ def head(title, description, path, extra_css="", og_image=None, og_image_alt=Non
 
 
 def header(current):
-    items = [("/roadmap", "Roadmap"), ("/blog", "Blog"), ("/projects", "Projects"), ("/consulting", "Consulting"), (YT, "YouTube")]
+    items = [("/career", "Career"), ("/blog", "Blog"), ("/projects", "Projects"), ("/consulting", "Consulting"), (YT, "YouTube")]
     cur = ' aria-current="page"'
     links = "".join(f'<a href="{h}"{cur if h == current else ""}>{n}</a>' for h, n in items)
     return f"""<header class="site-head"><div class="wrap">
@@ -284,7 +284,7 @@ def home():
       </div>
       <div class="actions">
         <a class="btn btn-primary" href="{PLAYLIST_URL}">{nb(NOW["button"])}</a>
-        <a class="btn btn-ghost" href="/roadmap">Free C++ roadmap</a>
+        <a class="btn btn-ghost" href="/career/cpp-roadmap-2027/">Free C++ roadmap</a>
       </div>
     </div>
     <figure>
@@ -318,7 +318,7 @@ def home():
   <div>
     <h2 id="roadmap-h">Learning C++ for a job?</h2>
     <p class="lede">The C++ Roadmap 2027: what to learn in order, what to skip, and where the jobs really are. Read it on the site, or get the one-page checklist by email.</p>
-    <p><a href="/roadmap">Read the roadmap</a></p>
+    <p><a href="/career/cpp-roadmap-2027/">Read the roadmap</a></p>
   </div>
   <div class="sheet">{signup("email-home")}</div>
 </div></section>
@@ -455,6 +455,37 @@ def projects():
 """ + footer())
 
 
+CAREER_CSS = """
+<style>
+.page{padding:var(--s6) 0 var(--s5)}
+.page h1{margin-bottom:var(--s4)}
+.clist{list-style:none;margin:var(--s5) 0 0;padding:0}
+.clist li{padding:var(--s4) 0;border-top:1px solid var(--rule)}
+.clist li:last-child{border-bottom:1px solid var(--rule)}
+.clist h2{font-size:clamp(20px,2.4vw,24px);margin:0 0 6px}
+.clist h2 a{color:var(--ink);text-decoration:none}
+.clist h2 a:hover{text-decoration:underline}
+.clist .st{font:500 14px var(--mono);color:var(--good);margin:0 0 10px}
+.clist p{max-width:68ch;color:var(--ink-2)}
+</style>
+"""
+
+
+def career():
+    items = "".join(
+        f'<li><h2><a href="{escape(c["url"])}">{nb(c["name"])}</a></h2><p class="st">{escape(c["status"])}</p><p>{escape(c["text"])}</p></li>'
+        for c in DATA.get("career", []))
+    return (head("Career: Morebyt",
+                 "Plans and roadmaps for growing as a software engineer: the free C++ Roadmap 2027 and project lists for experienced engineers.",
+                 "/career/") + CAREER_CSS + header("/career") + f"""
+<main id="main"><div class="wrap"><div class="page">
+  <h1>Career</h1>
+  <p class="lede">Plans for getting a job in systems programming and getting better once you have one. Each one comes from what I've seen working as a C++ engineer.</p>
+  <ul class="clist">{items}</ul>
+</div></div></main>
+""" + footer())
+
+
 def not_found():
     page = head("Page not found: Morebyt", "This page doesn't exist.", "/404")
     page = re.sub(r'<link rel="canonical"[^>]*>\n', '<meta name="robots" content="noindex">\n', page)
@@ -463,7 +494,7 @@ def not_found():
 <main id="main"><div class="wrap"><div class="page">
   <h1>Nothing at this address</h1>
   <p class="lede">The page may have moved, or the link has a typo.</p>
-  <div class="actions"><a class="btn btn-primary" href="/">Go to the home page</a><a class="btn btn-ghost" href="/roadmap">C++ roadmap</a></div>
+  <div class="actions"><a class="btn btn-primary" href="/">Go to the home page</a><a class="btn btn-ghost" href="/career/cpp-roadmap-2027/">C++ roadmap</a></div>
 </div></div></main>
 """ + footer())
 
@@ -484,6 +515,7 @@ if __name__ == "__main__":
     write("index.html", home())
     write("consulting/index.html", consulting())
     write("projects/index.html", projects())
+    write("career/index.html", career())
     # blog/index.html is built by build_blog.py
     write("404.html", not_found())
     write("assets/favicon.svg", FAVICON)

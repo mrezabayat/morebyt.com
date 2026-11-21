@@ -1,6 +1,6 @@
 """Builds the C++ Roadmap 2027 web page and the printable checklist from one data set.
 
-    python3 scripts/build_roadmap.py  -> public/roadmap/index.html, pdf/print.html
+    python3 scripts/build_roadmap.py  -> public/career/cpp-roadmap-2027/index.html, pdf/print.html
     then render the PDF with Chrome (see render_pdf.sh)
 
 Content source: ../roadmap-research/COMBINED-Cpp-Roadmap-2027.md (edit the data here when it changes).
@@ -242,8 +242,8 @@ def web():
 <meta property="og:title" content="C++ Roadmap 2027: what to learn, what to skip, where the jobs are">
 <meta property="og:description" content="8 stages, 10 projects, 12 industries and the interview questions — free, from Morebyt.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://morebyt.com/roadmap/">
-<link rel="canonical" href="https://morebyt.com/roadmap/">
+<meta property="og:url" content="https://morebyt.com/career/cpp-roadmap-2027/">
+<link rel="canonical" href="https://morebyt.com/career/cpp-roadmap-2027/">
 <meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E151C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -407,7 +407,7 @@ h4{{font:600 14px var(--mono);color:var(--ink-2);margin:0 0 6px}}
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-{site.header("/roadmap")}
+{site.header("/career")}
 <main id="main">
 <div class="wrap">
 
@@ -589,7 +589,7 @@ code{{font:7.6pt var(--mono)}}
   <div><b>Agent rule</b>You design, the agent types, tests judge. Never ship what you can't explain.</div>
 </div>
 <div class="tb">
-  <div><span>FULL ROADMAP, JOBS AND PROJECTS</span><b>morebyt.com/roadmap</b></div>
+  <div><span>FULL ROADMAP, JOBS AND PROJECTS</span><b>morebyt.com/career</b></div>
   <div><span>VIDEOS</span><b>youtube.com/@morebyt</b></div>
   <div><span>DRAWN BY</span><b>Mohammad Reza Bayat</b></div>
   <div><span>REV</span><b>{UPDATED}</b></div>
@@ -597,7 +597,7 @@ code{{font:7.6pt var(--mono)}}
 </div></body></html>"""
 
 if __name__ == "__main__":
-    out = HERE / "public" / "roadmap"
+    out = HERE / "public" / "career" / "cpp-roadmap-2027"
     out.mkdir(parents=True, exist_ok=True)
     (out / "index.html").write_text(web(), encoding="utf-8")
     (HERE / "pdf" / "print.html").write_text(printable(), encoding="utf-8")

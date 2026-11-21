@@ -1,5 +1,5 @@
 {
-  "_help": "Edit this file to change what the home page and /projects show, then run the build. scripts/update_home_videos.py can refresh 'episodes' from the YouTube playlist.",
+  "_help": "Edit this file to change what the home page, /projects and /career show, then run the build. scripts/update_home_videos.py can refresh 'episodes' from the YouTube playlist.",
   "now_building": {
     "title": "Build a CHIP-8 emulator in C++",
     "summary": "A whole computer in about 1,000 lines: memory, a CPU, a screen and a keyboard. Each episode adds one part and answers one question.",
@@ -94,6 +94,20 @@
       "icon": "chess",
       "text": "A chess tutor that explains why a move is good or bad in terms of what happens on the board. Stockfish finds the moves, a rule-based layer pulls out the reasons, and a language model writes the explanation from that evidence only.",
       "links": []
+    }
+  ],
+  "career": [
+    {
+      "name": "C++ Roadmap 2027",
+      "status": "Free, with a printable checklist",
+      "url": "/career/cpp-roadmap-2027/",
+      "text": "What to learn in C++, in order, what to skip, and where the C++ jobs actually are. Written for people aiming at their first or next C++ job."
+    },
+    {
+      "name": "27 projects for senior engineers",
+      "status": "Blog post",
+      "url": "/blog/projects-for-senior-engineers/",
+      "text": "Projects that make you understand the systems you already use: allocators, databases, compilers, networking and more."
     }
   ]
 }

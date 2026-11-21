@@ -10,7 +10,7 @@ After a few years in the job, most of us know our own stack well and everything 
 
 Here are 27 projects I'd recommend, three per area. None of them is a weekend job. Each one puts you in front of problems a CRUD app never shows you. For each I've noted what it teaches and a good place to start. Many people collect similar lists; the [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x) repository is the biggest, with tutorials for most of these.
 
-If you're earlier in your career and want projects that get you hired, the [C++ Roadmap 2027](/roadmap/#projects) has a shorter list aimed at that.
+If you're earlier in your career and want projects that get you hired, the [C++ Roadmap 2027](/career/cpp-roadmap-2027/#projects) has a shorter list aimed at that.
 
 ## Operating systems and storage
 
