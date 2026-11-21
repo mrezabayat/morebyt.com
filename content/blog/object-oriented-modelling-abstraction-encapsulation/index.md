@@ -8,7 +8,7 @@ tags: C++, software design, UML
 
 Object-oriented design rests on four principles: abstraction, encapsulation, decomposition and generalization. This post covers the first two, with C++ examples and the UML notation for drawing them. [Part 2](/blog/object-oriented-modelling-decomposition-generalization/) covers the other two.
 
-The principles matter more now than when I first wrote this. With AI tools writing more of the code, the part that's still yours is deciding what the pieces are and where their edges go. The [C++ Roadmap 2027](/career/cpp-roadmap-2027/#agents) makes the same argument.
+The principles matter more now than when I first wrote this. With AI tools writing more of the code, the part that's still yours is deciding what the pieces are and where their edges go. The [C++ Roadmap 2027](/career/cpp-roadmap/#agents) makes the same argument.
 
 ## Why model before you code
 

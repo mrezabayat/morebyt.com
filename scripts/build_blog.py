@@ -436,7 +436,7 @@ def feed(posts):
             f"{entries}</channel></rss>\n")
 
 
-STATIC_PAGES = ["/", "/career/", "/career/cpp-roadmap-2027/", "/projects/", "/blog/", "/consulting/"]
+STATIC_PAGES = ["/", "/career/", "/career/cpp-roadmap/", "/projects/", "/blog/", "/consulting/"]
 
 
 def sitemap(posts):

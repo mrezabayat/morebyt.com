@@ -3,7 +3,7 @@
 
     python3 scripts/build_site.py      -> public/index.html, consulting/, blog/, 404.html
 
-The C++ roadmap page (/career/cpp-roadmap-2027/) has its own generator (build_roadmap.py) but uses the same
+The C++ roadmap page (/career/cpp-roadmap/) has its own generator (build_roadmap.py) but uses the same
 head(), header() and footer() from here.
 """
 import re
@@ -284,7 +284,7 @@ def home():
       </div>
       <div class="actions">
         <a class="btn btn-primary" href="{PLAYLIST_URL}">{nb(NOW["button"])}</a>
-        <a class="btn btn-ghost" href="/career/cpp-roadmap-2027/">Free C++ roadmap</a>
+        <a class="btn btn-ghost" href="/career/cpp-roadmap/">Free C++ roadmap</a>
       </div>
     </div>
     <figure>
@@ -318,7 +318,7 @@ def home():
   <div>
     <h2 id="roadmap-h">Learning C++ for a job?</h2>
     <p class="lede">The C++ Roadmap 2027: what to learn in order, what to skip, and where the jobs really are. Read it on the site, or get the one-page checklist by email.</p>
-    <p><a href="/career/cpp-roadmap-2027/">Read the roadmap</a></p>
+    <p><a href="/career/cpp-roadmap/">Read the roadmap</a></p>
   </div>
   <div class="sheet">{signup("email-home")}</div>
 </div></section>
@@ -494,7 +494,7 @@ def not_found():
 <main id="main"><div class="wrap"><div class="page">
   <h1>Nothing at this address</h1>
   <p class="lede">The page may have moved, or the link has a typo.</p>
-  <div class="actions"><a class="btn btn-primary" href="/">Go to the home page</a><a class="btn btn-ghost" href="/career/cpp-roadmap-2027/">C++ roadmap</a></div>
+  <div class="actions"><a class="btn btn-primary" href="/">Go to the home page</a><a class="btn btn-ghost" href="/career/cpp-roadmap/">C++ roadmap</a></div>
 </div></div></main>
 """ + footer())
 
